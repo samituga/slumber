@@ -1,5 +1,10 @@
 package io.samituga.slumber.config.database;
 
+import static io.samituga.slumber.validator.Validator.notBlank;
+
+/**
+ * Configuration class with information to connect and configure a database
+ */
 public class DatabaseConfig {
     private final String driverClass;
     private final String url;
@@ -7,10 +12,10 @@ public class DatabaseConfig {
     private final String password;
 
     DatabaseConfig(String driverClass, String url, String user, String password) {
-        this.driverClass = driverClass;
-        this.url = url;
-        this.user = user;
-        this.password = password;
+        this.driverClass = notBlank("driverClass", driverClass);
+        this.url = notBlank("url", url);
+        this.user = notBlank("user", user);
+        this.password = notBlank("password", password);
     }
 
 
