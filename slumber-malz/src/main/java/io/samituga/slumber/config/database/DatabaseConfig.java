@@ -7,13 +7,13 @@ import static io.samituga.slumber.validator.Validator.notBlank;
  */
 public class DatabaseConfig {
     private final String driverClass;
-    private final String url;
+    private final String jdbcUrl;
     private final String user;
     private final String password;
 
-    DatabaseConfig(String driverClass, String url, String user, String password) {
+    DatabaseConfig(String driverClass, String jdbcUrl, String user, String password) {
         this.driverClass = notBlank("driverClass", driverClass);
-        this.url = notBlank("url", url);
+        this.jdbcUrl = notBlank("jdbcUrl", jdbcUrl);
         this.user = notBlank("user", user);
         this.password = notBlank("password", password);
     }
@@ -28,8 +28,8 @@ public class DatabaseConfig {
         return driverClass;
     }
 
-    public String getUrl() {
-        return url;
+    public String getJdbcUrl() {
+        return jdbcUrl;
     }
 
     public String getUser() {

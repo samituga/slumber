@@ -27,7 +27,7 @@ class DatabaseConfigTest {
               .build();
 
         assertEquals(driverClass, dbConfig.getDriverClass());
-        assertEquals(jdbcUrl, dbConfig.getUrl());
+        assertEquals(jdbcUrl, dbConfig.getJdbcUrl());
         assertEquals(user, dbConfig.getUser());
         assertEquals(password, dbConfig.getPassword());
     }
