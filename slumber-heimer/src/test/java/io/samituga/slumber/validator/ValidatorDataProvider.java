@@ -12,4 +12,14 @@ public class ValidatorDataProvider {
         );
     }
 
+    static Stream<Arguments> valid_strings() {
+        return Stream.of(
+              Arguments.of("ParamName", "teste"),
+              Arguments.of("ParamName", "     asd"),
+              Arguments.of("ParamName", "12345"),
+              Arguments.of("ParamName", "$#@"),
+              Arguments.of("ParamName", "asda    ")
+        );
+    }
+
 }

@@ -23,10 +23,12 @@ public final class Validator {
      *
      * @param name  the name of the parameter.
      * @param value the value of the parameter.
+     * @return the value if passes validation.
      * @throws ValidationException if the value fails the validation.
      */
-    public static void notBlank(String name, String value) {
+    public static String notBlank(String name, String value) {
         validate(() -> value == null || value.isBlank(), NOT_BLANK, name);
+        return value;
     }
 
     private static void validate(Supplier<Boolean> validation, ValidatorMessageFormat messageFormat,
