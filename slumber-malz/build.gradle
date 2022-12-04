@@ -3,15 +3,8 @@ plugins {
 }
 
 dependencies {
-
     api project(':slumber-heimer')
 
     implementation "org.jooq:jooq:${jooqVersion}"
-
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
 }
 
-test {
-    useJUnitPlatform()
-}

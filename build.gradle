@@ -11,6 +11,20 @@ test {
 subprojects {
     apply plugin: "maven-publish"
     apply plugin: "java"
+
+    sourceCompatibility = 17
+    targetCompatibility = 17
+
+    test {
+        useJUnitPlatform()
+    }
+
+    dependencies {
+        testImplementation "org.junit.jupiter:junit-jupiter:${junitVersion}"
+        testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+    }
+
     publishing {
         repositories {
             maven {
