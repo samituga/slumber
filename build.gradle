@@ -3,9 +3,6 @@ plugins {
     id "maven-publish"
 }
 
-repositories {
-    mavenCentral()
-}
 
 test {
     useJUnitPlatform()
@@ -27,9 +24,13 @@ subprojects {
         }
         publications {
             gpr(MavenPublication) {
-                from(components.java)
+                from components.java
             }
         }
+    }
+
+    repositories {
+        mavenCentral()
     }
 }
 

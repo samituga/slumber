@@ -1,3 +1,4 @@
 rootProject.name = 'slumber'
-include 'slumber-data'
+include 'slumber-heimer'
+include 'slumber-malz'
 
