@@ -1,5 +1,6 @@
 module io.samituga.slumber.malz {
     exports io.samituga.slumber.repository;
+    exports io.samituga.slumber.repository.command;
     exports io.samituga.slumber.config.database;
     exports io.samituga.slumber.factory;
 
