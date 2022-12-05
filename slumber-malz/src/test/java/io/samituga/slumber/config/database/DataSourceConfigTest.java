@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class DatabaseConfigTest {
+class DataSourceConfigTest {
 
 
     @Test
@@ -19,7 +19,7 @@ class DatabaseConfigTest {
         var user = "user";
         var password = "password";
 
-        var dbConfig = DatabaseConfig.builder()
+        var dbConfig = DataSourceConfig.builder()
               .driverClass(driverClass)
               .jdbcUrl(jdbcUrl)
               .user(user)
@@ -33,13 +33,13 @@ class DatabaseConfigTest {
     }
 
     @ParameterizedTest
-    @MethodSource("io.samituga.slumber.config.database.DatabaseConfigDataProvider#constructor_parameters_with_invalid_arguments")
+    @MethodSource("io.samituga.slumber.config.database.DataSourceConfigDataProvider#constructor_parameters_with_invalid_arguments")
     void should_fail_validation_when_mandatory_fields_are_invalid(String driverClass,
                                                                   String jdbcUrl,
                                                                   String user,
                                                                   String password) {
         assertThrows(ValidationException.class,
-              () -> DatabaseConfig.builder()
+              () -> DataSourceConfig.builder()
                     .driverClass(driverClass)
                     .jdbcUrl(jdbcUrl)
                     .user(user)
@@ -54,14 +54,14 @@ class DatabaseConfigTest {
         var user = "user";
         var password = "password";
 
-        var dbConfig = DatabaseConfig.builder()
+        var dbConfig = DataSourceConfig.builder()
               .driverClass(driverClass)
               .jdbcUrl(jdbcUrl)
               .user(user)
               .password(password)
               .build();
 
-        var copy = DatabaseConfig.builder().copy(dbConfig);
+        var copy = DataSourceConfig.builder().copy(dbConfig);
 
         assertEquals(dbConfig.getDriverClass(), copy.getDriverClass());
         assertEquals(dbConfig.getJdbcUrl(), copy.getJdbcUrl());

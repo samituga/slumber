@@ -5,13 +5,13 @@ import static io.samituga.slumber.validator.Validator.notBlank;
 /**
  * Configuration class with information to connect and configure a database
  */
-public class DatabaseConfig {
+public class DataSourceConfig {
     private final String driverClass;
     private final String jdbcUrl;
     private final String user;
     private final String password;
 
-    DatabaseConfig(String driverClass, String jdbcUrl, String user, String password) {
+    DataSourceConfig(String driverClass, String jdbcUrl, String user, String password) {
         this.driverClass = notBlank("driverClass", driverClass);
         this.jdbcUrl = notBlank("jdbcUrl", jdbcUrl);
         this.user = notBlank("user", user);
@@ -19,8 +19,8 @@ public class DatabaseConfig {
     }
 
 
-    public static DatabaseConfigBuilder builder() {
-        return new DatabaseConfigBuilder();
+    public static DataSourceConfigBuilder builder() {
+        return new DataSourceConfigBuilder();
     }
 
     public String getDriverClass() {

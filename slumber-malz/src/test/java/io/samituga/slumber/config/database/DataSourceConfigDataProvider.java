@@ -5,7 +5,7 @@ import static org.jooq.SQLDialect.POSTGRES;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.provider.Arguments;
 
-public class DatabaseConfigDataProvider {
+public class DataSourceConfigDataProvider {
 
     static Stream<Arguments> constructor_parameters_with_invalid_arguments() {
 
