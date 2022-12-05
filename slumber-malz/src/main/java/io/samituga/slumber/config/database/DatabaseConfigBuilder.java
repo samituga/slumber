@@ -1,8 +1,7 @@
 package io.samituga.slumber.config.database;
 
 import io.samituga.slumber.builder.Builder;
-
-public class DatabaseConfigBuilder implements Builder<DatabaseConfig> {
+final class DatabaseConfigBuilder implements Builder<DatabaseConfig> {
 
     private String driverClass;
     private String jdbcUrl;
@@ -10,9 +9,7 @@ public class DatabaseConfigBuilder implements Builder<DatabaseConfig> {
     private String password;
 
 
-    public DatabaseConfigBuilder() {
-
-    }
+    DatabaseConfigBuilder() {}
 
     public DatabaseConfigBuilder driverClass(String driverClass) {
         this.driverClass = driverClass;
@@ -37,5 +34,15 @@ public class DatabaseConfigBuilder implements Builder<DatabaseConfig> {
     @Override
     public DatabaseConfig build() {
         return new DatabaseConfig(driverClass, jdbcUrl, user, password);
+    }
+
+    @Override
+    public DatabaseConfig copy(DatabaseConfig databaseConfig) {
+        return new DatabaseConfigBuilder()
+              .driverClass(databaseConfig.getDriverClass())
+              .jdbcUrl(databaseConfig.getJdbcUrl())
+              .user(databaseConfig.getUser())
+              .password(databaseConfig.getPassword())
+              .build();
     }
 }

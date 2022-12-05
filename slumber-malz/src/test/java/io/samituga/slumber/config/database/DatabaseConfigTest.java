@@ -13,7 +13,7 @@ class DatabaseConfigTest {
 
 
     @Test
-    void shouldCreateInstanceWhenArgumentsAreValid() {
+    void should_create_instance_when_arguments_are_valid() {
         var driverClass = POSTGRES.getName();
         var jdbcUrl = "jdbc:postgresql://host:port/database?properties";
         var user = "user";
@@ -45,5 +45,27 @@ class DatabaseConfigTest {
                     .user(user)
                     .password(password)
                     .build());
+    }
+
+    @Test
+    void should_create_exact_copy() {
+        var driverClass = POSTGRES.getName();
+        var jdbcUrl = "jdbc:postgresql://host:port/database?properties";
+        var user = "user";
+        var password = "password";
+
+        var dbConfig = DatabaseConfig.builder()
+              .driverClass(driverClass)
+              .jdbcUrl(jdbcUrl)
+              .user(user)
+              .password(password)
+              .build();
+
+        var copy = DatabaseConfig.builder().copy(dbConfig);
+
+        assertEquals(dbConfig.getDriverClass(), copy.getDriverClass());
+        assertEquals(dbConfig.getJdbcUrl(), copy.getJdbcUrl());
+        assertEquals(dbConfig.getUser(), copy.getUser());
+        assertEquals(dbConfig.getPassword(), copy.getPassword());
     }
 }

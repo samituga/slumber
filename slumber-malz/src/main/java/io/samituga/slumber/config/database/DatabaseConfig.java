@@ -23,7 +23,6 @@ public class DatabaseConfig {
         return new DatabaseConfigBuilder();
     }
 
-
     public String getDriverClass() {
         return driverClass;
     }
