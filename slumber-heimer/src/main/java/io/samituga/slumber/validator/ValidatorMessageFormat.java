@@ -4,7 +4,8 @@ package io.samituga.slumber.validator;
  * Message formats for validation exceptions
  */
 public enum ValidatorMessageFormat {
-    NOT_BLANK("%s is blank");
+    NOT_BLANK("%s is blank"),
+    REQUIRED("%s is required");
 
     private final String format;
 
