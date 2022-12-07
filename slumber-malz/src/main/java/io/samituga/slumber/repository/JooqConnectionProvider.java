@@ -7,16 +7,16 @@ import org.jooq.exception.DataAccessException;
 
 public class JooqConnectionProvider implements ConnectionProvider {
 
-    private final HikariDataSourceProvider hikariDataSourceProvider;
+    private final DataSourceProvider dataSourceProvider;
 
-    public JooqConnectionProvider(HikariDataSourceProvider hikariDataSourceProvider) {
-        this.hikariDataSourceProvider = hikariDataSourceProvider;
+    public JooqConnectionProvider(DataSourceProvider dataSourceProvider) {
+        this.dataSourceProvider = dataSourceProvider;
     }
 
     @Override
     public Connection acquire() throws DataAccessException {
         try {
-            return hikariDataSourceProvider.connection();
+            return dataSourceProvider.connection();
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage(), e);
         }

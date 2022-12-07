@@ -10,7 +10,7 @@ import org.jooq.impl.DefaultConfiguration;
 
 public abstract class Repository {
 
-    private final DSLContext dslContext;
+    protected final DSLContext dslContext;
     protected final DatabaseCommandsImpl databaseCommands;
 
     public Repository(ConnectionProvider connectionProvider) {

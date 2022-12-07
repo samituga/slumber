@@ -9,7 +9,9 @@ public interface EntityRepository<E extends Entity<ID>, ID> {
 
     Optional<E> find(ID id);
 
-    Collection<E> findAll(Collection<ID> ids);
+    Collection<E> findAll(int limit);
+
+    Collection<E> findAllIn(Collection<ID> ids);
 
     E update(E entity);
 
