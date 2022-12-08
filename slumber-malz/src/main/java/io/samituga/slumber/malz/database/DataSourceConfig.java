@@ -1,6 +1,6 @@
-package io.samituga.slumber.config.database;
+package io.samituga.slumber.malz.database;
 
-import static io.samituga.slumber.validator.Validator.notBlank;
+import static io.samituga.slumber.heimer.validator.Validator.notBlank;
 
 /**
  * Configuration class with information to connect and configure a database

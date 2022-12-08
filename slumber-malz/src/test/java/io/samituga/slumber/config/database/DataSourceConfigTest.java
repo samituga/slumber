@@ -4,7 +4,8 @@ import static org.jooq.SQLDialect.POSTGRES;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import io.samituga.slumber.exception.ValidationException;
+import io.samituga.slumber.heimer.exception.ValidationException;
+import io.samituga.slumber.malz.database.DataSourceConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

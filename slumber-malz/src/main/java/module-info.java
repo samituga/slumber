@@ -1,9 +1,10 @@
 module io.samituga.slumber.malz {
-    exports io.samituga.slumber.repository;
-    exports io.samituga.slumber.repository.command;
-    exports io.samituga.slumber.config.database;
-    exports io.samituga.slumber.factory;
-    exports io.samituga.slumber.model;
+    exports io.samituga.slumber.malz.repository;
+    exports io.samituga.slumber.malz.repository.operation;
+    exports io.samituga.slumber.malz.database;
+    exports io.samituga.slumber.malz.factory;
+    exports io.samituga.slumber.malz.model;
+    exports io.samituga.slumber.malz.repository.provider;
 
     requires org.jooq;
     requires io.samituga.slumber.heimer;

@@ -1,7 +1,8 @@
-package io.samituga.slumber.repository;
+package io.samituga.slumber.malz.repository.provider;
 
-import io.samituga.slumber.config.database.DataSourceConfig;
-import io.samituga.slumber.factory.DataSourceFactory;
+import io.samituga.slumber.malz.database.DataSourceConfig;
+import io.samituga.slumber.malz.factory.DataSourceFactory;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 

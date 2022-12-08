@@ -1,4 +1,4 @@
-package io.samituga.slumber.repository;
+package io.samituga.slumber.malz.repository.provider;
 
 import java.sql.Connection;
 import java.sql.SQLException;

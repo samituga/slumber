@@ -1,4 +1,4 @@
-package io.samituga.slumber.error;
+package io.samituga.slumber.heimer.error;
 
 /**
  * Error thrown when there is an attempt to instantiate a utility class.

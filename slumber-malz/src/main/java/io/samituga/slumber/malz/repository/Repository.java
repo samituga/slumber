@@ -1,6 +1,7 @@
-package io.samituga.slumber.repository;
+package io.samituga.slumber.malz.repository;
 
-import io.samituga.slumber.repository.command.DatabaseCommandsImpl;
+import static io.samituga.slumber.heimer.validator.Validator.required;
+
 import org.jooq.Configuration;
 import org.jooq.ConnectionProvider;
 import org.jooq.DSLContext;
@@ -11,16 +12,11 @@ import org.jooq.impl.DefaultConfiguration;
 public abstract class Repository {
 
     protected final DSLContext dslContext;
-    protected final DatabaseCommandsImpl databaseCommands;
 
     public Repository(ConnectionProvider connectionProvider) {
+        required("connectionProvider", connectionProvider);
         this.dslContext = DSL.using(configuration(connectionProvider));
-        databaseCommands = new DatabaseCommandsImpl(dslContext);
     }
-
-//    public DatabaseCommandsImpl commands() {
-//        return databaseCommands;
-//    }
 
     private Configuration configuration(ConnectionProvider connectionProvider) {
         return new DefaultConfiguration()

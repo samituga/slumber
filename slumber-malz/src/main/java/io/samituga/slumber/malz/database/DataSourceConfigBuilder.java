@@ -1,6 +1,6 @@
-package io.samituga.slumber.config.database;
+package io.samituga.slumber.malz.database;
 
-import io.samituga.slumber.builder.Builder;
+import io.samituga.slumber.heimer.builder.Builder;
 public final class DataSourceConfigBuilder implements Builder<DataSourceConfig> {
 
     private String driverClass;

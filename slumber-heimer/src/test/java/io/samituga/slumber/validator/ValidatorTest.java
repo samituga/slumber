@@ -1,11 +1,11 @@
 package io.samituga.slumber.validator;
 
-import static io.samituga.slumber.validator.Validator.notBlank;
-import static io.samituga.slumber.validator.ValidatorMessageFormat.NOT_BLANK;
+import static io.samituga.slumber.heimer.validator.Validator.notBlank;
+import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.NOT_BLANK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import io.samituga.slumber.exception.ValidationException;
+import io.samituga.slumber.heimer.exception.ValidationException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 

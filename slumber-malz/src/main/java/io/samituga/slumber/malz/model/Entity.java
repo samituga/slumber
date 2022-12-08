@@ -1,6 +1,6 @@
-package io.samituga.slumber.model;
+package io.samituga.slumber.malz.model;
 
-import static io.samituga.slumber.validator.Validator.required;
+import static io.samituga.slumber.heimer.validator.Validator.required;
 
 public abstract class Entity<ID> {
 

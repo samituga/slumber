@@ -1,6 +1,7 @@
-package io.samituga.slumber.factory;
+package io.samituga.slumber.malz.factory;
 
-import io.samituga.slumber.config.database.DataSourceConfig;
+import io.samituga.slumber.malz.database.DataSourceConfig;
+
 import javax.sql.DataSource;
 
 /**

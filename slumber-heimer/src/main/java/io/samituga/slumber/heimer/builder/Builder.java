@@ -1,4 +1,4 @@
-package io.samituga.slumber.builder;
+package io.samituga.slumber.heimer.builder;
 
 public interface Builder<T> {
     T build();

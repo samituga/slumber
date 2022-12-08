@@ -1,11 +1,9 @@
-package io.samituga.slumber.validator;
+package io.samituga.slumber.heimer.validator;
 
-import static io.samituga.slumber.error.UtilityClassInstantiationError.MESSAGE_FORMAT;
-import static io.samituga.slumber.validator.ValidatorMessageFormat.NOT_BLANK;
-import static io.samituga.slumber.validator.ValidatorMessageFormat.REQUIRED;
+import static io.samituga.slumber.heimer.error.UtilityClassInstantiationError.MESSAGE_FORMAT;
 
-import io.samituga.slumber.error.UtilityClassInstantiationError;
-import io.samituga.slumber.exception.ValidationException;
+import io.samituga.slumber.heimer.error.UtilityClassInstantiationError;
+import io.samituga.slumber.heimer.exception.ValidationException;
 import java.util.function.Supplier;
 
 /**
@@ -30,7 +28,7 @@ public final class Validator {
      * @throws ValidationException if the value fails the validation.
      */
     public static String notBlank(String name, String value) {
-        validate(() -> value == null || value.isBlank(), NOT_BLANK, name);
+        validate(() -> value == null || value.isBlank(), ValidatorMessageFormat.NOT_BLANK, name);
         return value;
     }
 
@@ -43,7 +41,7 @@ public final class Validator {
      * @throws ValidationException if the value fails the validation.
      */
     public static <T> T required(String name, T value) { // TODO: 2022-12-05 tests
-        validate(() -> value == null, REQUIRED, name);
+        validate(() -> value == null, ValidatorMessageFormat.REQUIRED, name);
         return value;
     }
 
