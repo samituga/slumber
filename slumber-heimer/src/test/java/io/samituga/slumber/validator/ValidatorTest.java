@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import io.samituga.slumber.heimer.exception.ValidationException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -67,9 +68,28 @@ class ValidatorTest {
     }
 
     @Test
-    void should_return_value_when_strings_are_valid() {
+    void should_return_value_when_collection_is_valid() {
         var validCollection = List.of("value");
-        var  result = requiredNotEmpty("validCollection", validCollection);
+        var result = requiredNotEmpty("validCollection", validCollection);
+
+        assertEquals(validCollection, result);
+    }
+
+    @ParameterizedTest
+    @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#null_and_empty_and_null_value_map")
+    <K, V> void should_fail_required_and_not_empty_validation_when_map_is_invalid(String paramName,
+                                                                                  Map<K, V> value) {
+        var exception = assertThrows(ValidationException.class,
+              () -> requiredNotEmpty(paramName, value));
+
+        String expectedMessage = String.format(REQUIRED_NOT_EMPTY.format(), paramName);
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    void should_return_value_when_map_is_valid() {
+        var validCollection = Map.of("Key", "value");
+        var result = requiredNotEmpty("validCollection", validCollection);
 
         assertEquals(validCollection, result);
     }

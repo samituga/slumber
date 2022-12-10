@@ -5,6 +5,8 @@ import static io.samituga.slumber.heimer.error.UtilityClassInstantiationError.ME
 import io.samituga.slumber.heimer.error.UtilityClassInstantiationError;
 import io.samituga.slumber.heimer.exception.ValidationException;
 import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -55,7 +57,24 @@ public final class Validator {
      * @throws ValidationException if the value fails the validation
      */
     public static <T> Collection<T> requiredNotEmpty(String name, Collection<T> value) {
-        validate(() -> value == null || value.isEmpty(), ValidatorMessageFormat.REQUIRED_NOT_EMPTY, name);
+        validate(() -> value == null || value.isEmpty(), ValidatorMessageFormat.REQUIRED_NOT_EMPTY,
+              name);
+        return value;
+    }
+
+    /**
+     * Validates if map input is not null and not empty and values are not null.
+     *
+     * @param name  the name of the parameter
+     * @param value the value of the parameter
+     * @return the value if passes validation
+     * @throws ValidationException if the value fails the validation
+     */
+    public static <K, V> Map<K, V> requiredNotEmpty(String name, Map<K, V> value) {
+        validate(() -> value == null
+                    || value.isEmpty()
+                    || value.values().stream().anyMatch(Objects::isNull),
+              ValidatorMessageFormat.REQUIRED_NOT_EMPTY, name);
         return value;
     }
 

@@ -1,6 +1,8 @@
 package io.samituga.slumber.validator;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.provider.Arguments;
 
@@ -26,6 +28,18 @@ public class ValidatorDataProvider {
     static Stream<Arguments> null_and_empty_collection() {
         return Stream.of(
               Arguments.of("EmptyList", Collections.emptyList()),
+              Arguments.of("Null", null)
+        );
+    }
+
+    static Stream<Arguments> null_and_empty_and_null_value_map() {
+
+        var nullValueMap = new HashMap<String, String>();
+        nullValueMap.put("Key", null);
+
+        return Stream.of(
+              Arguments.of("EmptyMap", Map.of()),
+              Arguments.of("nullValueMap", nullValueMap),
               Arguments.of("Null", null)
         );
     }
