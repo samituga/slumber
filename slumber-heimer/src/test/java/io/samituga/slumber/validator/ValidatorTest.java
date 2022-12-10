@@ -2,12 +2,16 @@ package io.samituga.slumber.validator;
 
 import static io.samituga.slumber.heimer.validator.Validator.notBlank;
 import static io.samituga.slumber.heimer.validator.Validator.required;
+import static io.samituga.slumber.heimer.validator.Validator.requiredNotEmpty;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.NOT_BLANK;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED;
+import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED_NOT_EMPTY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.samituga.slumber.heimer.exception.ValidationException;
+import java.util.Collection;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -43,7 +47,6 @@ class ValidatorTest {
         assertEquals(expectedMessage, exception.getMessage());
     }
 
-
     @Test
     void should_return_value_when_required_is_valid() {
         var paramName = "paramName";
@@ -51,5 +54,23 @@ class ValidatorTest {
         String result = required(paramName, value);
 
         assertEquals(value, result);
+    }
+
+    @ParameterizedTest
+    @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#null_and_empty_collection")
+    <T> void should_fail_required_and_not_empty_validation_when_collection_is_invalid(String paramName, Collection<T> value) {
+        var exception = assertThrows(ValidationException.class,
+              () -> requiredNotEmpty(paramName, value));
+
+        String expectedMessage = String.format(REQUIRED_NOT_EMPTY.format(), paramName);
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    void should_return_value_when_strings_are_valid() {
+        var validCollection = List.of("value");
+        var  result = requiredNotEmpty("validCollection", validCollection);
+
+        assertEquals(validCollection, result);
     }
 }

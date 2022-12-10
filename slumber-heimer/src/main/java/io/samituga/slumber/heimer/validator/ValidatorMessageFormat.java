@@ -5,7 +5,8 @@ package io.samituga.slumber.heimer.validator;
  */
 public enum ValidatorMessageFormat {
     NOT_BLANK("%s is blank"),
-    REQUIRED("%s is required");
+    REQUIRED("%s is required"),
+    REQUIRED_NOT_EMPTY("%s is required and can't be empty");
 
     private final String format;
 

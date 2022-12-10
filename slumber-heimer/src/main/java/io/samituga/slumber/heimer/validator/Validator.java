@@ -4,6 +4,7 @@ import static io.samituga.slumber.heimer.error.UtilityClassInstantiationError.ME
 
 import io.samituga.slumber.heimer.error.UtilityClassInstantiationError;
 import io.samituga.slumber.heimer.exception.ValidationException;
+import java.util.Collection;
 import java.util.function.Supplier;
 
 /**
@@ -22,10 +23,10 @@ public final class Validator {
     /**
      * Validates if string input is not null, not empty and not blank.
      *
-     * @param name  the name of the parameter.
-     * @param value the value of the parameter.
-     * @return the value if passes validation.
-     * @throws ValidationException if the value fails the validation.
+     * @param name  the name of the parameter
+     * @param value the value of the parameter
+     * @return the value if passes validation
+     * @throws ValidationException if the value fails the validation
      */
     public static String notBlank(String name, String value) {
         validate(() -> value == null || value.isBlank(), ValidatorMessageFormat.NOT_BLANK, name);
@@ -35,13 +36,26 @@ public final class Validator {
     /**
      * Validates if input is not null.
      *
-     * @param name  the name of the parameter.
-     * @param value the value of the parameter.
-     * @return the value if passes validation.
-     * @throws ValidationException if the value fails the validation.
+     * @param name  the name of the parameter
+     * @param value the value of the parameter
+     * @return the value if passes validation
+     * @throws ValidationException if the value fails the validation
      */
     public static <T> T required(String name, T value) {
         validate(() -> value == null, ValidatorMessageFormat.REQUIRED, name);
+        return value;
+    }
+
+    /**
+     * Validates if collection input is not null and not empty.
+     *
+     * @param name  the name of the parameter
+     * @param value the value of the parameter
+     * @return the value if passes validation
+     * @throws ValidationException if the value fails the validation
+     */
+    public static <T> Collection<T> requiredNotEmpty(String name, Collection<T> value) {
+        validate(() -> value == null || value.isEmpty(), ValidatorMessageFormat.REQUIRED_NOT_EMPTY, name);
         return value;
     }
 
