@@ -1,4 +1,5 @@
 rootProject.name = 'slumber'
 include 'slumber-heimer'
 include 'slumber-malz'
+include 'slumber-demo'
 

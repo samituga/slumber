@@ -40,7 +40,7 @@ public final class Validator {
      * @return the value if passes validation.
      * @throws ValidationException if the value fails the validation.
      */
-    public static <T> T required(String name, T value) { // TODO: 2022-12-05 tests
+    public static <T> T required(String name, T value) {
         validate(() -> value == null, ValidatorMessageFormat.REQUIRED, name);
         return value;
     }
