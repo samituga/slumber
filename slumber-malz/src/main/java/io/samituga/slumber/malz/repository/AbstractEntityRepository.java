@@ -1,10 +1,11 @@
 package io.samituga.slumber.malz.repository;
 
 import static io.samituga.slumber.heimer.validator.Validator.required;
-import static io.samituga.slumber.malz.repository.operation.DatabaseOperation.findAllWhere;
-import static io.samituga.slumber.malz.repository.operation.DatabaseOperation.findOneWhere;
+import static io.samituga.slumber.heimer.validator.Validator.requiredNotEmpty;
+import static java.util.stream.Collectors.toMap;
 
 import io.samituga.slumber.malz.model.Entity;
+import io.samituga.slumber.malz.repository.operation.RepositoryOperation;
 import java.util.Collection;
 import java.util.Optional;
 import org.jooq.ConnectionProvider;
@@ -13,61 +14,88 @@ import org.jooq.Table;
 import org.jooq.TableField;
 
 public abstract class AbstractEntityRepository<ID, E extends Entity<ID>, R extends Record> extends
-      Repository implements EntityRepository<E, ID> {
+      RepositoryOperation<R> implements EntityRepository<E, ID> {
 
-    private final Table<R> table;
     private final TableField<R, ID> idTableField;
 
-    public AbstractEntityRepository(ConnectionProvider connectionProvider,
-                                    Table<R> table,
+    public AbstractEntityRepository(ConnectionProvider connectionProvider, Table<R> table,
                                     TableField<R, ID> idTableField) {
-        super(connectionProvider);
-        this.table = required("table", table);
+        super(connectionProvider, table);
         this.idTableField = required("idTableField", idTableField);
     }
 
     // TODO: 2022-12-05 implementations
     @Override
     public Optional<E> find(ID id) {
-        return findOneWhere(dslContext.selectFrom(table), idTableField.eq(id), this::toEntity);
+        required("id", id);
+        return findOneWhere(idTableField.eq(id)).map(this::toEntity);
+    }
+
+    @Override
+    public Collection<E> findAll() {
+        return findAll(Integer.MAX_VALUE);
     }
 
     @Override
     public Collection<E> findAll(int limit) {
-        return dslContext.selectFrom(table)
-              .limit(limit)
-              .fetch()
-              .map(this::toEntity);
+        return toEntity(findAllFrom(limit));
     }
 
     @Override
     public Collection<E> findAllIn(Collection<ID> ids) {
-        return findAllWhere(dslContext.selectFrom(table), idTableField.in(ids), this::toEntity);
+        return toEntity(findAllWhere(idTableField.in(requiredNotEmpty("ids", ids))));
     }
 
     @Override
-    public E update(E entity) {
-        return null;
+    public Collection<E> findAllIn(Collection<ID> ids, int limit) {
+        return toEntity(findAllWhere(idTableField.in(requiredNotEmpty("ids", ids)), limit));
     }
 
     @Override
-    public Collection<E> updateAll(Collection<E> entities) {
-        return null;
+    public boolean update(E entity) {
+        required("entity", entity);
+
+        return updateWhere(idTableField.eq(entity.id), toRecord(entity));
+    }
+
+    @Override
+    public int updateAll(Collection<E> entities) {
+        requiredNotEmpty("entities", entities);
+
+        return updateAllWhere(
+              entities.stream().collect(toMap(this::toRecord, e -> idTableField.eq(e.id))));
     }
 
     @Override
     public boolean delete(ID id) {
-        return false;
+        required("id", id);
+        return false; // TODO: 2022-12-10 implementation
+    }
+
+    @Override
+    public boolean delete(E entity) {
+        required("entity", entity);
+        return delete(entity.id);
     }
 
     @Override
     public Collection<E> deleteAll(Collection<E> entities) {
-        return null;
+        return null; // TODO: 2022-12-10 implementation
     }
 
     @Override
     public boolean exists(ID id) {
+        required("id", id);
+
         return dslContext.fetchExists(table, idTableField.eq(id));
+    }
+
+    private Collection<E> toEntity(Collection<R> records) {
+        return records.stream().map(this::toEntity).toList();
+    }
+
+    private Collection<R> toRecord(Collection<E> entities) {
+        return entities.stream().map(this::toRecord).toList();
     }
 
     protected abstract E toEntity(R record);

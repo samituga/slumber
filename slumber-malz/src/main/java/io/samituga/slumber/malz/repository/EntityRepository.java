@@ -9,15 +9,22 @@ public interface EntityRepository<E extends Entity<ID>, ID> {
 
     Optional<E> find(ID id);
 
+    Collection<E> findAll();
+
     Collection<E> findAll(int limit);
 
     Collection<E> findAllIn(Collection<ID> ids);
 
-    E update(E entity);
+    Collection<E> findAllIn(Collection<ID> ids, int limit);
 
-    Collection<E> updateAll(Collection<E> entities);
+
+    boolean update(E entity);
+
+    int updateAll(Collection<E> entities);
 
     boolean delete(ID id);
+
+    boolean delete(E entity);
 
     Collection<E> deleteAll(Collection<E> entities);
 
