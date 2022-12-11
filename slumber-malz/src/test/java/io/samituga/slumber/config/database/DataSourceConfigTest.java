@@ -62,7 +62,7 @@ class DataSourceConfigTest {
               .password(password)
               .build();
 
-        var copy = DataSourceConfig.builder().copy(dbConfig);
+        var copy = DataSourceConfig.builder().copy(dbConfig).build();
 
         assertEquals(dbConfig.getDriverClass(), copy.getDriverClass());
         assertEquals(dbConfig.getJdbcUrl(), copy.getJdbcUrl());
