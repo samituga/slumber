@@ -1,0 +1,79 @@
+plugins {
+    id 'java-library'
+    id 'java'
+    id 'nu.studer.jooq' version '8.0'
+}
+
+tasks.withType(PublishToMavenRepository).configureEach { it.enabled = false }
+
+jooq {
+    version = jooqVersion  // the default (can be omitted
+
+    configurations {
+        main {  // name of the jOOQ configuration
+            generateSchemaSourceOnCompilation = true  // default (can be omitted)
+
+            generationTool {
+//                logging = Logging.WARN
+                jdbc {
+                    driver = 'org.postgresql.Driver'
+                    url = 'jdbc:postgresql://localhost:54321/my_project_db'
+                    user = 'mike'
+                    password = 'supersecretpassword'
+                    properties {
+                        property {
+                            key = 'ssl'
+                            value = 'false'
+                        }
+                    }
+                }
+                generator {
+                    name = 'org.jooq.codegen.DefaultGenerator'
+                    database {
+                        name = 'org.jooq.meta.postgres.PostgresDatabase'
+                        inputSchema = 'public'
+                        forcedTypes {
+                            forcedType {
+                                name = 'varchar'
+                                includeExpression = '.*'
+                                includeTypes = 'JSONB?'
+                            }
+                            forcedType {
+                                name = 'varchar'
+                                includeExpression = '.*'
+                                includeTypes = 'INET'
+                            }
+                        }
+                    }
+                    generate {
+                        deprecated = false
+                        records = true
+                        immutablePojos = true
+                        fluentSetters = true
+                    }
+                    target {
+                        packageName = 'io.samituga.demo.jooq'
+                        directory = 'build/generated-src/jooq/main'  // default (can be omitted)
+                    }
+                    strategy.name = 'org.jooq.codegen.DefaultGeneratorStrategy'
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    api project(':slumber-heimer')
+    api project(':slumber-malz')
+
+    implementation("org.jooq:jooq:${jooqVersion}")
+    implementation 'org.postgresql:postgresql:42.5.1'
+
+    jooqGenerator 'org.postgresql:postgresql:42.5.1'
+
+
+    implementation 'org.slf4j:slf4j-api:2.0.5'
+    implementation 'org.slf4j:slf4j-log4j12:2.0.5'
+//    implementation 'org.slf4j:slf4j-log4j13:2.0.5'
+    implementation 'ch.qos.reload4j:reload4j:1.2.24'
+}
