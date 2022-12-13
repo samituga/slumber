@@ -17,7 +17,6 @@ public interface EntityRepository<E extends Entity<ID>, ID> {
 
     Collection<E> findAllIn(Collection<ID> ids, int limit);
 
-
     boolean update(E entity);
 
     int updateAll(Collection<E> entities);
@@ -26,7 +25,7 @@ public interface EntityRepository<E extends Entity<ID>, ID> {
 
     boolean delete(E entity);
 
-    Collection<E> deleteAll(Collection<E> entities);
+    boolean deleteAll(Collection<E> entities);
 
     boolean exists(ID id);
 }

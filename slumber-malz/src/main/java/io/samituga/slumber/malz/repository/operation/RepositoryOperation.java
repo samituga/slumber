@@ -55,7 +55,7 @@ public abstract class RepositoryOperation<R extends Record> extends Repository {
 
         final var updatedRows = dslContext.update(table).set(record).where(condition)
               .execute();
-        return shouldUpdateOnlyOneRow(updatedRows, condition);
+        return shouldAffectSpecifiedRowsNum(1, updatedRows, condition);
     }
 
     protected int updateAllWhere(Map<R, Condition> recordsWithCondition) {
@@ -70,18 +70,29 @@ public abstract class RepositoryOperation<R extends Record> extends Repository {
         final var iterator = recordsWithCondition.values().iterator();
 
         for (int updatedRows : updatedRowsForRecord) {
-            shouldUpdateOnlyOneRow(updatedRows, iterator.next());
+            shouldAffectSpecifiedRowsNum(1, updatedRows, iterator.next());
             totalRowsUpdated += updatedRows;
         }
 
         return totalRowsUpdated;
     }
 
-    private boolean shouldUpdateOnlyOneRow(int updatedRows, Condition condition) {
-        if (updatedRows > 1) {
+    protected boolean deleteWhere(Condition condition) {
+        final var result = dslContext.deleteFrom(table).where(condition).execute();
+        return shouldAffectSpecifiedRowsNum(1, result, condition);
+    }
+
+    protected boolean deleteAllWhere(Condition condition, int size) {
+
+        final var result = dslContext.deleteFrom(table).where(condition).execute();
+        return shouldAffectSpecifiedRowsNum(size, result, condition);
+    }
+
+    private boolean shouldAffectSpecifiedRowsNum(int expected, int result, Condition condition) {
+        if (result != expected) {
             throw new SQLQueryError(condition);
         }
-        return updatedRows > 0;
+        return result > 0;
     }
 
     private List<UpdateQuery<R>> updateQueries(Map<R, Condition> records) {

@@ -8,6 +8,7 @@ import io.samituga.slumber.malz.model.Entity;
 import io.samituga.slumber.malz.repository.operation.RepositoryOperation;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.jooq.ConnectionProvider;
 import org.jooq.Record;
 import org.jooq.Table;
@@ -24,7 +25,6 @@ public abstract class AbstractEntityRepository<ID, E extends Entity<ID>, R exten
         this.idTableField = required("idTableField", idTableField);
     }
 
-    // TODO: 2022-12-05 implementations
     @Override
     public Optional<E> find(ID id) {
         required("id", id);
@@ -69,18 +69,22 @@ public abstract class AbstractEntityRepository<ID, E extends Entity<ID>, R exten
     @Override
     public boolean delete(ID id) {
         required("id", id);
-        return false; // TODO: 2022-12-10 implementation
+        return deleteWhere(idTableField.eq(id));
     }
 
     @Override
     public boolean delete(E entity) {
         required("entity", entity);
+
         return delete(entity.id);
     }
 
     @Override
-    public Collection<E> deleteAll(Collection<E> entities) {
-        return null; // TODO: 2022-12-10 implementation
+    public boolean deleteAll(Collection<E> entities) {
+        requiredNotEmpty("entities", entities);
+
+        final var ids = entities.stream().map(e -> e.id).collect(Collectors.toSet());
+        return deleteAllWhere(idTableField.in(ids), ids.size());
     }
 
     @Override
