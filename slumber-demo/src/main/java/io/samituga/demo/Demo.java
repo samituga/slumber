@@ -1,5 +1,7 @@
 package io.samituga.demo;
 
+import static io.samituga.slumber.malz.driver.Driver.POSTGRES;
+
 import io.samituga.slumber.malz.database.DataSourceConfig;
 import io.samituga.slumber.malz.factory.DataSourceFactory;
 import io.samituga.slumber.malz.factory.HikariDataSourceFactory;
@@ -8,6 +10,7 @@ import io.samituga.slumber.malz.repository.provider.JooqConnectionProvider;
 import java.io.IOException;
 import java.util.List;
 import org.apache.log4j.xml.DOMConfigurator;
+
 
 public class Demo {
 
@@ -21,16 +24,17 @@ public class Demo {
 //        InputStream stream = module.getResourceAsStream("C:\\Users\\sami\\projects\\slumber\\slumber-demo\\src\\main\\resources\\log4j.xml");
 
 //        PropertyConfigurator.configure(stream);
-        DOMConfigurator.configure("C:\\Users\\sami\\projects\\slumber\\slumber-demo\\src\\main\\resources\\log4j.xml");
-        DOMConfigurator.configure("C:\\Users\\sami\\projects\\slumber\\slumber-demo\\src\\main\\resources\\log4j.xml");
+        DOMConfigurator.configure(
+              "C:\\Users\\sami\\projects\\slumber\\slumber-demo\\src\\main\\resources\\log4j.xml");
+        DOMConfigurator.configure(
+              "C:\\Users\\sami\\projects\\slumber\\slumber-demo\\src\\main\\resources\\log4j.xml");
 
-        var driverClass = "org.postgresql.Driver";
-        var jdbcUrl = "jdbc:postgresql://localhost:54321/my_project_db";
-        var user = "mike";
-        var password = "supersecretpassword";
+        var jdbcUrl = "jdbc:postgresql://localhost:5432/postgres";
+        var user = "postgres";
+        var password = "postgres";
 
         var dbConfig = DataSourceConfig.builder()
-              .driverClass(driverClass)
+              .driverClass(POSTGRES)
               .jdbcUrl(jdbcUrl)
               .user(user)
               .password(password)
@@ -38,7 +42,8 @@ public class Demo {
 
         DataSourceFactory dataSourceFactory = new HikariDataSourceFactory();
 
-        final var a = new JooqConnectionProvider(new HikariDataSourceProvider(dataSourceFactory, dbConfig));
+        final var a = new JooqConnectionProvider(
+              new HikariDataSourceProvider(dataSourceFactory, dbConfig));
         final var bookRepository = new BookRepository(a);
 
         final var result1 = bookRepository.find(1).get();
@@ -52,7 +57,6 @@ public class Demo {
         bookRepository.updateAll(List.of(updated1, updated2));
 
         System.out.println("\nupdate end\n");
-
 
         final var updatedResult1 = bookRepository.find(1).get();
         final var updatedResult2 = bookRepository.find(2).get();

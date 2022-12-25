@@ -17,9 +17,9 @@ jooq {
 //                logging = Logging.WARN
                 jdbc {
                     driver = 'org.postgresql.Driver'
-                    url = 'jdbc:postgresql://localhost:54321/my_project_db'
-                    user = 'mike'
-                    password = 'supersecretpassword'
+                    url = 'jdbc:postgresql://localhost:5432/postgres'
+                    user = 'postgres'
+                    password = 'postgres'
                     properties {
                         property {
                             key = 'ssl'
