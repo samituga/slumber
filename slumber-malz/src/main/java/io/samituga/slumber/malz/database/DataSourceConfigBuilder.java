@@ -33,7 +33,7 @@ public final class DataSourceConfigBuilder implements Builder<DataSourceConfig> 
 
     @Override
     public DataSourceConfig build() {
-        return new DataSourceConfig(driverClass, jdbcUrl, user, password);
+        return new DataSourceConfigRecord(driverClass, jdbcUrl, user, password);
     }
 
     @Override

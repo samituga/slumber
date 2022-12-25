@@ -1,41 +1,36 @@
 package io.samituga.slumber.malz.database;
 
-import static io.samituga.slumber.heimer.validator.Validator.notBlank;
+public sealed interface DataSourceConfig permits DataSourceConfigRecord {
 
-/**
- * Configuration class with information to connect and configure a database
- */
-public class DataSourceConfig {
-    private final String driverClass;
-    private final String jdbcUrl;
-    private final String user;
-    private final String password;
-
-    DataSourceConfig(String driverClass, String jdbcUrl, String user, String password) {
-        this.driverClass = notBlank("driverClass", driverClass);
-        this.jdbcUrl = notBlank("jdbcUrl", jdbcUrl);
-        this.user = notBlank("user", user);
-        this.password = notBlank("password", password);
-    }
-
-
-    public static DataSourceConfigBuilder builder() {
+    static DataSourceConfigBuilder builder() {
         return new DataSourceConfigBuilder();
     }
 
-    public String getDriverClass() {
-        return driverClass;
-    }
+    /**
+     * Gets the database driver class eg: org.postgresql.Driver.
+     *
+     * @return the database driver class
+     */
+    String getDriverClass();
 
-    public String getJdbcUrl() {
-        return jdbcUrl;
-    }
+    /**
+     * Gets the database url.
+     *
+     * @return the database url
+     */
+    String getJdbcUrl();
 
-    public String getUser() {
-        return user;
-    }
+    /**
+     * Gets the database username.
+     *
+     * @return the database username
+     */
+    String getUser();
 
-    public String getPassword() {
-        return password;
-    }
+    /**
+     * Gets the database password.
+     *
+     * @return the database password
+     */
+    String getPassword();
 }
