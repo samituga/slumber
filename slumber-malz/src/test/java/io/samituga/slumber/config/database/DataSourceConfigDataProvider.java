@@ -1,10 +1,10 @@
 package io.samituga.slumber.config.database;
 
 
+import static io.samituga.slumber.malz.driver.Driver.POSTGRES;
+
 import java.util.stream.Stream;
 import org.junit.jupiter.params.provider.Arguments;
-
-import static io.samituga.slumber.malz.driver.Driver.POSTGRES;
 
 public class DataSourceConfigDataProvider {
 

@@ -1,15 +1,15 @@
 package io.samituga.slumber.config.database;
 
+import static io.samituga.slumber.malz.driver.Driver.POSTGRES;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import io.samituga.slumber.heimer.exception.ValidationException;
 import io.samituga.slumber.malz.database.DataSourceConfig;
 import io.samituga.slumber.malz.driver.Driver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import static io.samituga.slumber.malz.driver.Driver.POSTGRES;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class DataSourceConfigTest {
 

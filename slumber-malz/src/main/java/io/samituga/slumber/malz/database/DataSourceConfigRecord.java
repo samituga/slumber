@@ -1,9 +1,9 @@
 package io.samituga.slumber.malz.database;
 
-import io.samituga.slumber.malz.driver.Driver;
-
 import static io.samituga.slumber.heimer.validator.Validator.notBlank;
 import static io.samituga.slumber.heimer.validator.Validator.required;
+
+import io.samituga.slumber.malz.driver.Driver;
 
 /**
  * Configuration class with information to connect and configure a database

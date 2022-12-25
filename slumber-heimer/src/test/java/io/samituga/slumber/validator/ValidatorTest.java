@@ -59,7 +59,8 @@ class ValidatorTest {
 
     @ParameterizedTest
     @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#null_and_empty_collection")
-    <T> void should_fail_required_and_not_empty_validation_when_collection_is_invalid(String paramName, Collection<T> value) {
+    <T> void should_fail_required_and_not_empty_validation_when_collection_is_invalid(
+          String paramName, Collection<T> value) {
         var exception = assertThrows(ValidationException.class,
               () -> requiredNotEmpty(paramName, value));
 
