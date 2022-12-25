@@ -11,7 +11,7 @@ public class HikariDataSourceFactory implements DataSourceFactory{
     @Override
     public DataSource dataSource(DataSourceConfig dataSourceConfig) {
         HikariConfig config = new HikariConfig();
-        config.setDriverClassName(dataSourceConfig.getDriverClass());
+        config.setDriverClassName(dataSourceConfig.getDriverClass().className);
         config.setJdbcUrl(dataSourceConfig.getJdbcUrl());
         config.setUsername(dataSourceConfig.getUser());
         config.setPassword(dataSourceConfig.getPassword());

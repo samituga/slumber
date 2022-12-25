@@ -1,5 +1,7 @@
 package io.samituga.slumber.malz.database;
 
+import io.samituga.slumber.malz.driver.Driver;
+
 public sealed interface DataSourceConfig permits DataSourceConfigRecord {
 
     static DataSourceConfigBuilder builder() {
@@ -11,7 +13,7 @@ public sealed interface DataSourceConfig permits DataSourceConfigRecord {
      *
      * @return the database driver class
      */
-    String getDriverClass();
+    Driver getDriverClass();
 
     /**
      * Gets the database url.

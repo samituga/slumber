@@ -1,9 +1,11 @@
 package io.samituga.slumber.malz.database;
 
 import io.samituga.slumber.heimer.builder.Builder;
+import io.samituga.slumber.malz.driver.Driver;
+
 public final class DataSourceConfigBuilder implements Builder<DataSourceConfig> {
 
-    private String driverClass;
+    private Driver driverClass;
     private String jdbcUrl;
     private String user;
     private String password;
@@ -11,7 +13,7 @@ public final class DataSourceConfigBuilder implements Builder<DataSourceConfig> 
 
     DataSourceConfigBuilder() {}
 
-    public DataSourceConfigBuilder driverClass(String driverClass) {
+    public DataSourceConfigBuilder driverClass(Driver driverClass) {
         this.driverClass = driverClass;
         return this;
     }
