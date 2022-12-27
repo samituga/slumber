@@ -28,10 +28,10 @@ class DataSourceConfigTest {
               .password(password)
               .build();
 
-        assertEquals(driverClass, dbConfig.getDriverClass());
-        assertEquals(jdbcUrl, dbConfig.getJdbcUrl());
-        assertEquals(user, dbConfig.getUser());
-        assertEquals(password, dbConfig.getPassword());
+        assertEquals(driverClass, dbConfig.driverClass());
+        assertEquals(jdbcUrl, dbConfig.jdbcUrl());
+        assertEquals(user, dbConfig.user());
+        assertEquals(password, dbConfig.password());
     }
 
     @ParameterizedTest
@@ -65,9 +65,9 @@ class DataSourceConfigTest {
 
         var copy = DataSourceConfig.builder().copy(dbConfig).build();
 
-        assertEquals(dbConfig.getDriverClass(), copy.getDriverClass());
-        assertEquals(dbConfig.getJdbcUrl(), copy.getJdbcUrl());
-        assertEquals(dbConfig.getUser(), copy.getUser());
-        assertEquals(dbConfig.getPassword(), copy.getPassword());
+        assertEquals(dbConfig.driverClass(), copy.driverClass());
+        assertEquals(dbConfig.jdbcUrl(), copy.jdbcUrl());
+        assertEquals(dbConfig.user(), copy.user());
+        assertEquals(dbConfig.password(), copy.password());
     }
 }

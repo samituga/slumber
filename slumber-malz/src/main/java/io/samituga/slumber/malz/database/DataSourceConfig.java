@@ -13,26 +13,26 @@ public sealed interface DataSourceConfig permits DataSourceConfigRecord {
      *
      * @return the database driver class
      */
-    Driver getDriverClass();
+    Driver driverClass();
 
     /**
      * Gets the database url.
      *
      * @return the database url
      */
-    String getJdbcUrl();
+    String jdbcUrl();
 
     /**
      * Gets the database username.
      *
      * @return the database username
      */
-    String getUser();
+    String user();
 
     /**
      * Gets the database password.
      *
      * @return the database password
      */
-    String getPassword();
+    String password();
 }
