@@ -1,7 +1,7 @@
 package io.samituga.slumber.malz.repository.operation;
 
-import static io.samituga.slumber.heimer.validator.Validator.required;
-import static io.samituga.slumber.heimer.validator.Validator.requiredNotEmpty;
+import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
+import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotEmpty;
 
 import io.samituga.slumber.malz.error.SQLQueryError;
 import io.samituga.slumber.malz.repository.Repository;

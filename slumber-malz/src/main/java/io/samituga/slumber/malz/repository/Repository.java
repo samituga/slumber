@@ -1,6 +1,6 @@
 package io.samituga.slumber.malz.repository;
 
-import static io.samituga.slumber.heimer.validator.Validator.required;
+import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 
 import org.jooq.Configuration;
 import org.jooq.ConnectionProvider;

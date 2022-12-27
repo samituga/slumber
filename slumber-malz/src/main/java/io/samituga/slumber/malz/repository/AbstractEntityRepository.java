@@ -1,7 +1,7 @@
 package io.samituga.slumber.malz.repository;
 
-import static io.samituga.slumber.heimer.validator.Validator.required;
-import static io.samituga.slumber.heimer.validator.Validator.requiredNotEmpty;
+import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
+import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotEmpty;
 import static java.util.stream.Collectors.toMap;
 
 import io.samituga.slumber.malz.model.Entity;
