@@ -1,15 +1,15 @@
 package io.samituga.slumber.validator;
 
-import static io.samituga.slumber.heimer.validator.Validator.notBlank;
-import static io.samituga.slumber.heimer.validator.Validator.required;
-import static io.samituga.slumber.heimer.validator.Validator.requiredNotEmpty;
+import static io.samituga.slumber.heimer.validator.AssertionUtility.notBlank;
+import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
+import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotEmpty;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.NOT_BLANK;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED_NOT_EMPTY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import io.samituga.slumber.heimer.exception.ValidationException;
+import io.samituga.slumber.heimer.exception.AssertionException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -17,13 +17,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class ValidatorTest {
+class AssertionUtilityTest {
 
 
     @ParameterizedTest
     @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#null_and_blank_strings")
     void should_fail_not_empty_validation_when_strings_are_invalid(String paramName, String value) {
-        var exception = assertThrows(ValidationException.class,
+        var exception = assertThrows(AssertionException.class,
               () -> notBlank(paramName, value));
 
         String expectedMessage = String.format(NOT_BLANK.format(), paramName);
@@ -41,7 +41,7 @@ class ValidatorTest {
     @Test
     void should_fail_required_validation_when_value_is_null() {
         var paramName = "paramName";
-        var exception = assertThrows(ValidationException.class,
+        var exception = assertThrows(AssertionException.class,
               () -> required(paramName, null));
 
         String expectedMessage = String.format(REQUIRED.format(), paramName);
@@ -61,7 +61,7 @@ class ValidatorTest {
     @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#null_and_empty_collection")
     <T> void should_fail_required_and_not_empty_validation_when_collection_is_invalid(
           String paramName, Collection<T> value) {
-        var exception = assertThrows(ValidationException.class,
+        var exception = assertThrows(AssertionException.class,
               () -> requiredNotEmpty(paramName, value));
 
         String expectedMessage = String.format(REQUIRED_NOT_EMPTY.format(), paramName);
@@ -80,7 +80,7 @@ class ValidatorTest {
     @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#null_and_empty_and_null_value_map")
     <K, V> void should_fail_required_and_not_empty_validation_when_map_is_invalid(String paramName,
                                                                                   Map<K, V> value) {
-        var exception = assertThrows(ValidationException.class,
+        var exception = assertThrows(AssertionException.class,
               () -> requiredNotEmpty(paramName, value));
 
         String expectedMessage = String.format(REQUIRED_NOT_EMPTY.format(), paramName);

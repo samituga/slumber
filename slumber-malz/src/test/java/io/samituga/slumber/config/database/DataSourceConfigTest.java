@@ -4,7 +4,7 @@ import static io.samituga.slumber.malz.driver.Driver.POSTGRES;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import io.samituga.slumber.heimer.exception.ValidationException;
+import io.samituga.slumber.heimer.exception.AssertionException;
 import io.samituga.slumber.malz.database.DataSourceConfig;
 import io.samituga.slumber.malz.driver.Driver;
 import org.junit.jupiter.api.Test;
@@ -28,10 +28,10 @@ class DataSourceConfigTest {
               .password(password)
               .build();
 
-        assertEquals(driverClass, dbConfig.getDriverClass());
-        assertEquals(jdbcUrl, dbConfig.getJdbcUrl());
-        assertEquals(user, dbConfig.getUser());
-        assertEquals(password, dbConfig.getPassword());
+        assertEquals(driverClass, dbConfig.driverClass());
+        assertEquals(jdbcUrl, dbConfig.jdbcUrl());
+        assertEquals(user, dbConfig.user());
+        assertEquals(password, dbConfig.password());
     }
 
     @ParameterizedTest
@@ -40,7 +40,7 @@ class DataSourceConfigTest {
                                                                   String jdbcUrl,
                                                                   String user,
                                                                   String password) {
-        assertThrows(ValidationException.class,
+        assertThrows(AssertionException.class,
               () -> DataSourceConfig.builder()
                     .driverClass(driverClass)
                     .jdbcUrl(jdbcUrl)
@@ -65,9 +65,9 @@ class DataSourceConfigTest {
 
         var copy = DataSourceConfig.builder().copy(dbConfig).build();
 
-        assertEquals(dbConfig.getDriverClass(), copy.getDriverClass());
-        assertEquals(dbConfig.getJdbcUrl(), copy.getJdbcUrl());
-        assertEquals(dbConfig.getUser(), copy.getUser());
-        assertEquals(dbConfig.getPassword(), copy.getPassword());
+        assertEquals(dbConfig.driverClass(), copy.driverClass());
+        assertEquals(dbConfig.jdbcUrl(), copy.jdbcUrl());
+        assertEquals(dbConfig.user(), copy.user());
+        assertEquals(dbConfig.password(), copy.password());
     }
 }

@@ -41,9 +41,9 @@ public final class DataSourceConfigBuilder implements Builder<DataSourceConfig> 
     @Override
     public DataSourceConfigBuilder copy(DataSourceConfig dataSourceConfig) {
         return new DataSourceConfigBuilder()
-              .driverClass(dataSourceConfig.getDriverClass())
-              .jdbcUrl(dataSourceConfig.getJdbcUrl())
-              .user(dataSourceConfig.getUser())
-              .password(dataSourceConfig.getPassword());
+              .driverClass(dataSourceConfig.driverClass())
+              .jdbcUrl(dataSourceConfig.jdbcUrl())
+              .user(dataSourceConfig.user())
+              .password(dataSourceConfig.password());
     }
 }

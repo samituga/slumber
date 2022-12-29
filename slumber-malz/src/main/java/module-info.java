@@ -10,5 +10,4 @@ module io.samituga.slumber.malz {
     requires org.jooq;
     requires io.samituga.slumber.heimer;
     requires com.zaxxer.hikari;
-    requires org.slf4j;
 }
