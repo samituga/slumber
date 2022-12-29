@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface EntityRepository<E extends Entity<ID>, ID> {
 
-
+//test
     Optional<E> find(ID id);
 
     Collection<E> findAll();
