@@ -27,7 +27,7 @@ class AssertionUtilityTest {
               () -> notBlank(paramName, value));
 
         String expectedMessage = String.format(NOT_BLANK.format(), paramName);
-        assertEquals(expectedMessage, exception.getMessage());
+        assertEquals(expectedMessage + "asdsa", exception.getMessage());
     }
 
     @ParameterizedTest
