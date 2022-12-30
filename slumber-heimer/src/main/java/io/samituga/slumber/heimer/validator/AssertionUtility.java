@@ -1,6 +1,10 @@
 package io.samituga.slumber.heimer.validator;
 
 import static io.samituga.slumber.heimer.error.UtilityClassInstantiationError.MESSAGE_FORMAT;
+import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.NOT_BLANK;
+import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED;
+import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED_NOT_EMPTY;
+import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED_VALID_PORT;
 
 import io.samituga.slumber.heimer.error.UtilityClassInstantiationError;
 import io.samituga.slumber.heimer.exception.AssertionException;
@@ -31,7 +35,7 @@ public final class AssertionUtility {
      * @throws AssertionException if the value fails the validation
      */
     public static String notBlank(String name, String value) {
-        validate(() -> value == null || value.isBlank(), ValidatorMessageFormat.NOT_BLANK, name);
+        validate(() -> value == null || value.isBlank(), NOT_BLANK, name);
         return value;
     }
 
@@ -44,7 +48,7 @@ public final class AssertionUtility {
      * @throws AssertionException if the value fails the validation
      */
     public static <T> T required(String name, T value) {
-        validate(() -> value == null, ValidatorMessageFormat.REQUIRED, name);
+        validate(() -> value == null, REQUIRED, name);
         return value;
     }
 
@@ -57,7 +61,7 @@ public final class AssertionUtility {
      * @throws AssertionException if the value fails the validation
      */
     public static <T> Collection<T> requiredNotEmpty(String name, Collection<T> value) {
-        validate(() -> value == null || value.isEmpty(), ValidatorMessageFormat.REQUIRED_NOT_EMPTY,
+        validate(() -> value == null || value.isEmpty(), REQUIRED_NOT_EMPTY,
               name);
         return value;
     }
@@ -74,8 +78,22 @@ public final class AssertionUtility {
         validate(() -> value == null
                     || value.isEmpty()
                     || value.values().stream().anyMatch(Objects::isNull),
-              ValidatorMessageFormat.REQUIRED_NOT_EMPTY, name);
+              REQUIRED_NOT_EMPTY, name);
         return value;
+    }
+
+    /**
+     * Validates if port input is between 0 and 65535 inclusive.
+     *
+     * @param port the port number
+     * @return the port number if it passes the validation
+     * @throws AssertionException if the value fails the validation
+     */
+    public static int requiredValidPort(int port) {
+        var min = 0;
+        var max = 65535;
+        validate(() -> port < min || port > max, REQUIRED_VALID_PORT, port);
+        return port;
     }
 
     private static void validate(Supplier<Boolean> validation, ValidatorMessageFormat messageFormat,

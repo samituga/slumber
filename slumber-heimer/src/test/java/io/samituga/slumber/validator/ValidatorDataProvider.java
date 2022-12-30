@@ -44,4 +44,22 @@ public class ValidatorDataProvider {
         );
     }
 
+    static Stream<Arguments> valid_ports() {
+
+        return Stream.of(
+              Arguments.of(0),
+              Arguments.of(1),
+              Arguments.of(65534),
+              Arguments.of(65535)
+        );
+    }
+
+    static Stream<Arguments> invalid_ports() {
+
+        return Stream.of(
+              Arguments.of(-1),
+              Arguments.of(65536)
+        );
+    }
+
 }

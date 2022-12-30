@@ -6,7 +6,9 @@ package io.samituga.slumber.heimer.validator;
 public enum ValidatorMessageFormat {
     NOT_BLANK("%s is blank"),
     REQUIRED("%s is required"),
-    REQUIRED_NOT_EMPTY("%s is required and can't be empty");
+    REQUIRED_NOT_EMPTY("%s is required and can't be empty"),
+    REQUIRED_VALID_PORT("Port number %d is not valid"),
+    ;
 
     private final String format;
 

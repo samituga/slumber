@@ -3,9 +3,11 @@ package io.samituga.slumber.validator;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.notBlank;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotEmpty;
+import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredValidPort;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.NOT_BLANK;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED_NOT_EMPTY;
+import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED_VALID_PORT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -95,5 +97,23 @@ class AssertionUtilityTest {
         var result = requiredNotEmpty("validCollection", validCollection);
 
         assertThat(result).isEqualTo(validCollection);
+    }
+
+    @ParameterizedTest
+    @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#valid_ports")
+    void should_return_port_when_port_is_valid(int port) {
+        var result = requiredValidPort(port);
+
+        assertThat(result).isEqualTo(port);
+    }
+
+    @ParameterizedTest
+    @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#invalid_ports")
+    void should_fail_port_validation_when_port_is_not_valid(int port) {
+        String expectedMessage = String.format(REQUIRED_VALID_PORT.format(), port);
+
+        assertThatThrownBy(() -> requiredValidPort(port))
+              .isInstanceOf(AssertionException.class)
+              .hasMessage(expectedMessage);
     }
 }
