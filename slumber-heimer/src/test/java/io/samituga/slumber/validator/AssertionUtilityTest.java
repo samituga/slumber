@@ -6,8 +6,9 @@ import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotE
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.NOT_BLANK;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED_NOT_EMPTY;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 
 import io.samituga.slumber.heimer.exception.AssertionException;
 import java.util.Collection;
@@ -23,11 +24,11 @@ class AssertionUtilityTest {
     @ParameterizedTest
     @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#null_and_blank_strings")
     void should_fail_not_empty_validation_when_strings_are_invalid(String paramName, String value) {
-        var exception = assertThrows(AssertionException.class,
-              () -> notBlank(paramName, value));
-
         String expectedMessage = String.format(NOT_BLANK.format(), paramName);
-        assertEquals(expectedMessage, exception.getMessage());
+
+        assertThatThrownBy(() -> notBlank(paramName, value))
+              .isInstanceOf(AssertionException.class)
+              .hasMessage(expectedMessage);
     }
 
     @ParameterizedTest
@@ -35,17 +36,18 @@ class AssertionUtilityTest {
     void should_return_value_when_strings_are_valid(String paramName, String value) {
         String result = notBlank(paramName, value);
 
-        assertEquals(value, result);
+        assertThat(result).isEqualTo(value);
     }
 
     @Test
     void should_fail_required_validation_when_value_is_null() {
         var paramName = "paramName";
-        var exception = assertThrows(AssertionException.class,
-              () -> required(paramName, null));
 
         String expectedMessage = String.format(REQUIRED.format(), paramName);
-        assertEquals(expectedMessage, exception.getMessage());
+
+        assertThatThrownBy(() -> required(paramName, null))
+              .isInstanceOf(AssertionException.class)
+              .hasMessage(expectedMessage);
     }
 
     @Test
@@ -54,18 +56,18 @@ class AssertionUtilityTest {
         var value = "value";
         String result = required(paramName, value);
 
-        assertEquals(value, result);
+        assertThat(result).isEqualTo(value);
     }
 
     @ParameterizedTest
     @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#null_and_empty_collection")
     <T> void should_fail_required_and_not_empty_validation_when_collection_is_invalid(
           String paramName, Collection<T> value) {
-        var exception = assertThrows(AssertionException.class,
-              () -> requiredNotEmpty(paramName, value));
-
         String expectedMessage = String.format(REQUIRED_NOT_EMPTY.format(), paramName);
-        assertEquals(expectedMessage, exception.getMessage());
+
+        assertThatThrownBy(() -> requiredNotEmpty(paramName, value))
+              .isInstanceOf(AssertionException.class)
+              .hasMessage(expectedMessage);
     }
 
     @Test
@@ -73,18 +75,18 @@ class AssertionUtilityTest {
         var validCollection = List.of("value");
         var result = requiredNotEmpty("validCollection", validCollection);
 
-        assertEquals(validCollection, result);
+        assertThat(result).isEqualTo(validCollection);
     }
 
     @ParameterizedTest
     @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#null_and_empty_and_null_value_map")
     <K, V> void should_fail_required_and_not_empty_validation_when_map_is_invalid(String paramName,
                                                                                   Map<K, V> value) {
-        var exception = assertThrows(AssertionException.class,
-              () -> requiredNotEmpty(paramName, value));
-
         String expectedMessage = String.format(REQUIRED_NOT_EMPTY.format(), paramName);
-        assertEquals(expectedMessage, exception.getMessage());
+
+        assertThatThrownBy(() -> requiredNotEmpty(paramName, value))
+              .isInstanceOf(AssertionException.class)
+              .hasMessage(expectedMessage);
     }
 
     @Test
@@ -92,6 +94,6 @@ class AssertionUtilityTest {
         var validCollection = Map.of("Key", "value");
         var result = requiredNotEmpty("validCollection", validCollection);
 
-        assertEquals(validCollection, result);
+        assertThat(result).isEqualTo(validCollection);
     }
 }
