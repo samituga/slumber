@@ -8,18 +8,14 @@ import java.util.Optional;
 /**
  * The server configuration data.
  */
-public sealed interface ServerConfig permits ServerConfigImpl {
-
-    static ServerConfigBuilder builder() {
-        return new ServerConfigBuilder();
-    }
+public interface ServerConfig {
 
     /**
      * Gets the server port.
      *
      * @return the server port
      */
-    int port();
+    Optional<Integer> port();
 
     /**
      * Gets the web server filters.
