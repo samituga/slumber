@@ -7,11 +7,11 @@ import io.samituga.bard.configuration.ServerConfig;
  * {@link io.samituga.bard.application.SlumberApplication#init(ServerConfig) init}
  * when the server is already initialized.
  */
-public class ServerAlreadyInitializedException extends RuntimeException {
+public class ServerInitException extends RuntimeException {
 
-    private static final String ERROR_MESSAGE = "The server is already in process";
+    private static final String ERROR_MESSAGE = "The server is already online";
 
-    public ServerAlreadyInitializedException() {
+    public ServerInitException() {
         super(ERROR_MESSAGE);
     }
 }
