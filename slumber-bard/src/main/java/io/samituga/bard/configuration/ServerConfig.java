@@ -15,12 +15,12 @@ public interface ServerConfig {
      *
      * @return the server port
      */
-    Optional<Integer> port();
+    int port();
 
     /**
      * Gets the web server filters.
      *
      * @return the filters
      */
-    Optional<Collection<Filter>> filters();
+    Collection<Filter> filters();
 }

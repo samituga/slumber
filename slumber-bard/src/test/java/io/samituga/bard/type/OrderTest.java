@@ -1,4 +1,4 @@
-package io.samituga.bard.filter;
+package io.samituga.bard.type;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

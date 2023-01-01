@@ -1,19 +1,24 @@
 package io.samituga.bard.filter;
 
 
+import io.samituga.bard.type.Order;
+import io.samituga.bard.type.Path;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 
+import java.util.Optional;
+import java.util.function.BiConsumer;
+
 /**
- * Represents the web server filter.
+ * Interface representing a web server filter.
  */
 public interface Filter {
 
     /**
      * <p>
      * Order of execution of the filter, the lower the order it will execute first the
-     * {@link #doBefore(ServletRequest, ServletResponse) doBefore} and last the
-     * {@link #doAfter(ServletRequest, ServletResponse) doAfter}, the opposite for the higher order.
+     * {@link #doBefore() doBefore} and last the
+     * {@link #doAfter() doAfter}, the opposite for the higher order.
      * </p>
      * <p>
      * There can only be one filter with {@link Precedence#FIRST first precedence}
@@ -25,18 +30,25 @@ public interface Filter {
     Order order();
 
     /**
+     * The ant path matcher for the requests where this filter will operate.
+     *
+     * @return the path
+     */
+    Path path();
+
+    /**
      * Operation to be executed before the request reaches the handler.
      *
-     * @param request  the request
-     * @param response the response
+     * @return A consumer that will do the filtering before the request,
+     *       {@link Optional#empty() empty} if there is nothing to do before
      */
-    void doBefore(ServletRequest request, ServletResponse response);
+    Optional<BiConsumer<ServletRequest, ServletResponse>> doBefore();
 
     /**
      * Operation to be executed after the request leaves the handler.
      *
-     * @param request  the request
-     * @param response the response
+     * @return A consumer that will do the filtering after the request,
+     *       {@link Optional#empty() empty} if there is nothing to do after
      */
-    void doAfter(ServletRequest request, ServletResponse response);
+    Optional<BiConsumer<ServletRequest, ServletResponse>> doAfter();
 }
