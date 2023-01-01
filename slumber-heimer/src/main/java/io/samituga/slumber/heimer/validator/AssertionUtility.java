@@ -34,7 +34,7 @@ public final class AssertionUtility {
      * @return the value if passes validation
      * @throws AssertionException if the value fails the validation
      */
-    public static String notBlank(String name, String value) {
+    public static String requiredNotBlank(String name, String value) {
         validate(() -> value == null || value.isBlank(), NOT_BLANK, name);
         return value;
     }

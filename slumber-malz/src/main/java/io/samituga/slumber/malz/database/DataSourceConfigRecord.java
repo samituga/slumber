@@ -2,7 +2,7 @@ package io.samituga.slumber.malz.database;
 
 import io.samituga.slumber.malz.driver.Driver;
 
-import static io.samituga.slumber.heimer.validator.AssertionUtility.notBlank;
+import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotBlank;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 
 /**
@@ -13,8 +13,8 @@ record DataSourceConfigRecord(Driver driverClass, String jdbcUrl, String user,
 
     DataSourceConfigRecord(Driver driverClass, String jdbcUrl, String user, String password) {
         this.driverClass = required("driverClass", driverClass);
-        this.jdbcUrl = notBlank("jdbcUrl", jdbcUrl);
-        this.user = notBlank("user", user);
-        this.password = notBlank("password", password);
+        this.jdbcUrl = requiredNotBlank("jdbcUrl", jdbcUrl);
+        this.user = requiredNotBlank("user", user);
+        this.password = requiredNotBlank("password", password);
     }
 }

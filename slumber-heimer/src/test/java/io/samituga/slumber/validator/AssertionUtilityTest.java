@@ -1,6 +1,6 @@
 package io.samituga.slumber.validator;
 
-import static io.samituga.slumber.heimer.validator.AssertionUtility.notBlank;
+import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotBlank;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotEmpty;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredValidPort;
@@ -28,7 +28,7 @@ class AssertionUtilityTest {
     void should_fail_not_empty_validation_when_strings_are_invalid(String paramName, String value) {
         String expectedMessage = String.format(NOT_BLANK.format(), paramName);
 
-        assertThatThrownBy(() -> notBlank(paramName, value))
+        assertThatThrownBy(() -> requiredNotBlank(paramName, value))
               .isInstanceOf(AssertionException.class)
               .hasMessage(expectedMessage);
     }
@@ -36,7 +36,7 @@ class AssertionUtilityTest {
     @ParameterizedTest
     @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#valid_strings")
     void should_return_value_when_strings_are_valid(String paramName, String value) {
-        String result = notBlank(paramName, value);
+        String result = requiredNotBlank(paramName, value);
 
         assertThat(result).isEqualTo(value);
     }
