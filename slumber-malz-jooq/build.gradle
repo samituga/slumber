@@ -1,0 +1,11 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    api project(':slumber-malz')
+
+    api "org.jooq:jooq:${jooqVersion}"
+    api "com.zaxxer:HikariCP:${hikariCPVersion}"
+}
+

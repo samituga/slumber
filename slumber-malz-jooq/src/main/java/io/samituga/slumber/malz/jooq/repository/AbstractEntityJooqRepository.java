@@ -1,11 +1,12 @@
-package io.samituga.slumber.malz.repository;
+package io.samituga.slumber.malz.jooq.repository;
 
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotEmpty;
 import static java.util.stream.Collectors.toMap;
 
 import io.samituga.slumber.malz.model.Entity;
-import io.samituga.slumber.malz.repository.operation.RepositoryOperation;
+import io.samituga.slumber.malz.repository.EntityRepository;
+import io.samituga.slumber.malz.jooq.repository.operation.JooqRepositoryOperation;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -14,13 +15,13 @@ import org.jooq.Record;
 import org.jooq.Table;
 import org.jooq.TableField;
 
-public abstract class AbstractEntityRepository<ID, E extends Entity<ID>, R extends Record> extends
-      RepositoryOperation<R> implements EntityRepository<E, ID> {
+public abstract class AbstractEntityJooqRepository<ID, E extends Entity<ID>, R extends Record> extends
+      JooqRepositoryOperation<R> implements EntityRepository<E, ID> {
 
     private final TableField<R, ID> idTableField;
 
-    public AbstractEntityRepository(ConnectionProvider connectionProvider, Table<R> table,
-                                    TableField<R, ID> idTableField) {
+    public AbstractEntityJooqRepository(ConnectionProvider connectionProvider, Table<R> table,
+                                        TableField<R, ID> idTableField) {
         super(connectionProvider, table);
         this.idTableField = required("idTableField", idTableField);
     }
@@ -55,7 +56,7 @@ public abstract class AbstractEntityRepository<ID, E extends Entity<ID>, R exten
     public boolean update(E entity) {
         required("entity", entity);
 
-        return updateWhere(idTableField.eq(entity.id), toRecord(entity));
+        return updateWhere(idTableField.eq(entity.id()), toRecord(entity));
     }
 
     @Override
@@ -63,7 +64,7 @@ public abstract class AbstractEntityRepository<ID, E extends Entity<ID>, R exten
         requiredNotEmpty("entities", entities);
 
         return updateAllWhere(
-              entities.stream().collect(toMap(this::toRecord, e -> idTableField.eq(e.id))));
+              entities.stream().collect(toMap(this::toRecord, e -> idTableField.eq(e.id()))));
     }
 
     @Override
@@ -76,14 +77,14 @@ public abstract class AbstractEntityRepository<ID, E extends Entity<ID>, R exten
     public boolean delete(E entity) {
         required("entity", entity);
 
-        return delete(entity.id);
+        return delete(entity.id());
     }
 
     @Override
     public boolean deleteAll(Collection<E> entities) {
         requiredNotEmpty("entities", entities);
 
-        final var ids = entities.stream().map(e -> e.id).collect(Collectors.toSet());
+        final var ids = entities.stream().map(Entity::id).collect(Collectors.toSet());
         return deleteAllWhere(idTableField.in(ids), ids.size());
     }
 

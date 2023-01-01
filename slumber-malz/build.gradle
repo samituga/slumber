@@ -4,8 +4,5 @@ plugins {
 
 dependencies {
     api project(':slumber-heimer')
-
-    api "org.jooq:jooq:${jooqVersion}"
-    api "com.zaxxer:HikariCP:${hikariCPVersion}"
 }
 
