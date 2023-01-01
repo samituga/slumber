@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     api project(':slumber-heimer')
+    api project(':slumber-ivern')
 
     compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 }

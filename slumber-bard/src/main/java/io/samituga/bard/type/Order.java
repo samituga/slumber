@@ -7,7 +7,6 @@ public class Order extends Type<Integer> {
 
     private static final String ERROR_MESSAGE_INVALID_ORDER = "To set the max or min precedence use the io.samituga.bard.filter.Precedence initializer";
 
-
     private Order(Integer order) {
         super(order);
     }
