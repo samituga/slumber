@@ -6,5 +6,5 @@ module slumber.bard {
     exports io.samituga.bard.type;
 
     requires jakarta.servlet;
-    requires io.samituga.slumber.heimer;
+    requires slumber.heimer;
 }

@@ -4,9 +4,9 @@ import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotEmpty;
 import static java.util.stream.Collectors.toMap;
 
+import io.samituga.slumber.malz.jooq.repository.operation.JooqRepositoryOperation;
 import io.samituga.slumber.malz.model.Entity;
 import io.samituga.slumber.malz.repository.EntityRepository;
-import io.samituga.slumber.malz.jooq.repository.operation.JooqRepositoryOperation;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,8 +15,8 @@ import org.jooq.Record;
 import org.jooq.Table;
 import org.jooq.TableField;
 
-public abstract class AbstractEntityJooqRepository<ID, E extends Entity<ID>, R extends Record> extends
-      JooqRepositoryOperation<R> implements EntityRepository<E, ID> {
+public abstract class AbstractEntityJooqRepository<ID, E extends Entity<ID>, R extends Record>
+      extends JooqRepositoryOperation<R> implements EntityRepository<E, ID> {
 
     private final TableField<R, ID> idTableField;
 

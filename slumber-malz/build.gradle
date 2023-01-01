@@ -4,5 +4,6 @@ plugins {
 
 dependencies {
     api project(':slumber-heimer')
+    api project(':slumber-ivern')
 }
 
