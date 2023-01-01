@@ -1,6 +1,7 @@
-package io.samituga.slumber.malz.database;
+package io.samituga.slumber.malz.jooq.config;
 
 import io.samituga.slumber.heimer.builder.Builder;
+import io.samituga.slumber.malz.database.DataSourceConfig;
 import io.samituga.slumber.malz.driver.Driver;
 
 public final class DataSourceConfigBuilder implements Builder<DataSourceConfig> {
@@ -11,7 +12,11 @@ public final class DataSourceConfigBuilder implements Builder<DataSourceConfig> 
     private String password;
 
 
-    DataSourceConfigBuilder() {}
+    private DataSourceConfigBuilder() {}
+
+    public static DataSourceConfigBuilder builder() {
+        return new DataSourceConfigBuilder();
+    }
 
     public DataSourceConfigBuilder driverClass(Driver driverClass) {
         this.driverClass = driverClass;
@@ -35,7 +40,7 @@ public final class DataSourceConfigBuilder implements Builder<DataSourceConfig> 
 
     @Override
     public DataSourceConfig build() {
-        return new DataSourceConfigRecord(driverClass, jdbcUrl, user, password);
+        return new DataSourceConfigImpl(driverClass, jdbcUrl, user, password);
     }
 
     @Override

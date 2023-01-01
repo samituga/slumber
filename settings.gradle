@@ -3,4 +3,6 @@ include 'slumber-heimer'
 include 'slumber-malz'
 include 'slumber-demo'
 include 'slumber-bard'
+include 'slumber-malz-jooq'
+include 'slumber-ivern'
 

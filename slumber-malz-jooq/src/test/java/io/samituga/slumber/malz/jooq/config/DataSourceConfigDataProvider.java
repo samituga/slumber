@@ -1,4 +1,4 @@
-package io.samituga.slumber.config.database;
+package io.samituga.slumber.malz.jooq.config;
 
 
 import org.junit.jupiter.params.provider.Arguments;

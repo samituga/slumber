@@ -1,8 +1,9 @@
-package io.samituga.slumber.malz.factory;
+package io.samituga.slumber.malz.jooq.factory;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import io.samituga.slumber.malz.database.DataSourceConfig;
+import io.samituga.slumber.malz.factory.DataSourceFactory;
 import javax.sql.DataSource;
 
 public class HikariDataSourceFactory implements DataSourceFactory {

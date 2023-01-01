@@ -1,11 +1,10 @@
-package io.samituga.slumber.config.database;
+package io.samituga.slumber.malz.jooq.config;
 
 import static io.samituga.slumber.malz.driver.Driver.POSTGRES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.samituga.slumber.heimer.exception.AssertionException;
-import io.samituga.slumber.malz.database.DataSourceConfig;
 import io.samituga.slumber.malz.driver.Driver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,7 +20,7 @@ class DataSourceConfigTest {
         var user = "user";
         var password = "password";
 
-        var dbConfig = DataSourceConfig.builder()
+        var dbConfig = DataSourceConfigBuilder.builder()
               .driverClass(driverClass)
               .jdbcUrl(jdbcUrl)
               .user(user)
@@ -35,14 +34,14 @@ class DataSourceConfigTest {
     }
 
     @ParameterizedTest
-    @MethodSource("io.samituga.slumber.config.database.DataSourceConfigDataProvider#constructor_parameters_with_invalid_arguments")
+    @MethodSource("io.samituga.slumber.malz.jooq.config.DataSourceConfigDataProvider#constructor_parameters_with_invalid_arguments")
     void should_fail_validation_when_mandatory_fields_are_invalid(Driver driverClass,
                                                                   String jdbcUrl,
                                                                   String user,
                                                                   String password) {
 
         assertThatThrownBy(
-              () -> DataSourceConfig.builder()
+              () -> DataSourceConfigBuilder.builder()
                     .driverClass(driverClass)
                     .jdbcUrl(jdbcUrl)
                     .user(user)
@@ -58,15 +57,14 @@ class DataSourceConfigTest {
         var user = "user";
         var password = "password";
 
-        var dbConfig = DataSourceConfig.builder()
+        var dbConfig = DataSourceConfigBuilder.builder()
               .driverClass(driverClass)
               .jdbcUrl(jdbcUrl)
               .user(user)
               .password(password)
               .build();
 
-        var copy = DataSourceConfig.builder().copy(dbConfig).build();
-
+        var copy = DataSourceConfigBuilder.builder().copy(dbConfig).build();
 
         assertThat(copy).isEqualTo(dbConfig);
     }

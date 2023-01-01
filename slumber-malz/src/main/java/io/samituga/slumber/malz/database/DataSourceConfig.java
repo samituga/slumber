@@ -2,11 +2,7 @@ package io.samituga.slumber.malz.database;
 
 import io.samituga.slumber.malz.driver.Driver;
 
-public sealed interface DataSourceConfig permits DataSourceConfigRecord {
-
-    static DataSourceConfigBuilder builder() {
-        return new DataSourceConfigBuilder();
-    }
+public interface DataSourceConfig {
 
     /**
      * Gets the database driver class eg: org.postgresql.Driver.

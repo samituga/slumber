@@ -1,4 +1,4 @@
-package io.samituga.slumber.malz.repository;
+package io.samituga.slumber.malz.jooq.repository;
 
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 
@@ -9,11 +9,11 @@ import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConfiguration;
 
-public abstract class Repository {
+public abstract class JooqRepository {
 
     protected final DSLContext dslContext;
 
-    public Repository(ConnectionProvider connectionProvider) {
+    public JooqRepository(ConnectionProvider connectionProvider) {
         required("connectionProvider", connectionProvider);
         this.dslContext = DSL.using(configuration(connectionProvider));
     }

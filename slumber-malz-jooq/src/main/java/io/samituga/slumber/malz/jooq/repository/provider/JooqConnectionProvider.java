@@ -1,7 +1,8 @@
-package io.samituga.slumber.malz.repository.provider;
+package io.samituga.slumber.malz.jooq.repository.provider;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import io.samituga.slumber.malz.repository.provider.DataSourceProvider;
 import org.jooq.ConnectionProvider;
 import org.jooq.exception.DataAccessException;
 

@@ -1,10 +1,10 @@
-package io.samituga.slumber.malz.repository.operation;
+package io.samituga.slumber.malz.jooq.repository.operation;
 
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotEmpty;
 
 import io.samituga.slumber.malz.error.SQLQueryError;
-import io.samituga.slumber.malz.repository.Repository;
+import io.samituga.slumber.malz.jooq.repository.JooqRepository;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -16,11 +16,11 @@ import org.jooq.Table;
 import org.jooq.UpdateQuery;
 import org.jooq.exception.TooManyRowsException;
 
-public abstract class RepositoryOperation<R extends Record> extends Repository {
+public abstract class JooqRepositoryOperation<R extends Record> extends JooqRepository {
 
     protected final Table<R> table;
 
-    public RepositoryOperation(ConnectionProvider connectionProvider, Table<R> table) {
+    public JooqRepositoryOperation(ConnectionProvider connectionProvider, Table<R> table) {
         super(connectionProvider);
         this.table = required("table", table);
     }
@@ -31,7 +31,7 @@ public abstract class RepositoryOperation<R extends Record> extends Repository {
         try {
             return dslContext.selectFrom(table).where(condition).fetchOptional();
         } catch (TooManyRowsException e) {
-            throw new SQLQueryError(condition);
+            throw new SQLQueryError(condition.toString());
         }
     }
 
@@ -90,7 +90,7 @@ public abstract class RepositoryOperation<R extends Record> extends Repository {
 
     private boolean shouldAffectSpecifiedRowsNum(int expected, int result, Condition condition) {
         if (result != expected) {
-            throw new SQLQueryError(condition);
+            throw new SQLQueryError(condition.toString());
         }
         return result > 0;
     }
