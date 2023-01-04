@@ -1,11 +1,10 @@
 package io.samituga.bard.filter;
 
 
-import io.samituga.bard.type.Order;
-import io.samituga.bard.type.Path;
+import io.samituga.bard.endpoint.type.Path;
+import io.samituga.bard.filter.type.Order;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
