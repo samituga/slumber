@@ -1,0 +1,9 @@
+plugins {
+    id 'java-library'
+}
+
+
+dependencies {
+    api project(':slumber-heimer')
+    api project(':slumber-bard')
+}

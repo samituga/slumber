@@ -1,6 +1,8 @@
 package io.samituga.bard.configuration;
 
+import io.samituga.bard.endpoint.Route;
 import io.samituga.bard.filter.Filter;
+
 import java.util.Collection;
 
 /**
@@ -21,4 +23,11 @@ public interface ServerConfig {
      * @return the filters
      */
     Collection<Filter> filters();
+
+    /**
+     * Gets the routes to be registered.
+     *
+     * @return the routes
+     */
+    Collection<Route<?>> routes();
 }

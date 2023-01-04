@@ -1,8 +1,8 @@
 rootProject.name = 'slumber'
 include 'slumber-heimer'
 include 'slumber-malz'
+include 'slumber-malz-jooq'
 include 'slumber-demo'
 include 'slumber-bard'
-include 'slumber-malz-jooq'
+include 'slumber-bard-javalin'
 include 'slumber-ivern'
-
