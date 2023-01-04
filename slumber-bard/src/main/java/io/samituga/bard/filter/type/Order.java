@@ -1,4 +1,6 @@
-package io.samituga.bard.type;
+package io.samituga.bard.filter.type;
+
+import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 
 import io.samituga.bard.filter.Precedence;
 import io.samituga.slumber.heimer.type.Type;
@@ -9,7 +11,7 @@ public class Order extends Type<Integer> {
 
 
     private Order(Integer order) {
-        super(order);
+        super(required("order", order));
     }
 
     public static Order of(int order) {

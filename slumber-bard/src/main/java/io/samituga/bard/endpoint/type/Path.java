@@ -1,8 +1,8 @@
-package io.samituga.bard.type;
-
-import io.samituga.slumber.heimer.type.Type;
+package io.samituga.bard.endpoint.type;
 
 import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotBlank;
+
+import io.samituga.slumber.heimer.type.Type;
 
 public class Path extends Type<String> {
 
