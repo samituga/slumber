@@ -3,6 +3,8 @@ package io.samituga.bard.endpoint;
 import io.samituga.bard.endpoint.type.Path;
 import io.samituga.bard.endpoint.type.PathParamName;
 import io.samituga.bard.endpoint.type.QueryParamName;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Function;
@@ -51,5 +53,5 @@ public interface Route<T> {
      *
      * @return the response.
      */
-    Function<Request, Response<T>> handler();
+    Function<HttpServletRequest, Response<T>> handler(); // TODO: 04/01/2023 Can HttpServletRequest be used here?
 }
