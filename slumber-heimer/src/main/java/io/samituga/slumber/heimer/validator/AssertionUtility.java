@@ -96,12 +96,12 @@ public final class AssertionUtility {
         return port;
     }
 
-    private static void validate(Supplier<Boolean> validation, ValidatorMessageFormat messageFormat,
+    public static void validate(Supplier<Boolean> validation, ValidatorMessageFormat messageFormat,
                                  Object... params) {
         validate(validation, messageFormat.format(), params);
     }
 
-    private static void validate(Supplier<Boolean> validation, String format, Object... params) {
+    public static void validate(Supplier<Boolean> validation, String format, Object... params) {
         if (validation.get()) {
             throw new AssertionException(String.format(format, params));
         }

@@ -1,10 +1,13 @@
 plugins {
     id 'java-library'
+    id 'java-test-fixtures'
 }
 
 
 dependencies {
     api project(':slumber-heimer')
 
-    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+//    testFixtures("jakarta.servlet:jakarta.servlet-api:6.0.0")
+
+    api "jakarta.servlet:jakarta.servlet-api:${jakartaServletApiVersion}"
 }
