@@ -28,6 +28,7 @@ public class FilterTestData {
         private Optional<BiConsumer<ServletRequest, ServletResponse>> doBefore = Optional.empty();
         private Optional<BiConsumer<ServletRequest, ServletResponse>> doAfter = Optional.empty();
 
+        private FilterBuilder() {}
 
         public FilterBuilder order(Order order) {
             this.order = order;

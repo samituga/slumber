@@ -26,6 +26,7 @@ public class ServerConfigTestData {
         private int port;
         private Collection<Filter> filters = new ArrayList<>();
 
+        private ServerConfigBuilder() {}
 
         public ServerConfigBuilder port(int port) {
             this.port = port;
