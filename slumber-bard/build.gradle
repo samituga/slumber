@@ -7,7 +7,5 @@ plugins {
 dependencies {
     api project(':slumber-heimer')
 
-//    testFixtures("jakarta.servlet:jakarta.servlet-api:6.0.0")
-
     api "jakarta.servlet:jakarta.servlet-api:${jakartaServletApiVersion}"
 }
