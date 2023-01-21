@@ -18,10 +18,10 @@ public interface Response<T> {
 
 
     /**
-     * The response object.
+     * The response body.
      *
-     * @return the response object
+     * @return the response body
      */
-    Optional<T> response();
+    Optional<T> responseBody();
 
 }
