@@ -2,6 +2,7 @@ package io.samituga.slumber.bard.javalin;
 
 import io.javalin.Javalin;
 import io.samituga.bard.configuration.ServerConfig;
+import io.samituga.bard.endpoint.Route;
 import io.samituga.bard.filter.Filter;
 import java.util.Collection;
 
@@ -13,8 +14,7 @@ public class JavalinConfigurator {
     }
 
 
-    private void addFilters(Javalin javalin, Collection<Filter> filters) {
-
+    public static void addFilters(Javalin javalin, Collection<Filter> filters) {
         filters.stream()
               .sorted()
               .forEach(filter -> {
@@ -32,4 +32,9 @@ public class JavalinConfigurator {
               });
     }
 
+    public static void addRoutes(Javalin javalin, Collection<Route<?>> routes) {
+        for (Route<?> route : routes) {
+
+        }
+    }
 }

@@ -9,7 +9,6 @@ package io.samituga.bard.exception;
 public class ServerShutdownException extends RuntimeException {
     private static final String ERROR_MESSAGE = "The server is not online";
 
-
     public ServerShutdownException() {
         super(ERROR_MESSAGE);
     }

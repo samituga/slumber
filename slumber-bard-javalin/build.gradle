@@ -10,4 +10,6 @@ dependencies {
     implementation "io.javalin:javalin:${javalinVersion}"
 
     compileOnly "jakarta.servlet:jakarta.servlet-api:${jakartaServletApiVersion}"
+
+    testImplementation(testFixtures(project(':slumber-bard')))
 }
