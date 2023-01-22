@@ -1,6 +1,7 @@
 package io.samituga.bard.fixture;
 
 import io.samituga.bard.configuration.ServerConfig;
+import io.samituga.bard.endpoint.Route;
 import io.samituga.bard.filter.Filter;
 import io.samituga.bard.filter.Precedence;
 import io.samituga.slumber.heimer.validator.AssertionUtility;
@@ -25,6 +26,7 @@ public class ServerConfigTestData {
 
         private int port;
         private Collection<Filter> filters = new ArrayList<>();
+        private Collection<Route<?>> routes = new ArrayList<>();
 
         private ServerConfigBuilder() {}
 
@@ -48,6 +50,21 @@ public class ServerConfigTestData {
             return this;
         }
 
+        public ServerConfigBuilder routes(Route<?> route) {
+            this.routes.add(route);
+            return this;
+        }
+
+        public ServerConfigBuilder routes(Route<?>... routes) {
+            this.routes.addAll(List.of(routes));
+            return this;
+        }
+
+        public ServerConfigBuilder routes(Collection<Route<?>> routes) {
+            this.routes = routes;
+            return this;
+        }
+
         public ServerConfig build() {
             return build(false);
         }
@@ -65,6 +82,11 @@ public class ServerConfigTestData {
                 @Override
                 public Collection<Filter> filters() {
                     return filters;
+                }
+
+                @Override
+                public Collection<Route<?>> routes() {
+                    return routes;
                 }
             };
         }

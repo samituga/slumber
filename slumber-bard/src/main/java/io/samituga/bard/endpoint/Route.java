@@ -1,12 +1,7 @@
 package io.samituga.bard.endpoint;
 
 import io.samituga.bard.endpoint.type.Path;
-import io.samituga.bard.endpoint.type.PathParamName;
-import io.samituga.bard.endpoint.type.QueryParamName;
-import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.function.Function;
 
 /**
@@ -29,22 +24,6 @@ public interface Route<T> {
      * @return the path of the HTTP request
      */
     Path path();
-
-    /**
-     * Provides information about the path param names that this route will use.
-     * <p> Should return an {@link Collections#emptyList() empty list} if it is not applicable.
-     *
-     * @return the path param names.
-     */
-    Collection<PathParamName> pathParamNames();
-
-    /**
-     * Provides information about the query param names that this route will use.
-     * <p> Should return an {@link Collections#emptyList() empty list} if it is not applicable.
-     *
-     * @return the query param names.
-     */
-    Collection<QueryParamName> queryParamNames();
 
 
     /**
