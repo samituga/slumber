@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id 'groovy'
 }
 
 
@@ -12,4 +13,6 @@ dependencies {
     compileOnly "jakarta.servlet:jakarta.servlet-api:${jakartaServletApiVersion}"
 
     testImplementation(testFixtures(project(':slumber-bard')))
+    testImplementation("org.spockframework:spock-core:${spockVersion}")
+    testImplementation("org.codehaus.groovy:groovy-all:${groovyVersion}")
 }
