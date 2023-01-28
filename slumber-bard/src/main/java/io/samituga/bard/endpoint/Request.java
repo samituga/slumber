@@ -1,8 +1,8 @@
 package io.samituga.bard.endpoint;
 
-import io.samituga.bard.endpoint.type.Headers;
 import io.samituga.bard.endpoint.type.PathParams;
 import io.samituga.bard.endpoint.type.QueryParams;
+import io.samituga.slumber.ivern.http.type.Headers;
 
 /**
  * Represents the information about an HTTP request.
