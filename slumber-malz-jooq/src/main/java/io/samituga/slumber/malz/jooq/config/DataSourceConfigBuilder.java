@@ -1,6 +1,6 @@
 package io.samituga.slumber.malz.jooq.config;
 
-import io.samituga.slumber.heimer.builder.Builder;
+import io.samituga.slumber.ivern.builder.Builder;
 import io.samituga.slumber.malz.database.DataSourceConfig;
 import io.samituga.slumber.malz.driver.Driver;
 

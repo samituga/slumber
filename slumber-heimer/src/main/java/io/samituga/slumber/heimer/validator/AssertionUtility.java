@@ -8,7 +8,7 @@ import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIR
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED_VALID_PORT;
 
 import io.samituga.slumber.heimer.error.UtilityClassInstantiationError;
-import io.samituga.slumber.heimer.exception.AssertionException;
+import io.samituga.slumber.heimer.validator.exception.AssertionException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;

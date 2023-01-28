@@ -1,4 +1,4 @@
-package io.samituga.slumber.heimer.exception;
+package io.samituga.slumber.heimer.validator.exception;
 
 /**
  * Unchecked exception thrown when there is a given input is not valid.

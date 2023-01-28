@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     api project(':slumber-heimer')
+    api project(':slumber-ivern')
 
     api "jakarta.servlet:jakarta.servlet-api:${jakartaServletApiVersion}"
 }

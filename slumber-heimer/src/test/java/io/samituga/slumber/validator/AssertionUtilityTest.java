@@ -13,7 +13,7 @@ import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIR
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import io.samituga.slumber.heimer.exception.AssertionException;
+import io.samituga.slumber.heimer.validator.exception.AssertionException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
