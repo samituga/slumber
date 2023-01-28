@@ -13,7 +13,7 @@ public class Headers extends Type<Map<String, String>> {
         super(requiredNotEmpty("headers", headers));
     }
 
-    public Headers of(String name, String value) {
+    public static Headers of(String name, String value) {
         return new Headers(Map.of(name, value));
     }
 
@@ -25,7 +25,7 @@ public class Headers extends Type<Map<String, String>> {
         return new Headers(Map.ofEntries(headers));
     }
 
-    public Headers of(String... headers) {
+    public static Headers of(String... headers) {
         requiredArgsPair("headers", headers);
         var headersMap = new HashMap<String, String>();
         for (int i = 0; i < headers.length; i = i + 2) {
