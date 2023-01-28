@@ -1,7 +1,7 @@
 package io.samituga.slumber.ivern.http.type;
 
+import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredArgsPair;
-import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotEmpty;
 
 import io.samituga.slumber.ivern.type.Type;
 import java.util.Collections;
@@ -11,7 +11,16 @@ import java.util.Map;
 public class Headers extends Type<Map<String, String>> {
 
     private Headers(Map<String, String> headers) {
-        super(requiredNotEmpty("headers", headers));
+        super(required("headers", headers));
+    }
+
+
+    public int size() {
+        return value().size();
+    }
+
+    public boolean isEmpty() {
+        return size() == 0;
     }
 
     public static Headers of(String name, String value) {
@@ -33,5 +42,9 @@ public class Headers extends Type<Map<String, String>> {
             headersMap.put(headers[i], headers[i + 1]);
         }
         return new Headers(Collections.unmodifiableMap(headersMap));
+    }
+
+    public static Headers empty() {
+        return new Headers(Collections.emptyMap());
     }
 }
