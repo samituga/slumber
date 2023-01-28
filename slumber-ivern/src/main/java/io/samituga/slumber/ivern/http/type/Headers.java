@@ -4,6 +4,7 @@ import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredArgs
 import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotEmpty;
 
 import io.samituga.slumber.ivern.type.Type;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,8 +30,8 @@ public class Headers extends Type<Map<String, String>> {
         requiredArgsPair("headers", headers);
         var headersMap = new HashMap<String, String>();
         for (int i = 0; i < headers.length; i = i + 2) {
-            headersMap.put(headers[i], headers[i++]);
+            headersMap.put(headers[i], headers[i + 1]);
         }
-        return new Headers(headersMap);
+        return new Headers(Collections.unmodifiableMap(headersMap));
     }
 }
