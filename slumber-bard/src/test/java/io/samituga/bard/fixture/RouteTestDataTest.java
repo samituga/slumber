@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import io.samituga.bard.endpoint.Response;
 import io.samituga.bard.endpoint.Verb;
 import io.samituga.bard.endpoint.type.Path;
-import io.samituga.slumber.heimer.exception.AssertionException;
+import io.samituga.slumber.heimer.validator.exception.AssertionException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import java.util.function.Function;
