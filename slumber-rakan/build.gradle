@@ -5,4 +5,5 @@ dependencies {
     api project(':slumber-heimer')
     api project(':slumber-ivern')
 
+    api "com.fasterxml.jackson.core:jackson-databind:2.13.4.2"
 }

@@ -8,7 +8,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.concurrent.CompletableFuture;
 
 public final class HttpClientSupport { // TODO: 2023-01-28 Naming
 
@@ -22,20 +21,20 @@ public final class HttpClientSupport { // TODO: 2023-01-28 Naming
               .build();
     }
 
-    public static HttpResponse<String> get(HttpClient client,
+    public static HttpExecutor<String> get(HttpClient client,
                                            URI uri)
           throws IOException, InterruptedException {
         return get(client, uri, Headers.empty());
     }
 
-    public static HttpResponse<String> get(HttpClient client,
+    public static HttpExecutor<String> get(HttpClient client,
                                            URI uri,
                                            Headers headers)
           throws IOException, InterruptedException {
         return get(client, uri, headers, DEFAULT_TIMEOUT);
     }
 
-    public static HttpResponse<String> get(HttpClient client,
+    public static HttpExecutor<String> get(HttpClient client,
                                            URI uri,
                                            Headers headers,
                                            Duration timeout)
@@ -43,7 +42,7 @@ public final class HttpClientSupport { // TODO: 2023-01-28 Naming
         return get(client, uri, headers, timeout, HttpResponse.BodyHandlers.ofString());
     }
 
-    public static <T> HttpResponse<T> get(HttpClient client,
+    public static <T> HttpExecutor<T> get(HttpClient client,
                                           URI uri,
                                           Headers headers,
                                           Duration timeout,
@@ -59,24 +58,45 @@ public final class HttpClientSupport { // TODO: 2023-01-28 Naming
             request.headers(HeadersResolver.from(headers));
         }
 
-        return execute(client, request.build(), responseBodyHandler);
+        return HttpExecutor.executor(client, request.build(), responseBodyHandler);
     }
 
-    private static <T> HttpResponse<T> execute(HttpClient client,
-                                               HttpRequest request,
-                                               HttpResponse.BodyHandler<T> responseBodyHandler)
+    public static <T> HttpExecutor<T> post(HttpClient client,
+                                           URI uri,
+                                           byte[] body,
+                                           HttpResponse.BodyHandler<T> responseBodyHandler)
           throws IOException, InterruptedException {
 
-        // TODO: 2023-01-28 Logging
-        // TODO: 2023-01-28 Handle error?
-        return client.send(request, responseBodyHandler);
+        return post(client, uri, body, responseBodyHandler, Headers.empty(), DEFAULT_TIMEOUT);
     }
 
-    private static <T> CompletableFuture<HttpResponse<T>> executeAsync(HttpClient client,
-                                                                       HttpResponse.BodyHandler<T> responseBodyHandler,
-                                                                       HttpRequest request) {
-        // TODO: 2023-01-28 Logging
-        // TODO: 2023-01-28 Handle error?
-        return client.sendAsync(request, responseBodyHandler);
+    public static <T> HttpExecutor<T> post(HttpClient client,
+                                           URI uri,
+                                           byte[] body,
+                                           HttpResponse.BodyHandler<T> responseBodyHandler,
+                                           Headers headers)
+          throws IOException, InterruptedException {
+
+        return post(client, uri, body, responseBodyHandler, headers, DEFAULT_TIMEOUT);
+    }
+
+    public static <T> HttpExecutor<T> post(HttpClient client,
+                                           URI uri,
+                                           byte[] body,
+                                           HttpResponse.BodyHandler<T> responseBodyHandler,
+                                           Headers headers,
+                                           Duration timeout)
+          throws IOException, InterruptedException {
+
+        var request = HttpRequest.newBuilder()
+              .POST(HttpRequest.BodyPublishers.ofByteArray(body))
+              .uri(uri)
+              .timeout(timeout);
+
+        if (!headers.isEmpty()) {
+            request.headers(HeadersResolver.from(headers));
+        }
+
+        return HttpExecutor.executor(client, request.build(), responseBodyHandler);
     }
 }
