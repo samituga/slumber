@@ -40,7 +40,7 @@ public class ResponseTestData {
             if (!skipValidation) {
                 validate(this);
             }
-            return new Response<>() {
+            return new Response<T>() {
                 @Override
                 public HttpCode statusCode() {
                     return statusCode;
