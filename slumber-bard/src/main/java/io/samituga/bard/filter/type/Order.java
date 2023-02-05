@@ -3,8 +3,7 @@ package io.samituga.bard.filter.type;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 
 import io.samituga.bard.filter.Precedence;
-import io.samituga.slumber.heimer.type.Type;
-import java.util.Objects;
+import io.samituga.slumber.ivern.type.Type;
 
 public class Order extends Type<Integer> implements Comparable<Order>{
 

@@ -1,6 +1,6 @@
 package io.samituga.slumber.malz.repository;
 
-import io.samituga.slumber.ivern.repository.Repository;
+import io.samituga.slumber.ivern.data.repository.Repository;
 import io.samituga.slumber.malz.model.Entity;
 import java.util.Collection;
 import java.util.Optional;

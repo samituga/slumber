@@ -1,18 +1,19 @@
 package io.samituga.slumber.validator;
 
-import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotBlank;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
+import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredArgsPair;
+import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotBlank;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotEmpty;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredValidPort;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.NOT_BLANK;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED;
+import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED_EVEN_VALUES;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED_NOT_EMPTY;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED_VALID_PORT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-
-import io.samituga.slumber.heimer.exception.AssertionException;
+import io.samituga.slumber.heimer.validator.exception.AssertionException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -113,6 +114,35 @@ class AssertionUtilityTest {
         String expectedMessage = String.format(REQUIRED_VALID_PORT.format(), port);
 
         assertThatThrownBy(() -> requiredValidPort(port))
+              .isInstanceOf(AssertionException.class)
+              .hasMessage(expectedMessage);
+    }
+
+    @Test
+    void should_return_params_when_size_is_even() {
+        var params = new String[] {"param1", "param2", "param3", "param4"};
+        var result = requiredArgsPair("params", params);
+
+        assertThat(result).isEqualTo(params);
+    }
+
+
+    @Test
+    void should_throw_exception_if_params_size_is_odd() {
+        var params = new String[] {"param1", "param2", "param3"};
+        String expectedMessage = String.format(REQUIRED_EVEN_VALUES.format(), "params");
+
+        assertThatThrownBy(() -> requiredArgsPair("params", params))
+              .isInstanceOf(AssertionException.class)
+              .hasMessage(expectedMessage);
+    }
+
+    @Test
+    void should_throw_exception_if_params_size_is_empty() {
+        var params = new String[] {};
+        String expectedMessage = String.format(REQUIRED_EVEN_VALUES.format(), "params");
+
+        assertThatThrownBy(() -> requiredArgsPair("params", params))
               .isInstanceOf(AssertionException.class)
               .hasMessage(expectedMessage);
     }

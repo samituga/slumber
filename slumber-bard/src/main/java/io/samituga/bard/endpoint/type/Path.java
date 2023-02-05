@@ -2,7 +2,7 @@ package io.samituga.bard.endpoint.type;
 
 import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotBlank;
 
-import io.samituga.slumber.heimer.type.Type;
+import io.samituga.slumber.ivern.type.Type;
 
 public class Path extends Type<String> {
 

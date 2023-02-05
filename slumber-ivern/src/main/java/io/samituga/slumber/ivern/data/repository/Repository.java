@@ -1,4 +1,4 @@
-package io.samituga.slumber.ivern.repository;
+package io.samituga.slumber.ivern.data.repository;
 
 /**
  * Common Repository interface, all repositories should implement this interface.

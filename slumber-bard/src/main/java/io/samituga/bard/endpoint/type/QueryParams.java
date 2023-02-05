@@ -1,6 +1,6 @@
 package io.samituga.bard.endpoint.type;
 
-import io.samituga.slumber.heimer.type.Type;
+import io.samituga.slumber.ivern.type.Type;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
