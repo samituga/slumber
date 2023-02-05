@@ -6,6 +6,7 @@ module slumber.bard {
     exports io.samituga.bard.exception;
     exports io.samituga.bard.endpoint;
     exports io.samituga.bard.endpoint.type;
+    exports io.samituga.bard;
 
     requires jakarta.servlet;
     requires slumber.heimer;

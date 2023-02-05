@@ -15,4 +15,5 @@ dependencies {
     testImplementation(testFixtures(project(':slumber-bard')))
     testImplementation("org.spockframework:spock-core:${spockVersion}")
     testImplementation("org.codehaus.groovy:groovy-all:${groovyVersion}")
+    testImplementation(project(":slumber-rakan"))
 }
