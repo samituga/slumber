@@ -1,4 +1,4 @@
-package io.samituga.slumber.rakan.support;
+package io.samituga.slumber.rakan.executor;
 
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 
@@ -9,7 +9,6 @@ import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
 
 public class HttpExecutor<T> {
-
 
     private final HttpClient client;
     private final HttpRequest request;
