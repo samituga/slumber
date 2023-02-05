@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import io.samituga.bard.filter.Filter;
 import io.samituga.bard.filter.Precedence;
 import io.samituga.bard.filter.type.Order;
-import io.samituga.slumber.heimer.exception.AssertionException;
+import io.samituga.slumber.heimer.validator.exception.AssertionException;
 import org.junit.jupiter.api.Test;
 
 class ServerConfigTestDataTest {

@@ -1,6 +1,6 @@
 package io.samituga.bard.endpoint.type;
 
-import io.samituga.slumber.heimer.type.Type;
+import io.samituga.slumber.ivern.type.Type;
 
 public class PathParamName extends Type<String> {
     private PathParamName(String value) {

@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     api project(':slumber-malz')
+    api project(':slumber-ivern')
 
     api "org.jooq:jooq:${jooqVersion}"
     api "com.zaxxer:HikariCP:${hikariCPVersion}"

@@ -3,11 +3,12 @@ package io.samituga.slumber.heimer.validator;
 import static io.samituga.slumber.heimer.error.UtilityClassInstantiationError.MESSAGE_FORMAT;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.NOT_BLANK;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED;
+import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED_EVEN_VALUES;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED_NOT_EMPTY;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED_VALID_PORT;
 
 import io.samituga.slumber.heimer.error.UtilityClassInstantiationError;
-import io.samituga.slumber.heimer.exception.AssertionException;
+import io.samituga.slumber.heimer.validator.exception.AssertionException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -96,8 +97,23 @@ public final class AssertionUtility {
         return port;
     }
 
+    /**
+     * Validates if number of parameters are even and not 0.
+     *
+     * @param name the name of the parameter
+     * @param params the params
+     * @return The params as array if passes the validation
+     * @param <T> The type of the params
+     */
+    public static <T> T[] requiredArgsPair(String name, T... params) {
+        validate(() -> params.length == 0
+                    || params.length % 2 != 0,
+              REQUIRED_EVEN_VALUES, name);
+        return params;
+    }
+
     public static void validate(Supplier<Boolean> validation, ValidatorMessageFormat messageFormat,
-                                 Object... params) {
+                                Object... params) {
         validate(validation, messageFormat.format(), params);
     }
 

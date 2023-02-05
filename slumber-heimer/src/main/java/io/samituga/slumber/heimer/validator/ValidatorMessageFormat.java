@@ -8,6 +8,7 @@ public enum ValidatorMessageFormat {
     REQUIRED("%s is required"),
     REQUIRED_NOT_EMPTY("%s is required and can't be empty"),
     REQUIRED_VALID_PORT("Port number %d is not valid"),
+    REQUIRED_EVEN_VALUES("%s length must be even"),
     ;
 
     private final String format;

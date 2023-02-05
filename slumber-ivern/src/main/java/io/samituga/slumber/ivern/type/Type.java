@@ -1,4 +1,4 @@
-package io.samituga.slumber.heimer.type;
+package io.samituga.slumber.ivern.type;
 
 import java.util.Objects;
 
