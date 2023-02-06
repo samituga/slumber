@@ -6,4 +6,4 @@ include 'slumber-bard'
 include 'slumber-malz-jooq'
 include 'slumber-ivern'
 include 'slumber-rakan'
-
+include 'slumber-ziggs'
