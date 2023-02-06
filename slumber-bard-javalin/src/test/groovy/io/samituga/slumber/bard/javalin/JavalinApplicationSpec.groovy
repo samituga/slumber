@@ -9,13 +9,13 @@ import io.samituga.bard.fixture.RouteTestData
 import io.samituga.bard.fixture.ServerConfigTestData
 import io.samituga.slumber.rakan.request.HttpRequestBuilder
 import io.samituga.slumber.rakan.request.HttpRequestBuilderImpl
+import io.samituga.slumber.ziggs.WaitFor
 import jakarta.servlet.http.HttpServletRequest
 import spock.lang.Specification
 
 import java.net.http.HttpResponse
 import java.time.Duration
 import java.util.function.Function
-import java.util.function.Supplier
 
 import static io.samituga.bard.endpoint.Verb.GET
 
@@ -51,15 +51,15 @@ class JavalinApplicationSpec extends Specification {
     }
 
 
-    def 'test'() {
-        given:
+    def 'should start server and create endpoint'() {
+        given: 'server initialization'
         def uri = URI.create("http://localhost:" + port + path.value())
         application.init(serverConfig)
 
-        and:
-        waitFor { application.serverStatus() == ServerStatus.STARTED }
+        and: 'wait for the server to be initialized'
+        WaitFor.waitFor({ application.serverStatus() == ServerStatus.STARTED }, Duration.ofSeconds(1))
 
-        when:
+        when: 'makes request'
         def result = HttpRequestBuilder.request(String.class)
           .client(HttpRequestBuilderImpl.DEFAULT_HTTP_CLIENT)
           .uri(uri)
@@ -67,17 +67,8 @@ class JavalinApplicationSpec extends Specification {
           .httpGet()
           .execute()
 
-        then:
+        then: 'result should have correct values'
         result.statusCode() == HttpCode.OK.code()
         result.body() == responseBody
-    }
-
-    private void waitFor(Supplier<Boolean> probe) { // TODO common place for this
-        for (i in 0..<Duration.ofSeconds(5).seconds * 10) {
-            if (probe.get()) {
-                break
-            }
-            Thread.sleep(100)
-        }
     }
 }

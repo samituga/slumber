@@ -16,4 +16,5 @@ dependencies {
     testImplementation("org.spockframework:spock-core:${spockVersion}")
     testImplementation("org.codehaus.groovy:groovy-all:${groovyVersion}")
     testImplementation(project(":slumber-rakan"))
+    testImplementation(project(":slumber-ziggs"))
 }
