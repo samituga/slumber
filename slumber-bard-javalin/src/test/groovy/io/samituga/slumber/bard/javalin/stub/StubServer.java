@@ -1,6 +1,7 @@
 package io.samituga.slumber.bard.javalin.stub;
 
 import static io.samituga.bard.endpoint.Verb.GET;
+import static io.samituga.bard.endpoint.Verb.POST;
 
 import io.samituga.bard.ServerStatus;
 import io.samituga.bard.configuration.ServerConfig;
@@ -14,17 +15,20 @@ import io.samituga.bard.fixture.ResponseTestData;
 import io.samituga.bard.fixture.RouteTestData;
 import io.samituga.bard.fixture.ServerConfigTestData;
 import io.samituga.slumber.bard.javalin.JavalinApplication;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class StubServer {
 
     public static final JavalinApplication app = new JavalinApplication();
 
     public static final int PORT = 8080;
-    public static final Path PATH_TITLE = Path.of("/title/{uuid}");
+    public static final Path PATH_GET_TITLE = Path.of("/title/{uuid}");
+    public static final Path PATH_POST_TITLE = Path.of("/title");
 
     public static final Path PATH_HELLO_WORLD = Path.of("/hello/world");
     private final Route<String> routeHelloWorld = RouteTestData.<String>aRoute()
@@ -34,9 +38,15 @@ public class StubServer {
           .build();
     private final Map<UUID, String> database;
     private final Route<String> routeGetTitle = RouteTestData.<String>aRoute()
-          .path(PATH_TITLE)
+          .path(PATH_GET_TITLE)
           .verb(GET)
           .handler(this::getTitle)
+          .build();
+
+    private final Route<String> routePostTitle = RouteTestData.<String>aRoute()
+          .path(PATH_POST_TITLE)
+          .verb(POST)
+          .handler(this::postTitle)
           .build();
 
     public StubServer() {
@@ -50,7 +60,7 @@ public class StubServer {
 
     public ServerConfig serverConfig() {
         return ServerConfigTestData.defaultServerConfig()
-              .routes(routeGetTitle, routeHelloWorld)
+              .routes(routeHelloWorld, routeGetTitle, routePostTitle)
               .port(PORT)
               .build();
     }
@@ -65,6 +75,33 @@ public class StubServer {
         return ResponseTestData.<String>defaultResponse()
               .statusCode(statusCode)
               .responseBody(result)
+              .build();
+    }
+
+    public Response<String> postTitle(Request request) {
+        String body;
+        try {
+            body = request.request()
+                  .getReader()
+                  .lines()
+                  .collect(Collectors.joining(System.lineSeparator()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        var uuid = UUID.randomUUID();
+
+        var contains = database.containsValue(body);
+
+        var statusCode = HttpCode.CONFLICT;
+        if (!contains) {
+            database.put(uuid, body);
+            statusCode = HttpCode.CREATED;
+        }
+
+        return ResponseTestData.<String>defaultResponse()
+              .statusCode(statusCode)
+              .responseBody(uuid.toString())
               .build();
     }
 

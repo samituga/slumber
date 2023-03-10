@@ -35,4 +35,30 @@ class JavalinApplicationSpec extends Specification {
         result.statusCode() == HttpCode.OK.code()
         result.body() == "Hello world"
     }
+
+    def 'should make post request and create title'() {
+        given: 'server initialization'
+        application.init()
+        def title = "The Big And The Small"
+
+        and: 'wait for the server to be initialized'
+        WaitFor.waitFor({ application.serverStatus() == ServerStatus.STARTED }, Duration.ofSeconds(5))
+
+        when: 'makes request'
+        def postTitleResponse = client.postTitle(title)
+
+        then: 'result should have correct values'
+        postTitleResponse.statusCode() == HttpCode.CREATED.code()
+        !postTitleResponse.body().isBlank()
+        def resultBody = postTitleResponse.body()
+        def uuid = UUID.fromString(resultBody);
+        uuid != null
+
+        and: 'should get the newly crated title'
+        def getTitleResponse = client.getTitle(uuid)
+
+        then:
+        getTitleResponse.statusCode() == HttpCode.OK.code()
+        getTitleResponse.body() == title
+    }
 }
