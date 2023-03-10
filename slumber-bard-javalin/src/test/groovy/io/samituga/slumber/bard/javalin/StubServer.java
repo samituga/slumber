@@ -1,18 +1,17 @@
 package io.samituga.slumber.bard.javalin;
 
+import static io.samituga.bard.endpoint.Verb.GET;
+
 import io.samituga.bard.configuration.ServerConfig;
 import io.samituga.bard.endpoint.HttpCode;
+import io.samituga.bard.endpoint.Request;
 import io.samituga.bard.endpoint.Response;
 import io.samituga.bard.endpoint.Route;
 import io.samituga.bard.endpoint.type.Path;
 import io.samituga.bard.fixture.ResponseTestData;
 import io.samituga.bard.fixture.RouteTestData;
 import io.samituga.bard.fixture.ServerConfigTestData;
-import jakarta.servlet.http.HttpServletRequest;
-
 import java.util.function.Function;
-
-import static io.samituga.bard.endpoint.Verb.GET;
 
 public class StubServer {
 
@@ -24,9 +23,9 @@ public class StubServer {
           .responseBody(RESPONSE_BODY)
           .build();
 
-    public static final Function<HttpServletRequest, Response<String>> HANDLER = (HttpServletRequest request) -> RESPONSE;
+    public static final Function<Request, Response<String>> HANDLER = (Request request) -> RESPONSE;
 
-    public static final Route<String> ROUTE = RouteTestData.<String>defaultRoute()
+    public static final Route<String> ROUTE = RouteTestData.<String>aRoute()
           .path(PATH)
           .verb(GET)
           .handler(HANDLER)

@@ -2,6 +2,7 @@ package io.samituga.slumber.bard.javalin
 
 import io.samituga.bard.ServerStatus
 import io.samituga.bard.endpoint.HttpCode
+import io.samituga.bard.endpoint.Request
 import io.samituga.bard.endpoint.Response
 import io.samituga.bard.endpoint.type.Path
 import io.samituga.bard.fixture.ResponseTestData
@@ -10,7 +11,6 @@ import io.samituga.bard.fixture.ServerConfigTestData
 import io.samituga.slumber.rakan.request.HttpRequestBuilder
 import io.samituga.slumber.rakan.request.HttpRequestBuilderImpl
 import io.samituga.slumber.ziggs.WaitFor
-import jakarta.servlet.http.HttpServletRequest
 import spock.lang.Specification
 
 import java.net.http.HttpResponse
@@ -31,9 +31,9 @@ class JavalinApplicationSpec extends Specification {
       .responseBody(responseBody)
       .build()
 
-    private Function<HttpServletRequest, Response<String>> handler = { HttpServletRequest request -> response }
+    private Function<Request, Response<String>> handler = { Request request -> response }
 
-    def route = RouteTestData.defaultRoute()
+    def route = RouteTestData.aRoute()
       .path(path)
       .verb(GET)
       .handler(handler)

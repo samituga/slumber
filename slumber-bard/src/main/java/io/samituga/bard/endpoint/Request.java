@@ -2,31 +2,16 @@ package io.samituga.bard.endpoint;
 
 import io.samituga.bard.endpoint.type.PathParams;
 import io.samituga.bard.endpoint.type.QueryParams;
-import io.samituga.slumber.ivern.http.type.Headers;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * Represents the information about an HTTP request.
+ * HTTP request.
  */
 public interface Request {
 
-    /**
-     * The path params of the request.
-     *
-     * @return the path params of the request
-     */
     PathParams pathParams();
 
-    /**
-     * The query params of the request.
-     *
-     * @return the query params of the request
-     */
     QueryParams queryParams();
 
-    /**
-     * The headers of the request.
-     *
-     * @return the headers of the request
-     */
-    Headers headers();
+    HttpServletRequest request();
 }

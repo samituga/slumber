@@ -1,16 +1,16 @@
 package io.samituga.bard.fixture;
 
+import io.samituga.bard.endpoint.Request;
 import io.samituga.bard.endpoint.Response;
 import io.samituga.bard.endpoint.Route;
 import io.samituga.bard.endpoint.Verb;
 import io.samituga.bard.endpoint.type.Path;
 import io.samituga.slumber.heimer.validator.AssertionUtility;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.function.Function;
 
 public class RouteTestData {
 
-    public static <T> RouteBuilder<T> defaultRoute() {
+    public static <T> RouteBuilder<T> aRoute() {
         return RouteTestData.<T>routeBuilder()
               .verb(Verb.GET)
               .path(Path.of("/hello"))
@@ -25,7 +25,7 @@ public class RouteTestData {
 
         private Verb verb;
         private Path path;
-        Function<HttpServletRequest, Response<T>> handler;
+        Function<Request, Response<T>> handler;
 
         private RouteBuilder() {}
 
@@ -39,7 +39,7 @@ public class RouteTestData {
             return this;
         }
 
-        public RouteBuilder<T> handler(Function<HttpServletRequest, Response<T>> handler) {
+        public RouteBuilder<T> handler(Function<Request, Response<T>> handler) {
             this.handler = handler;
             return this;
         }
@@ -64,7 +64,7 @@ public class RouteTestData {
                 }
 
                 @Override
-                public Function<HttpServletRequest, Response<T>> handler() {
+                public Function<Request, Response<T>> handler() {
                     return handler;
                 }
             };
@@ -85,7 +85,7 @@ public class RouteTestData {
         AssertionUtility.required("path", path);
     }
 
-    private static void validateHandler(Function<HttpServletRequest, ? extends Response<?>> handler) {
+    private static void validateHandler(Function<Request, ? extends Response<?>> handler) {
         AssertionUtility.required("handler", handler);
     }
 }
