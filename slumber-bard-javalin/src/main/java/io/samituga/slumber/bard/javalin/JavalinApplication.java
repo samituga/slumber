@@ -1,15 +1,5 @@
 package io.samituga.slumber.bard.javalin;
 
-import io.javalin.Javalin;
-import io.javalin.event.EventListener;
-import io.samituga.bard.ServerStatus;
-import io.samituga.bard.application.SlumberApplication;
-import io.samituga.bard.configuration.ServerConfig;
-import io.samituga.bard.exception.ServerInitException;
-import io.samituga.bard.exception.ServerShutdownException;
-
-import java.util.function.Consumer;
-
 import static io.samituga.bard.ServerStatus.STARTED;
 import static io.samituga.bard.ServerStatus.STARTING;
 import static io.samituga.bard.ServerStatus.STOPPED;
@@ -17,14 +7,24 @@ import static io.samituga.bard.ServerStatus.STOPPING;
 import static io.samituga.slumber.bard.javalin.JavalinConfigurator.addFilters;
 import static io.samituga.slumber.bard.javalin.JavalinConfigurator.addRoutes;
 
+import io.javalin.Javalin;
+import io.javalin.event.EventListener;
+import io.samituga.bard.ServerStatus;
+import io.samituga.bard.application.SlumberApplication;
+import io.samituga.bard.configuration.ServerConfig;
+import io.samituga.bard.exception.ServerInitException;
+import io.samituga.bard.exception.ServerShutdownException;
+import java.util.function.Consumer;
+
 public class JavalinApplication implements SlumberApplication {
 
     private final Javalin javalin;
-    private ServerStatus serverStatus;
+    private ServerStatus serverStatus = STOPPED;
 
 
     public JavalinApplication() {
-        this(Javalin.create());
+        this.javalin = Javalin.create();
+        javalin.events(eventListener());
     }
 
     public JavalinApplication(Javalin javalin) {

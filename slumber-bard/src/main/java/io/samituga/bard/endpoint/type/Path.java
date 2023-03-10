@@ -13,4 +13,8 @@ public class Path extends Type<String> {
     public static Path of(String path) {
         return new Path(path);
     }
+
+    // TODO: 2023-02-26 Get path without parameters or query
+    // TODO: 2023-02-26 Get only query
+    // TODO: 2023-02-26 Get only parameters
 }
