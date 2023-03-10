@@ -28,7 +28,7 @@ public class ResponseTestData {
         }
 
         public ResponseBuilder<T> responseBody(T responseBody) {
-            this.responseBody = Optional.of(responseBody);
+            this.responseBody = Optional.ofNullable(responseBody);
             return this;
         }
 
