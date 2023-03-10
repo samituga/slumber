@@ -2,7 +2,7 @@ package io.samituga.slumber.ivern.type;
 
 import java.util.Objects;
 
-public class Type<T> {
+public abstract class Type<T> {
 
     private final T value;
 

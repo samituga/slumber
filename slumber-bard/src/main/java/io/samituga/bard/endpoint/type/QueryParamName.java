@@ -3,6 +3,7 @@ package io.samituga.bard.endpoint.type;
 import io.samituga.slumber.ivern.type.Type;
 
 public class QueryParamName extends Type<String> {
+
     private QueryParamName(String value) {
         super(value);
     }
