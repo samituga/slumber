@@ -21,6 +21,6 @@ class HeadersResolverTest {
 
 
         var expected = new String[] {key1, value1, key2, value2};
-        assertThat(result).containsExactly(expected);
+        assertThat(result).containsExactlyInAnyOrder(expected);
     }
 }

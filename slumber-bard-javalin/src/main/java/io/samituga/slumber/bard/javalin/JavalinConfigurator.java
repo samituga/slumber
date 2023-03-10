@@ -16,7 +16,8 @@ public class JavalinConfigurator {
 
 
     public static void configure(Javalin javalin, ServerConfig serverConfig) {
-
+        addFilters(javalin, serverConfig.filters());
+        addRoutes(javalin, serverConfig.routes());
     }
 
 

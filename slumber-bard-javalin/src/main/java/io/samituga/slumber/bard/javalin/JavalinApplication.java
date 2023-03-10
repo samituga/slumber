@@ -4,8 +4,6 @@ import static io.samituga.bard.ServerStatus.STARTED;
 import static io.samituga.bard.ServerStatus.STARTING;
 import static io.samituga.bard.ServerStatus.STOPPED;
 import static io.samituga.bard.ServerStatus.STOPPING;
-import static io.samituga.slumber.bard.javalin.JavalinConfigurator.addFilters;
-import static io.samituga.slumber.bard.javalin.JavalinConfigurator.addRoutes;
 
 import io.javalin.Javalin;
 import io.javalin.event.EventListener;
@@ -38,7 +36,7 @@ public class JavalinApplication implements SlumberApplication {
             throw new ServerInitException();
         }
 
-        configureJavalin(config);
+        JavalinConfigurator.configure(javalin, config);
 
         javalin.start(config.port());
     }
@@ -63,10 +61,5 @@ public class JavalinApplication implements SlumberApplication {
             eventListener.serverStopping(() -> serverStatus = STOPPING);
             eventListener.serverStopped(() -> serverStatus = STOPPED);
         };
-    }
-
-    private void configureJavalin(ServerConfig config) {
-        addFilters(javalin, config.filters());
-        addRoutes(javalin, config.routes());
     }
 }
