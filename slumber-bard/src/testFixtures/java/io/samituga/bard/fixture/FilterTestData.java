@@ -77,6 +77,11 @@ public class FilterTestData {
                 public Optional<BiConsumer<ServletRequest, ServletResponse>> doAfter() {
                     return doAfter;
                 }
+
+                @Override
+                public int compareTo(Filter o) {
+                    return order.compareTo(o.order());
+                }
             };
         }
     }

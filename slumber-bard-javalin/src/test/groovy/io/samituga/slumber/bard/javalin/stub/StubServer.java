@@ -2,6 +2,10 @@ package io.samituga.slumber.bard.javalin.stub;
 
 import static io.samituga.bard.endpoint.Verb.GET;
 import static io.samituga.bard.endpoint.Verb.POST;
+import static io.samituga.bard.fixture.ServerConfigTestData.defaultServerConfig;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.stream.Collectors.toList;
 
 import io.samituga.bard.ServerStatus;
 import io.samituga.bard.configuration.ServerConfig;
@@ -11,20 +15,21 @@ import io.samituga.bard.endpoint.Response;
 import io.samituga.bard.endpoint.Route;
 import io.samituga.bard.endpoint.type.Path;
 import io.samituga.bard.endpoint.type.PathParamName;
+import io.samituga.bard.filter.Filter;
 import io.samituga.bard.fixture.ResponseTestData;
 import io.samituga.bard.fixture.RouteTestData;
-import io.samituga.bard.fixture.ServerConfigTestData;
 import io.samituga.slumber.bard.javalin.JavalinApplication;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StubServer {
 
-    public static final JavalinApplication app = new JavalinApplication();
+    private final JavalinApplication app = new JavalinApplication();
 
     public static final int PORT = 8080;
     public static final Path PATH_GET_TITLE = Path.of("/title/{uuid}");
@@ -55,15 +60,33 @@ public class StubServer {
 
 
     public void init() {
-        app.init(serverConfig());
+        app.init(serverConfig(emptyList(), emptyList()));
     }
 
-    public ServerConfig serverConfig() {
-        return ServerConfigTestData.defaultServerConfig()
-              .routes(routeHelloWorld, routeGetTitle, routePostTitle)
+    public void init(Collection<Route<?>> extraRoutes, Collection<Filter> extraFilters) {
+        app.init(serverConfig(extraRoutes, extraFilters));
+    }
+
+    public void cleanup() {
+        app.shutdown();
+    }
+
+    public ServerConfig serverConfig(Collection<Route<?>> extraRoutes,
+                                     Collection<Filter> extraFilters) {
+        return defaultServerConfig()
+              .routes(routes(extraRoutes))
+              .filters(extraFilters)
               .port(PORT)
               .build();
     }
+
+    private Collection<Route<?>> routes(Collection<Route<?>> extraRoutes) {
+        return Stream.concat(
+                    Stream.of(routeHelloWorld, routeGetTitle, routePostTitle),
+                    extraRoutes.stream())
+              .collect(toList());
+    }
+
 
     public Response<String> getTitle(Request request) {
 
@@ -114,7 +137,7 @@ public class StubServer {
     }
 
     public Map<UUID, String> getDatabase() {
-        return Collections.unmodifiableMap(database);
+        return unmodifiableMap(database);
     }
 
     public ServerStatus serverStatus() {

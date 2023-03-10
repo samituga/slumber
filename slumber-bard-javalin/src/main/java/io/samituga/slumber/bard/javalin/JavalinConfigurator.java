@@ -32,7 +32,7 @@ public class JavalinConfigurator {
 
                   if (filter.doAfter().isPresent()) {
                       var doAfterConsumer = filter.doAfter().get();
-                      javalin.before(filter.path().value(),
+                      javalin.after(filter.path().value(),
                             ctx -> doAfterConsumer.accept(ctx.req(), ctx.res()));
                   }
               });

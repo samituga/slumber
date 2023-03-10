@@ -11,7 +11,7 @@ import java.util.function.BiConsumer;
 /**
  * Interface representing a web server filter.
  */
-public interface Filter {
+public interface Filter extends Comparable<Filter> {
 
     /**
      * <p>
