@@ -20,12 +20,14 @@ class RouteTestDataTest {
 
     @Test
     void should_build_route() {
+        // given when
         var result = RouteTestData.<String>routeBuilder()
               .verb(VERB)
               .path(PATH)
               .handler(HANDLER)
               .build();
 
+        // then
         assertThat(result).isNotNull();
         assertThat(result.verb()).isEqualTo(VERB);
         assertThat(result.path()).isEqualTo(PATH);
@@ -34,12 +36,14 @@ class RouteTestDataTest {
 
     @Test
     void should_build_response_with_invalid_data_if_skip_validation_is_true() {
+        // given when
         var result = RouteTestData.<String>routeBuilder()
               .verb(null)
               .path(PATH)
               .handler(HANDLER)
               .build(true);
 
+        // then
         assertThat(result).isNotNull();
         assertThat(result.verb()).isNull();
         assertThat(result.path()).isEqualTo(PATH);
@@ -48,33 +52,39 @@ class RouteTestDataTest {
 
     @Test
     void should_throw_exception_when_verb_is_null() {
+        // given
         var builder = RouteTestData.<String>routeBuilder()
               .verb(null)
               .path(PATH)
               .handler(HANDLER);
 
+        // when then
         assertThatThrownBy(builder::build)
               .isInstanceOf(AssertionException.class);
     }
 
     @Test
     void should_throw_exception_when_path_is_null() {
+        // given
         var builder = RouteTestData.<String>routeBuilder()
               .verb(VERB)
               .path(null)
               .handler(HANDLER);
 
+        // when then
         assertThatThrownBy(builder::build)
               .isInstanceOf(AssertionException.class);
     }
 
     @Test
     void should_throw_exception_when_handler_is_null() {
+        // given
         var builder = RouteTestData.<String>routeBuilder()
               .verb(VERB)
               .path(PATH)
               .handler(null);
 
+        // when then
         assertThatThrownBy(builder::build)
               .isInstanceOf(AssertionException.class);
     }

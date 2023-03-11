@@ -15,11 +15,13 @@ class DataSourceConfigTest {
 
     @Test
     void should_create_instance_when_arguments_are_valid() {
+        // given
         var driverClass = POSTGRES;
         var jdbcUrl = "jdbc:postgresql://host:port/database?properties";
         var user = "user";
         var password = "password";
 
+        // when
         var dbConfig = DataSourceConfigBuilder.builder()
               .driverClass(driverClass)
               .jdbcUrl(jdbcUrl)
@@ -27,6 +29,7 @@ class DataSourceConfigTest {
               .password(password)
               .build();
 
+        // then
         assertThat(dbConfig.driverClass()).isEqualTo(driverClass);
         assertThat(dbConfig.jdbcUrl()).isEqualTo(jdbcUrl);
         assertThat(dbConfig.user()).isEqualTo(user);
@@ -39,9 +42,9 @@ class DataSourceConfigTest {
                                                                   String jdbcUrl,
                                                                   String user,
                                                                   String password) {
-
-        assertThatThrownBy(
-              () -> DataSourceConfigBuilder.builder()
+        // given when then
+        assertThatThrownBy(() ->
+              DataSourceConfigBuilder.builder()
                     .driverClass(driverClass)
                     .jdbcUrl(jdbcUrl)
                     .user(user)
@@ -52,20 +55,22 @@ class DataSourceConfigTest {
 
     @Test
     void should_create_exact_copy() {
-        var driverClass = POSTGRES;
+        // given
         var jdbcUrl = "jdbc:postgresql://host:port/database?properties";
         var user = "user";
         var password = "password";
 
         var dbConfig = DataSourceConfigBuilder.builder()
-              .driverClass(driverClass)
+              .driverClass(POSTGRES)
               .jdbcUrl(jdbcUrl)
               .user(user)
               .password(password)
               .build();
 
+        // when
         var copy = DataSourceConfigBuilder.builder().copy(dbConfig).build();
 
+        // then
         assertThat(copy).isEqualTo(dbConfig);
     }
 }

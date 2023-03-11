@@ -8,8 +8,8 @@ import io.samituga.bard.filter.type.Order;
 import io.samituga.slumber.heimer.validator.exception.AssertionException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import org.junit.jupiter.api.Test;
 import java.util.function.BiConsumer;
+import org.junit.jupiter.api.Test;
 
 class FilterTestDataTest {
 
@@ -23,7 +23,7 @@ class FilterTestDataTest {
 
     @Test
     void should_build_filter() {
-
+        // given when
         var result = FilterTestData.filterBuilder()
               .order(ORDER)
               .path(PATH)
@@ -31,6 +31,7 @@ class FilterTestDataTest {
               .doAfter(DO_AFTER)
               .build();
 
+        // then
         assertThat(result).isNotNull();
         assertThat(result.order()).isEqualTo(ORDER);
         assertThat(result.path()).isEqualTo(PATH);
@@ -40,7 +41,7 @@ class FilterTestDataTest {
 
     @Test
     void should_build_filter_with_invalid_data_if_skip_validation_is_true() {
-
+        // given when
         var result = FilterTestData.filterBuilder()
               .order(null)
               .path(PATH)
@@ -48,6 +49,7 @@ class FilterTestDataTest {
               .doAfter(DO_AFTER)
               .build(true);
 
+        // then
         assertThat(result).isNotNull();
         assertThat(result.order()).isNull();
         assertThat(result.path()).isEqualTo(PATH);
@@ -57,12 +59,13 @@ class FilterTestDataTest {
 
     @Test
     void should_build_filter_when_do_before_or_do_after_is_not_present() {
-
+        // given when
         var result = FilterTestData.filterBuilder()
               .order(ORDER)
               .path(PATH)
               .build();
 
+        // then
         assertThat(result).isNotNull();
         assertThat(result.order()).isEqualTo(ORDER);
         assertThat(result.path()).isEqualTo(PATH);
@@ -72,24 +75,28 @@ class FilterTestDataTest {
 
     @Test
     void should_throw_exception_if_order_is_null() {
+        // given
         var builder = FilterTestData.filterBuilder()
               .order(null)
               .path(PATH)
               .doBefore(DO_BEFORE)
               .doAfter(DO_AFTER);
 
+        // when then
         assertThatThrownBy(builder::build)
               .isInstanceOf(AssertionException.class);
     }
 
     @Test
     void should_throw_exception_if_path_is_null() {
+        // given
         var builder = FilterTestData.filterBuilder()
               .order(ORDER)
               .path(null)
               .doBefore(DO_BEFORE)
               .doAfter(DO_AFTER);
 
+        // when then
         assertThatThrownBy(builder::build)
               .isInstanceOf(AssertionException.class);
     }
