@@ -2,6 +2,7 @@ package io.samituga.bard.endpoint.type;
 
 import io.samituga.slumber.ivern.type.MapType;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class QueryParams extends MapType<QueryParamName, Set<QueryParamValue>> {
@@ -29,6 +30,18 @@ public class QueryParams extends MapType<QueryParamName, Set<QueryParamValue>> {
 
     public static QueryParams of(QueryParamName name, QueryParamValue value) {
         return new QueryParams(Map.of(name, Set.of(value)));
+    }
+
+    public QueryParamValue getFirst(QueryParamName paramName) {
+        return get(paramName).stream()
+              .findFirst()
+              .orElseThrow();
+    }
+
+
+    public Optional<QueryParamValue> findFirst(QueryParamName paramName) {
+        return get(paramName).stream()
+              .findFirst();
     }
 
     public static QueryParams empty() {

@@ -15,6 +15,7 @@ import io.samituga.bard.endpoint.Response;
 import io.samituga.bard.endpoint.Route;
 import io.samituga.bard.endpoint.type.Path;
 import io.samituga.bard.endpoint.type.PathParamName;
+import io.samituga.bard.endpoint.type.QueryParamName;
 import io.samituga.bard.filter.Filter;
 import io.samituga.bard.fixture.ResponseTestData;
 import io.samituga.bard.fixture.RouteTestData;
@@ -33,6 +34,7 @@ public class StubServer {
 
     public static final int PORT = 8080;
     public static final Path PATH_GET_TITLE = Path.of("/title/{uuid}");
+    public static final Path PATH_GET_TITLE_BY_QUERY = Path.of("/title/");
     public static final Path PATH_POST_TITLE = Path.of("/title");
 
     public static final Path PATH_HELLO_WORLD = Path.of("/hello/world");
@@ -46,6 +48,12 @@ public class StubServer {
           .path(PATH_GET_TITLE)
           .verb(GET)
           .handler(this::getTitle)
+          .build();
+
+    private final Route<String> routeGetTitleByQuery = RouteTestData.<String>aRoute()
+          .path(PATH_GET_TITLE_BY_QUERY)
+          .verb(GET)
+          .handler(this::getTitleByQuery)
           .build();
 
     private final Route<String> routePostTitle = RouteTestData.<String>aRoute()
@@ -82,7 +90,7 @@ public class StubServer {
 
     private Collection<Route<?>> routes(Collection<Route<?>> extraRoutes) {
         return Stream.concat(
-                    Stream.of(routeHelloWorld, routeGetTitle, routePostTitle),
+                    Stream.of(routeHelloWorld, routeGetTitle, routeGetTitleByQuery, routePostTitle),
                     extraRoutes.stream())
               .collect(toList());
     }
@@ -95,7 +103,32 @@ public class StubServer {
         var result = database.get(UUID.fromString(uuid.value()));
         var statusCode = result == null ? HttpCode.NOT_FOUND : HttpCode.OK;
 
-        return ResponseTestData.<String>defaultResponse()
+        return ResponseTestData.<String>responseBuilder()
+              .statusCode(statusCode)
+              .responseBody(result)
+              .build();
+    }
+
+    public Response<String> getTitleByQuery(Request request) {
+
+        var firstLetter = request.queryParams().getFirst(QueryParamName.of("firstLetter"));
+        var ignoreCase = request.queryParams()
+              .findFirst(QueryParamName.of("ignoreCase"))
+              .map(ignoreCaseStr -> Boolean.parseBoolean(ignoreCaseStr.value()))
+              .orElse(false);
+
+        var result = database.values().stream()
+              .filter(tittle -> ignoreCase
+                    ? tittle.toLowerCase().startsWith(firstLetter.value().toLowerCase())
+                    : tittle.startsWith(firstLetter.value()))
+              .collect(Collectors.joining(","));
+
+        var statusCode = HttpCode.OK;
+        if (result.isBlank()) {
+            statusCode = HttpCode.NOT_FOUND;
+        }
+
+        return ResponseTestData.<String>responseBuilder()
               .statusCode(statusCode)
               .responseBody(result)
               .build();
@@ -122,7 +155,7 @@ public class StubServer {
             statusCode = HttpCode.CREATED;
         }
 
-        return ResponseTestData.<String>defaultResponse()
+        return ResponseTestData.<String>responseBuilder()
               .statusCode(statusCode)
               .responseBody(uuid.toString())
               .build();
@@ -130,7 +163,7 @@ public class StubServer {
 
     public Response<String> helloWorld(Request request) {
 
-        return ResponseTestData.<String>defaultResponse()
+        return ResponseTestData.<String>responseBuilder()
               .statusCode(HttpCode.OK)
               .responseBody("Hello world")
               .build();

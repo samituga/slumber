@@ -24,6 +24,17 @@ public class StubClient {
               .execute();
     }
 
+    public HttpResponse<String> getTitlesByQuery(String firstLetter, boolean ignoreCase)
+          throws IOException, InterruptedException {
+        return HttpRequestBuilder.request(String.class)
+              .client(HttpRequestBuilderImpl.DEFAULT_HTTP_CLIENT)
+              .uri(URI.create(
+                    BASE_URI + "/title?firstLetter=" + firstLetter + "&ignoreCase=" + ignoreCase))
+              .responseBodyHandler(HttpResponse.BodyHandlers.ofString())
+              .httpGet()
+              .execute();
+    }
+
     public HttpResponse<String> postTitle(String title) throws IOException, InterruptedException {
         return HttpRequestBuilder.request(String.class)
               .client(HttpRequestBuilderImpl.DEFAULT_HTTP_CLIENT)
