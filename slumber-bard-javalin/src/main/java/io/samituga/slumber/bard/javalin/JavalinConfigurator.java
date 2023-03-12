@@ -1,6 +1,7 @@
 package io.samituga.slumber.bard.javalin;
 
 import io.javalin.Javalin;
+import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.samituga.bard.configuration.ServerConfig;
 import io.samituga.bard.endpoint.Request;
@@ -9,6 +10,7 @@ import io.samituga.bard.endpoint.Route;
 import io.samituga.bard.filter.Filter;
 import io.samituga.slumber.bard.javalin.mapper.RequestMapper;
 import io.samituga.slumber.bard.javalin.mapper.VerbToHandlerType;
+import io.samituga.slumber.ivern.http.type.Headers;
 import java.util.Collection;
 import java.util.function.Function;
 
@@ -47,13 +49,18 @@ public class JavalinConfigurator {
     }
 
     private static <T> Handler converToHandler(Function<Request, Response<T>> function) {
-        return context -> {
-            final var response = function.apply(RequestMapper.fromContext(context));
+        return ctx -> {
+            final var response = function.apply(RequestMapper.fromContext(ctx));
 
             if (response.responseBody().isPresent()) {
-                context.result(response.responseBody().get().toString()); // TODO: 05/02/2023 Bytes?
+                ctx.result(response.responseBody().get().toString()); // TODO: 05/02/2023 Bytes?
             }
-            context.status(response.statusCode().code());
+            ctx.status(response.statusCode().code());
+            ctxWithHeaders(ctx, response.headers());
         };
+    }
+
+    private static void ctxWithHeaders(Context ctx, Headers headers) {
+        headers.value().forEach(ctx::header);
     }
 }

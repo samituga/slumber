@@ -3,6 +3,7 @@ package io.samituga.bard.fixture;
 import io.samituga.bard.endpoint.HttpCode;
 import io.samituga.bard.endpoint.Response;
 import io.samituga.slumber.heimer.validator.AssertionUtility;
+import io.samituga.slumber.ivern.http.type.Headers;
 import java.util.Optional;
 
 public class ResponseTestData {
@@ -19,6 +20,7 @@ public class ResponseTestData {
 
         private HttpCode statusCode;
         private Optional<T> responseBody = Optional.empty();
+        private Headers headers = Headers.empty();
 
         private ResponseBuilder() {}
 
@@ -29,6 +31,11 @@ public class ResponseTestData {
 
         public ResponseBuilder<T> responseBody(T responseBody) {
             this.responseBody = Optional.ofNullable(responseBody);
+            return this;
+        }
+
+        public ResponseBuilder<T> headers(Headers headers) {
+            this.headers = headers;
             return this;
         }
 
@@ -49,6 +56,11 @@ public class ResponseTestData {
                 @Override
                 public Optional<T> responseBody() {
                     return responseBody;
+                }
+
+                @Override
+                public Headers headers() {
+                    return headers;
                 }
             };
         }

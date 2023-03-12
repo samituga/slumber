@@ -1,10 +1,12 @@
 package io.samituga.slumber.bard.javalin.stub;
 
+import static io.samituga.slumber.bard.javalin.stub.StubServer.PATH_HEADERS;
 import static io.samituga.slumber.bard.javalin.stub.StubServer.PATH_HELLO_WORLD;
 import static io.samituga.slumber.bard.javalin.stub.StubServer.PATH_POST_TITLE;
 import static io.samituga.slumber.bard.javalin.stub.StubServer.PORT;
 import static io.samituga.slumber.rakan.request.HttpRequestBuilderImpl.DEFAULT_HTTP_CLIENT;
 
+import io.samituga.slumber.ivern.http.type.Headers;
 import io.samituga.slumber.rakan.request.HttpRequestBuilder;
 import java.io.IOException;
 import java.net.URI;
@@ -58,6 +60,16 @@ public class StubClient {
               .client(DEFAULT_HTTP_CLIENT)
               .uri(URI.create(BASE_URI + PATH_HELLO_WORLD))
               .responseBodyHandler(HttpResponse.BodyHandlers.ofString())
+              .httpGet()
+              .execute();
+    }
+
+    public HttpResponse<String> sendHeaders(Headers headers) throws IOException, InterruptedException {
+        return HttpRequestBuilder.request(String.class)
+              .client(DEFAULT_HTTP_CLIENT)
+              .uri(URI.create(BASE_URI + PATH_HEADERS))
+              .responseBodyHandler(HttpResponse.BodyHandlers.ofString())
+              .headers(headers)
               .httpGet()
               .execute();
     }

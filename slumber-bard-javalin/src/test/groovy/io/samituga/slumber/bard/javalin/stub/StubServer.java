@@ -1,5 +1,8 @@
 package io.samituga.slumber.bard.javalin.stub;
 
+import static io.samituga.bard.endpoint.HttpCode.BAD_REQUEST;
+import static io.samituga.bard.endpoint.HttpCode.EXPECTATION_FAILED;
+import static io.samituga.bard.endpoint.HttpCode.OK;
 import static io.samituga.bard.endpoint.Verb.DELETE;
 import static io.samituga.bard.endpoint.Verb.GET;
 import static io.samituga.bard.endpoint.Verb.POST;
@@ -21,6 +24,7 @@ import io.samituga.bard.filter.Filter;
 import io.samituga.bard.fixture.ResponseTestData;
 import io.samituga.bard.fixture.RouteTestData;
 import io.samituga.slumber.bard.javalin.JavalinApplication;
+import io.samituga.slumber.ivern.http.type.Headers;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,10 +44,17 @@ public class StubServer {
     public static final Path PATH_POST_TITLE = Path.of("/title");
     public static final Path PATH_DELETE_TITLE = Path.of("/auth/title/{uuid}");
     public static final Path PATH_HELLO_WORLD = Path.of("/hello/world");
+    public static final Path PATH_HEADERS = Path.of("/headers");
     private final Route<String> routeHelloWorld = RouteTestData.<String>aRoute()
           .path(PATH_HELLO_WORLD)
           .verb(GET)
           .handler(this::helloWorld)
+          .build();
+
+    private final Route<String> routeGetHeaders = RouteTestData.<String>aRoute()
+          .path(PATH_HEADERS)
+          .verb(GET)
+          .handler(this::getHeaders)
           .build();
     private final Map<UUID, String> database;
     private final Route<String> routeGetTitle = RouteTestData.<String>aRoute()
@@ -98,7 +109,11 @@ public class StubServer {
 
     private Collection<Route<?>> routes(Collection<Route<?>> extraRoutes) {
         return Stream.concat(
-                    Stream.of(routeHelloWorld, routeGetTitle, routeGetTitleByQuery, routePostTitle,
+                    Stream.of(routeHelloWorld,
+                          routeGetHeaders,
+                          routeGetTitle,
+                          routeGetTitleByQuery,
+                          routePostTitle,
                           routeDeleteTitle),
                     extraRoutes.stream())
               .collect(toList());
@@ -194,6 +209,20 @@ public class StubServer {
         return ResponseTestData.<String>responseBuilder()
               .statusCode(HttpCode.OK)
               .responseBody("Hello world")
+              .build();
+    }
+
+    public Response<String> getHeaders(Request request) {
+
+        var statusCode = Optional.ofNullable(request.request()
+                    .getHeader("req-header-name"))
+              .map(headerValue -> headerValue.equals("req-header-value") ? OK : EXPECTATION_FAILED)
+              .orElse(BAD_REQUEST);
+
+        return ResponseTestData.<String>responseBuilder()
+              .statusCode(statusCode)
+              .responseBody("Hello world")
+              .headers(Headers.of("resp-header-name", "resp-header-value"))
               .build();
     }
 

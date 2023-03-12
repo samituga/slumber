@@ -1,5 +1,6 @@
 package io.samituga.bard.endpoint;
 
+import io.samituga.slumber.ivern.http.type.Headers;
 import java.util.Optional;
 
 /**
@@ -9,20 +10,10 @@ import java.util.Optional;
  */
 public interface Response<T> {
 
-    /**
-     * The status code of the response.
-     *
-     * @return the status code of the response
-     */
     HttpCode statusCode();
 
-    // TODO: 2023-03-12 headers
-
-    /**
-     * The response body.
-     *
-     * @return the response body
-     */
     Optional<T> responseBody();
+
+    Headers headers();
 
 }

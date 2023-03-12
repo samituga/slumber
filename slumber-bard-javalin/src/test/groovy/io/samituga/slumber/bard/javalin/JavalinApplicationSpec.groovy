@@ -7,6 +7,7 @@ import io.samituga.bard.filter.type.Order
 import io.samituga.bard.fixture.FilterTestData
 import io.samituga.slumber.bard.javalin.stub.StubClient
 import io.samituga.slumber.bard.javalin.stub.StubServer
+import io.samituga.slumber.ivern.http.type.Headers
 import io.samituga.slumber.ziggs.WaitFor
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -39,7 +40,7 @@ class JavalinApplicationSpec extends Specification {
         application.init()
 
         and: 'wait for the server to be initialized'
-        WaitFor.waitFor({ application.serverStatus() == ServerStatus.STARTED }, Duration.ofSeconds(5))
+        waitForServerInit()
 
         when: 'makes request'
         def result = client.getHelloWorld()
@@ -55,7 +56,7 @@ class JavalinApplicationSpec extends Specification {
         def title = "The Big And The Small"
 
         and: 'wait for the server to be initialized'
-        WaitFor.waitFor({ application.serverStatus() == ServerStatus.STARTED }, Duration.ofSeconds(5))
+        waitForServerInit()
 
         when: 'makes request'
         def postTitleResponse = client.postTitle(title)
@@ -97,7 +98,7 @@ class JavalinApplicationSpec extends Specification {
 
 
         and: 'wait for the server to be initialized'
-        WaitFor.waitFor({ application.serverStatus() == ServerStatus.STARTED }, Duration.ofSeconds(5))
+        waitForServerInit()
 
         when: 'makes request'
         def result = client.getHelloWorld()
@@ -158,7 +159,7 @@ class JavalinApplicationSpec extends Specification {
         application.init(Collections.emptyList(), List.of(middleFilter, lastFilter,firstFilter))
 
         and: 'wait for the server to be initialized'
-        WaitFor.waitFor({ application.serverStatus() == ServerStatus.STARTED }, Duration.ofSeconds(5))
+        waitForServerInit()
 
         when: 'makes request'
         def result = client.getHelloWorld()
@@ -181,7 +182,7 @@ class JavalinApplicationSpec extends Specification {
         def title4 = "Cold"
 
         and: 'wait for the server to be initialized'
-        WaitFor.waitFor({ application.serverStatus() == ServerStatus.STARTED }, Duration.ofSeconds(5))
+        waitForServerInit()
 
         when: 'makes request'
         def postTitleResponse1 = client.postTitle(titleStartsWithT1)
@@ -215,7 +216,7 @@ class JavalinApplicationSpec extends Specification {
         def title = "The Big And The Small"
 
         and: 'wait for the server to be initialized'
-        WaitFor.waitFor({ application.serverStatus() == ServerStatus.STARTED }, Duration.ofSeconds(5))
+        waitForServerInit()
 
         when: 'makes request'
         def postTitleResponse = client.postTitle(title)
@@ -232,5 +233,31 @@ class JavalinApplicationSpec extends Specification {
 
         then:
         getTitleResponse.statusCode() == HttpCode.NO_CONTENT.code()
+    }
+
+    def "should send request with headers and receive response with new headers"() {
+        given: 'server initialization'
+        application.init()
+        def headers = Headers.of("req-header-name", "req-header-value")
+
+        and: 'wait for the server to be initialized'
+        waitForServerInit()
+
+        when: 'sends request with headers'
+        def response = client.sendHeaders(headers);
+
+        then: 'should receive the response headers'
+        response.statusCode() == HttpCode.OK.code()
+        with(response.headers()) {
+            it.firstValue("resp-header-name").orElseThrow() == "resp-header-value"
+        }
+    }
+
+    def waitForServerInit() {
+        waitForServerInit(Duration.ofSeconds(5))
+    }
+
+    def waitForServerInit(Duration duration) {
+        WaitFor.waitFor({ application.serverStatus() == ServerStatus.STARTED }, duration)
     }
 }
