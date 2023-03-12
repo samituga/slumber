@@ -1,5 +1,7 @@
 package io.samituga.bard.fixture;
 
+import static io.samituga.bard.fixture.ResponseTestData.defaultResponse;
+import static io.samituga.bard.fixture.RouteTestData.routeBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -15,13 +17,13 @@ class RouteTestDataTest {
 
     private static final Verb VERB = Verb.GET;
     private static final Path PATH = Path.of("/hello");
-    private static final Function<Request, Response<String>> HANDLER =
-          req -> ResponseTestData.<String>defaultResponse().build();
+    private static final Function<Request, Response> HANDLER =
+          req -> defaultResponse().build();
 
     @Test
     void should_build_route() {
         // given when
-        var result = RouteTestData.<String>routeBuilder()
+        var result = routeBuilder()
               .verb(VERB)
               .path(PATH)
               .handler(HANDLER)
@@ -37,7 +39,7 @@ class RouteTestDataTest {
     @Test
     void should_build_response_with_invalid_data_if_skip_validation_is_true() {
         // given when
-        var result = RouteTestData.<String>routeBuilder()
+        var result = routeBuilder()
               .verb(null)
               .path(PATH)
               .handler(HANDLER)
@@ -53,7 +55,7 @@ class RouteTestDataTest {
     @Test
     void should_throw_exception_when_verb_is_null() {
         // given
-        var builder = RouteTestData.<String>routeBuilder()
+        var builder = routeBuilder()
               .verb(null)
               .path(PATH)
               .handler(HANDLER);
@@ -66,7 +68,7 @@ class RouteTestDataTest {
     @Test
     void should_throw_exception_when_path_is_null() {
         // given
-        var builder = RouteTestData.<String>routeBuilder()
+        var builder = routeBuilder()
               .verb(VERB)
               .path(null)
               .handler(HANDLER);
@@ -79,7 +81,7 @@ class RouteTestDataTest {
     @Test
     void should_throw_exception_when_handler_is_null() {
         // given
-        var builder = RouteTestData.<String>routeBuilder()
+        var builder = routeBuilder()
               .verb(VERB)
               .path(PATH)
               .handler(null);

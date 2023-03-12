@@ -29,5 +29,5 @@ public interface ServerConfig {
      *
      * @return the routes
      */
-    Collection<Route<?>> routes();
+    Collection<Route> routes();
 }

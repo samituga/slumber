@@ -6,6 +6,8 @@ import static io.samituga.bard.endpoint.HttpCode.OK;
 import static io.samituga.bard.endpoint.Verb.DELETE;
 import static io.samituga.bard.endpoint.Verb.GET;
 import static io.samituga.bard.endpoint.Verb.POST;
+import static io.samituga.bard.fixture.ResponseTestData.responseBuilder;
+import static io.samituga.bard.fixture.RouteTestData.aRoute;
 import static io.samituga.bard.fixture.ServerConfigTestData.defaultServerConfig;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableMap;
@@ -20,9 +22,8 @@ import io.samituga.bard.endpoint.Route;
 import io.samituga.bard.endpoint.type.Path;
 import io.samituga.bard.endpoint.type.PathParamName;
 import io.samituga.bard.endpoint.type.QueryParamName;
+import io.samituga.bard.endpoint.type.ResponseBody;
 import io.samituga.bard.filter.Filter;
-import io.samituga.bard.fixture.ResponseTestData;
-import io.samituga.bard.fixture.RouteTestData;
 import io.samituga.slumber.bard.javalin.JavalinApplication;
 import io.samituga.slumber.ivern.http.type.Headers;
 import java.io.IOException;
@@ -45,37 +46,37 @@ public class StubServer {
     public static final Path PATH_DELETE_TITLE = Path.of("/auth/title/{uuid}");
     public static final Path PATH_HELLO_WORLD = Path.of("/hello/world");
     public static final Path PATH_HEADERS = Path.of("/headers");
-    private final Route<String> routeHelloWorld = RouteTestData.<String>aRoute()
+    private final Route routeHelloWorld = aRoute()
           .path(PATH_HELLO_WORLD)
           .verb(GET)
           .handler(this::helloWorld)
           .build();
 
-    private final Route<String> routeGetHeaders = RouteTestData.<String>aRoute()
+    private final Route routeGetHeaders = aRoute()
           .path(PATH_HEADERS)
           .verb(GET)
           .handler(this::getHeaders)
           .build();
     private final Map<UUID, String> database;
-    private final Route<String> routeGetTitle = RouteTestData.<String>aRoute()
+    private final Route routeGetTitle = aRoute()
           .path(PATH_GET_TITLE)
           .verb(GET)
           .handler(this::getTitle)
           .build();
 
-    private final Route<String> routeGetTitleByQuery = RouteTestData.<String>aRoute()
+    private final Route routeGetTitleByQuery = aRoute()
           .path(PATH_GET_TITLE_BY_QUERY)
           .verb(GET)
           .handler(this::getTitleByQuery)
           .build();
 
-    private final Route<String> routePostTitle = RouteTestData.<String>aRoute()
+    private final Route routePostTitle = aRoute()
           .path(PATH_POST_TITLE)
           .verb(POST)
           .handler(this::postTitle)
           .build();
 
-    private final Route<String> routeDeleteTitle = RouteTestData.<String>aRoute()
+    private final Route routeDeleteTitle = aRoute()
           .path(PATH_DELETE_TITLE)
           .verb(DELETE)
           .handler(this::deleteTitle)
@@ -90,7 +91,7 @@ public class StubServer {
         app.init(serverConfig(emptyList(), emptyList()));
     }
 
-    public void init(Collection<Route<?>> extraRoutes, Collection<Filter> extraFilters) {
+    public void init(Collection<Route> extraRoutes, Collection<Filter> extraFilters) {
         app.init(serverConfig(extraRoutes, extraFilters));
     }
 
@@ -98,7 +99,7 @@ public class StubServer {
         app.shutdown();
     }
 
-    public ServerConfig serverConfig(Collection<Route<?>> extraRoutes,
+    public ServerConfig serverConfig(Collection<Route> extraRoutes,
                                      Collection<Filter> extraFilters) {
         return defaultServerConfig()
               .routes(routes(extraRoutes))
@@ -107,7 +108,7 @@ public class StubServer {
               .build();
     }
 
-    private Collection<Route<?>> routes(Collection<Route<?>> extraRoutes) {
+    private Collection<Route> routes(Collection<Route> extraRoutes) {
         return Stream.concat(
                     Stream.of(routeHelloWorld,
                           routeGetHeaders,
@@ -127,20 +128,21 @@ public class StubServer {
     }
 
 
-    public Response<String> getTitle(Request request) {
+    public Response getTitle(Request request) {
 
         var uuid = request.pathParams().get(PathParamName.of("uuid"));
 
-        var result = database.get(UUID.fromString(uuid.value()));
-        var statusCode = result == null ? HttpCode.NOT_FOUND : HttpCode.OK;
-
-        return ResponseTestData.<String>responseBuilder()
-              .statusCode(statusCode)
-              .responseBody(result)
-              .build();
+        return Optional.ofNullable(database.get(UUID.fromString(uuid.value())))
+              .map(title -> responseBuilder()
+                    .statusCode(HttpCode.OK)
+                    .responseBody(ResponseBody.of(title))
+                    .build())
+              .orElse(responseBuilder()
+                    .statusCode(HttpCode.NOT_FOUND)
+                    .build());
     }
 
-    public Response<String> getTitleByQuery(Request request) {
+    public Response getTitleByQuery(Request request) {
 
         var firstLetter = request.queryParams().getFirst(QueryParamName.of("firstLetter"));
         var ignoreCase = request.queryParams()
@@ -159,13 +161,13 @@ public class StubServer {
             statusCode = HttpCode.NOT_FOUND;
         }
 
-        return ResponseTestData.<String>responseBuilder()
+        return responseBuilder()
               .statusCode(statusCode)
-              .responseBody(result)
+              .responseBody(ResponseBody.of(result))
               .build();
     }
 
-    public Response<String> postTitle(Request request) {
+    public Response postTitle(Request request) {
         String body;
         try {
             body = request.request()
@@ -186,42 +188,42 @@ public class StubServer {
             statusCode = HttpCode.CREATED;
         }
 
-        return ResponseTestData.<String>responseBuilder()
+        return responseBuilder()
               .statusCode(statusCode)
-              .responseBody(uuid.toString())
+              .responseBody(ResponseBody.of(uuid.toString()))
               .build();
     }
 
-    public Response<String> deleteTitle(Request request) {
+    public Response deleteTitle(Request request) {
         var uuid = request.pathParams().get(PathParamName.of("uuid"));
 
         var deleted = Optional.ofNullable(database.remove(UUID.fromString(uuid.value())))
               .isPresent();
         var statusCode = deleted ? HttpCode.NO_CONTENT : HttpCode.NOT_FOUND;
 
-        return ResponseTestData.<String>responseBuilder()
+        return responseBuilder()
               .statusCode(statusCode)
               .build();
     }
 
-    public Response<String> helloWorld(Request request) {
+    public Response helloWorld(Request request) {
 
-        return ResponseTestData.<String>responseBuilder()
+        return responseBuilder()
               .statusCode(HttpCode.OK)
-              .responseBody("Hello world")
+              .responseBody(ResponseBody.of("Hello world"))
               .build();
     }
 
-    public Response<String> getHeaders(Request request) {
+    public Response getHeaders(Request request) {
 
         var statusCode = Optional.ofNullable(request.request()
                     .getHeader("req-header-name"))
               .map(headerValue -> headerValue.equals("req-header-value") ? OK : EXPECTATION_FAILED)
               .orElse(BAD_REQUEST);
 
-        return ResponseTestData.<String>responseBuilder()
+        return responseBuilder()
               .statusCode(statusCode)
-              .responseBody("Hello world")
+              .responseBody(ResponseBody.of("Hello world"))
               .headers(Headers.of("resp-header-name", "resp-header-value"))
               .build();
     }

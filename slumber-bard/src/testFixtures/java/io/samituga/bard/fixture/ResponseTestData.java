@@ -2,59 +2,60 @@ package io.samituga.bard.fixture;
 
 import io.samituga.bard.endpoint.HttpCode;
 import io.samituga.bard.endpoint.Response;
+import io.samituga.bard.endpoint.type.ResponseBody;
 import io.samituga.slumber.heimer.validator.AssertionUtility;
 import io.samituga.slumber.ivern.http.type.Headers;
 import java.util.Optional;
 
 public class ResponseTestData {
 
-    public static <T> ResponseBuilder<T> defaultResponse() {
-        return ResponseTestData.<T>responseBuilder().statusCode(HttpCode.OK);
+    public static ResponseBuilder defaultResponse() {
+        return responseBuilder().statusCode(HttpCode.OK);
     }
 
-    public static <T> ResponseBuilder<T> responseBuilder() {
-        return new ResponseBuilder<>();
+    public static ResponseBuilder responseBuilder() {
+        return new ResponseBuilder();
     }
 
-    public static class ResponseBuilder<T> {
+    public static class ResponseBuilder {
 
         private HttpCode statusCode;
-        private Optional<T> responseBody = Optional.empty();
+        private Optional<ResponseBody> responseBody = Optional.empty();
         private Headers headers = Headers.empty();
 
         private ResponseBuilder() {}
 
-        public ResponseBuilder<T> statusCode(HttpCode statusCode) {
+        public ResponseBuilder statusCode(HttpCode statusCode) {
             this.statusCode = statusCode;
             return this;
         }
 
-        public ResponseBuilder<T> responseBody(T responseBody) {
+        public ResponseBuilder responseBody(ResponseBody responseBody) {
             this.responseBody = Optional.ofNullable(responseBody);
             return this;
         }
 
-        public ResponseBuilder<T> headers(Headers headers) {
+        public ResponseBuilder headers(Headers headers) {
             this.headers = headers;
             return this;
         }
 
-        public Response<T> build() {
+        public Response build() {
             return build(false);
         }
 
-        public Response<T> build(boolean skipValidation) {
+        public Response build(boolean skipValidation) {
             if (!skipValidation) {
                 validate(this);
             }
-            return new Response<>() {
+            return new Response() {
                 @Override
                 public HttpCode statusCode() {
                     return statusCode;
                 }
 
                 @Override
-                public Optional<T> responseBody() {
+                public Optional<ResponseBody> responseBody() {
                     return responseBody;
                 }
 
@@ -66,7 +67,7 @@ public class ResponseTestData {
         }
     }
 
-    private static void validate(ResponseBuilder<?> builder) {
+    private static void validate(ResponseBuilder builder) {
         validateStatusCode(builder.statusCode);
     }
 

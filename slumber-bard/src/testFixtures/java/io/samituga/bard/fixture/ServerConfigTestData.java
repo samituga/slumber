@@ -26,7 +26,7 @@ public class ServerConfigTestData {
 
         private int port;
         private Collection<Filter> filters = new ArrayList<>();
-        private Collection<Route<?>> routes = new ArrayList<>();
+        private Collection<Route> routes = new ArrayList<>();
 
         private ServerConfigBuilder() {}
 
@@ -50,17 +50,17 @@ public class ServerConfigTestData {
             return this;
         }
 
-        public ServerConfigBuilder routes(Route<?> route) {
+        public ServerConfigBuilder routes(Route route) {
             this.routes.add(route);
             return this;
         }
 
-        public ServerConfigBuilder routes(Route<?>... routes) {
+        public ServerConfigBuilder routes(Route... routes) {
             this.routes.addAll(List.of(routes));
             return this;
         }
 
-        public ServerConfigBuilder routes(Collection<Route<?>> routes) {
+        public ServerConfigBuilder routes(Collection<Route> routes) {
             this.routes = routes;
             return this;
         }
@@ -85,7 +85,7 @@ public class ServerConfigTestData {
                 }
 
                 @Override
-                public Collection<Route<?>> routes() {
+                public Collection<Route> routes() {
                     return routes;
                 }
             };

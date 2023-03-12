@@ -41,19 +41,19 @@ public class JavalinConfigurator {
               });
     }
 
-    public static void addRoutes(Javalin javalin, Collection<Route<?>> routes) {
-        for (Route<?> route : routes) {
+    public static void addRoutes(Javalin javalin, Collection<Route> routes) {
+        for (Route route : routes) {
             javalin.addHandler(VerbToHandlerType.toHandlerType(route.verb()), route.path().value(),
                   converToHandler(route.handler()));
         }
     }
 
-    private static <T> Handler converToHandler(Function<Request, Response<T>> function) {
+    private static <T> Handler converToHandler(Function<Request, Response> function) {
         return ctx -> {
             final var response = function.apply(RequestMapper.fromContext(ctx));
 
             if (response.responseBody().isPresent()) {
-                ctx.result(response.responseBody().get().toString()); // TODO: 05/02/2023 Bytes?
+                ctx.result(response.responseBody().get().value());
             }
             ctx.status(response.statusCode().code());
             ctxWithHeaders(ctx, response.headers());

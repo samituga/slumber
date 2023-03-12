@@ -1,5 +1,7 @@
 package io.samituga.bard.fixture;
 
+import static io.samituga.bard.fixture.ResponseTestData.defaultResponse;
+
 import io.samituga.bard.endpoint.Request;
 import io.samituga.bard.endpoint.Response;
 import io.samituga.bard.endpoint.Route;
@@ -10,49 +12,49 @@ import java.util.function.Function;
 
 public class RouteTestData {
 
-    public static <T> RouteBuilder<T> aRoute() {
-        return RouteTestData.<T>routeBuilder()
+    public static RouteBuilder aRoute() {
+        return routeBuilder()
               .verb(Verb.GET)
               .path(Path.of("/hello"))
-              .handler(req -> ResponseTestData.<T>defaultResponse().build());
+              .handler(req -> defaultResponse().build());
     }
 
-    public static <T> RouteBuilder<T> routeBuilder() {
-        return new RouteBuilder<>();
+    public static RouteBuilder routeBuilder() {
+        return new RouteBuilder();
     }
 
-    public static class RouteBuilder<T> {
+    public static class RouteBuilder {
 
         private Verb verb;
         private Path path;
-        Function<Request, Response<T>> handler;
+        Function<Request, Response> handler;
 
         private RouteBuilder() {}
 
-        public RouteBuilder<T> verb(Verb verb) {
+        public RouteBuilder verb(Verb verb) {
             this.verb = verb;
             return this;
         }
 
-        public RouteBuilder<T> path(Path path) {
+        public RouteBuilder path(Path path) {
             this.path = path;
             return this;
         }
 
-        public RouteBuilder<T> handler(Function<Request, Response<T>> handler) {
+        public RouteBuilder handler(Function<Request, Response> handler) {
             this.handler = handler;
             return this;
         }
 
-        public Route<T> build() {
+        public Route build() {
             return build(false);
         }
 
-        public Route<T> build(boolean skipValidation) {
+        public Route build(boolean skipValidation) {
             if (!skipValidation) {
                 validate(this);
             }
-            return new Route<>() {
+            return new Route() {
                 @Override
                 public Verb verb() {
                     return verb;
@@ -64,14 +66,14 @@ public class RouteTestData {
                 }
 
                 @Override
-                public Function<Request, Response<T>> handler() {
+                public Function<Request, Response> handler() {
                     return handler;
                 }
             };
         }
     }
 
-    private static void validate(RouteBuilder<?> builder) {
+    private static void validate(RouteBuilder builder) {
         validateVerb(builder.verb);
         validatePath(builder.path);
         validateHandler(builder.handler);
@@ -85,7 +87,7 @@ public class RouteTestData {
         AssertionUtility.required("path", path);
     }
 
-    private static void validateHandler(Function<Request, ? extends Response<?>> handler) {
+    private static void validateHandler(Function<Request, ? extends Response> handler) {
         AssertionUtility.required("handler", handler);
     }
 }
