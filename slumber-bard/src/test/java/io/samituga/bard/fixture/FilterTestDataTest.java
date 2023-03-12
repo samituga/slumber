@@ -6,9 +6,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import io.samituga.bard.endpoint.type.Path;
 import io.samituga.bard.filter.type.Order;
 import io.samituga.slumber.heimer.validator.exception.AssertionException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.function.BiConsumer;
+
 import org.junit.jupiter.api.Test;
 
 class FilterTestDataTest {
@@ -16,9 +18,9 @@ class FilterTestDataTest {
     private static final Order ORDER = Order.of(0);
     private static final Path PATH = Path.of("**");
 
-    private static final BiConsumer<ServletRequest, ServletResponse> DO_BEFORE =
+    private static final BiConsumer<HttpServletRequest, HttpServletResponse> DO_BEFORE =
           (req, res) -> System.out.println("before");
-    private static final BiConsumer<ServletRequest, ServletResponse> DO_AFTER =
+    private static final BiConsumer<HttpServletRequest, HttpServletResponse> DO_AFTER =
           (req, res) -> System.out.println("after");
 
     @Test

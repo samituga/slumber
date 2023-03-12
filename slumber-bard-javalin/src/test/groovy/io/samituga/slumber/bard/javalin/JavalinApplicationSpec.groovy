@@ -64,7 +64,7 @@ class JavalinApplicationSpec extends Specification {
         postTitleResponse.statusCode() == HttpCode.CREATED.code()
         !postTitleResponse.body().isBlank()
         def resultBody = postTitleResponse.body()
-        def uuid = UUID.fromString(resultBody);
+        def uuid = UUID.fromString(resultBody)
         uuid != null
 
         and: 'should get the newly crated title'
@@ -206,5 +206,31 @@ class JavalinApplicationSpec extends Specification {
             it.contains(titleStartsWithT1)
             it.contains(titleStartsWithT2)
         }
+    }
+
+
+    def 'should delete title'() {
+        given: 'server initialization'
+        application.init()
+        def title = "The Big And The Small"
+
+        and: 'wait for the server to be initialized'
+        WaitFor.waitFor({ application.serverStatus() == ServerStatus.STARTED }, Duration.ofSeconds(5))
+
+        when: 'makes request'
+        def postTitleResponse = client.postTitle(title)
+
+        then: 'result should have correct values'
+        postTitleResponse.statusCode() == HttpCode.CREATED.code()
+        !postTitleResponse.body().isBlank()
+        def resultBody = postTitleResponse.body()
+        def uuid = UUID.fromString(resultBody)
+        uuid != null
+
+        and: 'should delete the newly crated title'
+        def getTitleResponse = client.deleteTitle(uuid)
+
+        then:
+        getTitleResponse.statusCode() == HttpCode.NO_CONTENT.code()
     }
 }

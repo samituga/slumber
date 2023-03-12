@@ -1,5 +1,6 @@
 package io.samituga.slumber.bard.javalin.stub;
 
+import static io.samituga.bard.endpoint.Verb.DELETE;
 import static io.samituga.bard.endpoint.Verb.GET;
 import static io.samituga.bard.endpoint.Verb.POST;
 import static io.samituga.bard.fixture.ServerConfigTestData.defaultServerConfig;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,7 +38,7 @@ public class StubServer {
     public static final Path PATH_GET_TITLE = Path.of("/title/{uuid}");
     public static final Path PATH_GET_TITLE_BY_QUERY = Path.of("/title/");
     public static final Path PATH_POST_TITLE = Path.of("/title");
-
+    public static final Path PATH_DELETE_TITLE = Path.of("/auth/title/{uuid}");
     public static final Path PATH_HELLO_WORLD = Path.of("/hello/world");
     private final Route<String> routeHelloWorld = RouteTestData.<String>aRoute()
           .path(PATH_HELLO_WORLD)
@@ -62,6 +64,12 @@ public class StubServer {
           .handler(this::postTitle)
           .build();
 
+    private final Route<String> routeDeleteTitle = RouteTestData.<String>aRoute()
+          .path(PATH_DELETE_TITLE)
+          .verb(DELETE)
+          .handler(this::deleteTitle)
+          .build();
+
     public StubServer() {
         this.database = new HashMap<>();
     }
@@ -83,15 +91,23 @@ public class StubServer {
                                      Collection<Filter> extraFilters) {
         return defaultServerConfig()
               .routes(routes(extraRoutes))
-              .filters(extraFilters)
+              .filters(filters(extraFilters))
               .port(PORT)
               .build();
     }
 
     private Collection<Route<?>> routes(Collection<Route<?>> extraRoutes) {
         return Stream.concat(
-                    Stream.of(routeHelloWorld, routeGetTitle, routeGetTitleByQuery, routePostTitle),
+                    Stream.of(routeHelloWorld, routeGetTitle, routeGetTitleByQuery, routePostTitle,
+                          routeDeleteTitle),
                     extraRoutes.stream())
+              .collect(toList());
+    }
+
+    private Collection<Filter> filters(Collection<Filter> extraFilters) {
+        return Stream.concat(
+                    Stream.of(),
+                    extraFilters.stream())
               .collect(toList());
     }
 
@@ -158,6 +174,18 @@ public class StubServer {
         return ResponseTestData.<String>responseBuilder()
               .statusCode(statusCode)
               .responseBody(uuid.toString())
+              .build();
+    }
+
+    public Response<String> deleteTitle(Request request) {
+        var uuid = request.pathParams().get(PathParamName.of("uuid"));
+
+        var deleted = Optional.ofNullable(database.remove(UUID.fromString(uuid.value())))
+              .isPresent();
+        var statusCode = deleted ? HttpCode.NO_CONTENT : HttpCode.NOT_FOUND;
+
+        return ResponseTestData.<String>responseBuilder()
+              .statusCode(statusCode)
               .build();
     }
 

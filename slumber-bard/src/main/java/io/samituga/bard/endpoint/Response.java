@@ -16,6 +16,7 @@ public interface Response<T> {
      */
     HttpCode statusCode();
 
+    // TODO: 2023-03-12 headers
 
     /**
      * The response body.

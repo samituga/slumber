@@ -4,8 +4,9 @@ import io.samituga.bard.endpoint.type.Path;
 import io.samituga.bard.filter.Filter;
 import io.samituga.bard.filter.type.Order;
 import io.samituga.slumber.heimer.validator.AssertionUtility;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
@@ -25,8 +26,8 @@ public class FilterTestData {
     public static class FilterBuilder {
         private Order order;
         private Path path;
-        private Optional<BiConsumer<ServletRequest, ServletResponse>> doBefore = Optional.empty();
-        private Optional<BiConsumer<ServletRequest, ServletResponse>> doAfter = Optional.empty();
+        private Optional<BiConsumer<HttpServletRequest, HttpServletResponse>> doBefore = Optional.empty();
+        private Optional<BiConsumer<HttpServletRequest, HttpServletResponse>> doAfter = Optional.empty();
 
         private FilterBuilder() {}
 
@@ -40,12 +41,12 @@ public class FilterTestData {
             return this;
         }
 
-        public FilterBuilder doBefore(BiConsumer<ServletRequest, ServletResponse> doBefore) {
+        public FilterBuilder doBefore(BiConsumer<HttpServletRequest, HttpServletResponse> doBefore) {
             this.doBefore = Optional.of(doBefore);
             return this;
         }
 
-        public FilterBuilder doAfter(BiConsumer<ServletRequest, ServletResponse> doAfter) {
+        public FilterBuilder doAfter(BiConsumer<HttpServletRequest, HttpServletResponse> doAfter) {
             this.doAfter = Optional.of(doAfter);
             return this;
         }
@@ -69,12 +70,12 @@ public class FilterTestData {
                 }
 
                 @Override
-                public Optional<BiConsumer<ServletRequest, ServletResponse>> doBefore() {
+                public Optional<BiConsumer<HttpServletRequest, HttpServletResponse>> doBefore() {
                     return doBefore;
                 }
 
                 @Override
-                public Optional<BiConsumer<ServletRequest, ServletResponse>> doAfter() {
+                public Optional<BiConsumer<HttpServletRequest, HttpServletResponse>> doAfter() {
                     return doAfter;
                 }
 
