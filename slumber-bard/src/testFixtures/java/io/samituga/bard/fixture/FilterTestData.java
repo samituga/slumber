@@ -13,7 +13,7 @@ import java.util.function.BiConsumer;
 public class FilterTestData {
 
 
-    public static FilterTestData.FilterBuilder defaultFilter() {
+    public static FilterTestData.FilterBuilder aFilter() {
         return filterBuilder()
               .order(Order.of(0))
               .path(Path.of("**"));

@@ -1,5 +1,7 @@
 package io.samituga.bard.fixture;
 
+import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
+
 import io.samituga.bard.endpoint.Request;
 import io.samituga.bard.endpoint.type.PathParamName;
 import io.samituga.bard.endpoint.type.PathParamValue;
@@ -7,7 +9,6 @@ import io.samituga.bard.endpoint.type.PathParams;
 import io.samituga.bard.endpoint.type.QueryParamName;
 import io.samituga.bard.endpoint.type.QueryParamValue;
 import io.samituga.bard.endpoint.type.QueryParams;
-import io.samituga.slumber.heimer.validator.AssertionUtility;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class RequestTestData {
@@ -79,10 +80,10 @@ public class RequestTestData {
     }
 
     private static void validatePathParams(PathParams pathParams) {
-        AssertionUtility.required("pathParams", pathParams);
+        required("pathParams", pathParams);
     }
 
     private static void validateQueryParams(QueryParams queryParams) {
-        AssertionUtility.required("queryParams", queryParams);
+        required("queryParams", queryParams);
     }
 }

@@ -8,7 +8,7 @@ import static io.samituga.bard.endpoint.Verb.GET;
 import static io.samituga.bard.endpoint.Verb.POST;
 import static io.samituga.bard.fixture.ResponseTestData.responseBuilder;
 import static io.samituga.bard.fixture.RouteTestData.aRoute;
-import static io.samituga.bard.fixture.ServerConfigTestData.defaultServerConfig;
+import static io.samituga.bard.fixture.ServerConfigTestData.aServerConfig;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.stream.Collectors.toList;
@@ -101,7 +101,7 @@ public class StubServer {
 
     public ServerConfig serverConfig(Collection<Route> extraRoutes,
                                      Collection<Filter> extraFilters) {
-        return defaultServerConfig()
+        return aServerConfig()
               .routes(routes(extraRoutes))
               .filters(filters(extraFilters))
               .port(PORT)

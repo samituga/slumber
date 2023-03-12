@@ -1,15 +1,16 @@
 package io.samituga.bard.fixture;
 
+import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
+
 import io.samituga.bard.endpoint.HttpCode;
 import io.samituga.bard.endpoint.Response;
 import io.samituga.bard.endpoint.type.ResponseBody;
-import io.samituga.slumber.heimer.validator.AssertionUtility;
 import io.samituga.slumber.ivern.http.type.Headers;
 import java.util.Optional;
 
 public class ResponseTestData {
 
-    public static ResponseBuilder defaultResponse() {
+    public static ResponseBuilder aResponse() {
         return responseBuilder().statusCode(HttpCode.OK);
     }
 
@@ -72,6 +73,6 @@ public class ResponseTestData {
     }
 
     private static void validateStatusCode(HttpCode statusCode) {
-        AssertionUtility.required("statusCode", statusCode);
+        required("statusCode", statusCode);
     }
 }

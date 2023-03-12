@@ -1,13 +1,13 @@
 package io.samituga.bard.fixture;
 
-import static io.samituga.bard.fixture.ResponseTestData.defaultResponse;
+import static io.samituga.bard.fixture.ResponseTestData.aResponse;
+import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 
 import io.samituga.bard.endpoint.Request;
 import io.samituga.bard.endpoint.Response;
 import io.samituga.bard.endpoint.Route;
 import io.samituga.bard.endpoint.Verb;
 import io.samituga.bard.endpoint.type.Path;
-import io.samituga.slumber.heimer.validator.AssertionUtility;
 import java.util.function.Function;
 
 public class RouteTestData {
@@ -16,7 +16,7 @@ public class RouteTestData {
         return routeBuilder()
               .verb(Verb.GET)
               .path(Path.of("/hello"))
-              .handler(req -> defaultResponse().build());
+              .handler(req -> aResponse().build());
     }
 
     public static RouteBuilder routeBuilder() {
@@ -80,14 +80,14 @@ public class RouteTestData {
     }
 
     private static void validateVerb(Verb verb) {
-        AssertionUtility.required("verb", verb);
+        required("verb", verb);
     }
 
     private static void validatePath(Path path) {
-        AssertionUtility.required("path", path);
+        required("path", path);
     }
 
     private static void validateHandler(Function<Request, ? extends Response> handler) {
-        AssertionUtility.required("handler", handler);
+        required("handler", handler);
     }
 }

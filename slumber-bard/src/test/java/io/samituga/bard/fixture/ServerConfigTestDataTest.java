@@ -1,5 +1,7 @@
 package io.samituga.bard.fixture;
 
+import static io.samituga.bard.fixture.FilterTestData.aFilter;
+import static io.samituga.bard.fixture.ServerConfigTestData.serverConfigBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -12,13 +14,13 @@ import org.junit.jupiter.api.Test;
 class ServerConfigTestDataTest {
 
     private final static int VALID_PORT = 8080;
-    private final static Filter FILTER = FilterTestData.defaultFilter().build();
+    private final static Filter FILTER = aFilter().build();
 
 
     @Test
     void should_build_server_config() {
         // given when
-        var result = ServerConfigTestData.serverConfigBuilder()
+        var result = serverConfigBuilder()
               .port(VALID_PORT)
               .filter(FILTER)
               .build();
@@ -35,7 +37,7 @@ class ServerConfigTestDataTest {
         var invalidPort = -1;
 
         // when
-        var result = ServerConfigTestData.serverConfigBuilder()
+        var result = serverConfigBuilder()
               .port(invalidPort)
               .filter(FILTER)
               .build(true);
@@ -51,7 +53,7 @@ class ServerConfigTestDataTest {
         // given
         var invalidPort = -1;
 
-        var builder = ServerConfigTestData.serverConfigBuilder()
+        var builder = serverConfigBuilder()
               .port(invalidPort)
               .filter(FILTER);
 
@@ -63,10 +65,10 @@ class ServerConfigTestDataTest {
     @Test
     void should_throw_exception_if_multiple_first_precedence_filters() {
         // given
-        var filter1 = FilterTestData.defaultFilter().order(Order.of(Precedence.FIRST)).build();
-        var filter2 = FilterTestData.defaultFilter().order(Order.of(Precedence.FIRST)).build();
+        var filter1 = aFilter().order(Order.of(Precedence.FIRST)).build();
+        var filter2 = aFilter().order(Order.of(Precedence.FIRST)).build();
 
-        var builder = ServerConfigTestData.serverConfigBuilder()
+        var builder = serverConfigBuilder()
               .port(VALID_PORT)
               .filters(filter1, filter2);
 
@@ -78,10 +80,10 @@ class ServerConfigTestDataTest {
     @Test
     void should_throw_exception_if_multiple_last_precedence_filters() {
         // given
-        var filter1 = FilterTestData.defaultFilter().order(Order.of(Precedence.LAST)).build();
-        var filter2 = FilterTestData.defaultFilter().order(Order.of(Precedence.LAST)).build();
+        var filter1 = aFilter().order(Order.of(Precedence.LAST)).build();
+        var filter2 = aFilter().order(Order.of(Precedence.LAST)).build();
 
-        var builder = ServerConfigTestData.serverConfigBuilder()
+        var builder = serverConfigBuilder()
               .port(VALID_PORT)
               .filters(filter1, filter2);
 

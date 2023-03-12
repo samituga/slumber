@@ -1,5 +1,9 @@
 package io.samituga.bard.fixture;
 
+import static io.samituga.bard.fixture.FilterTestData.aFilter;
+import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
+import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredValidPort;
+
 import io.samituga.bard.configuration.ServerConfig;
 import io.samituga.bard.endpoint.Route;
 import io.samituga.bard.filter.Filter;
@@ -12,10 +16,10 @@ import java.util.List;
 public class ServerConfigTestData {
 
 
-    public static ServerConfigBuilder defaultServerConfig() {
+    public static ServerConfigBuilder aServerConfig() {
         return serverConfigBuilder()
               .port(8080)
-              .filter(FilterTestData.defaultFilter().build());
+              .filter(aFilter().build());
     }
 
     public static ServerConfigBuilder serverConfigBuilder() {
@@ -98,11 +102,11 @@ public class ServerConfigTestData {
     }
 
     private static void validatePort(int port) {
-        AssertionUtility.requiredValidPort(port);
+        requiredValidPort(port);
     }
 
     private static void validateFiltersOrder(Collection<Filter> filters) {
-        AssertionUtility.required("filters", filters);
+        required("filters", filters);
 
         var firstFilterCount = filters.stream()
               .filter(filter -> filter.order().value().equals(Precedence.FIRST.precedenceLevel()))

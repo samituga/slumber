@@ -1,6 +1,6 @@
 package io.samituga.bard.fixture;
 
-import static io.samituga.bard.fixture.ResponseTestData.defaultResponse;
+import static io.samituga.bard.fixture.ResponseTestData.aResponse;
 import static io.samituga.bard.fixture.RouteTestData.routeBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -18,7 +18,7 @@ class RouteTestDataTest {
     private static final Verb VERB = Verb.GET;
     private static final Path PATH = Path.of("/hello");
     private static final Function<Request, Response> HANDLER =
-          req -> defaultResponse().build();
+          req -> aResponse().build();
 
     @Test
     void should_build_route() {
