@@ -26,6 +26,7 @@ import io.samituga.bard.endpoint.type.ResponseBody;
 import io.samituga.bard.filter.Filter;
 import io.samituga.slumber.bard.javalin.JavalinApplication;
 import io.samituga.slumber.ivern.http.type.Headers;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,8 +38,6 @@ import java.util.stream.Stream;
 
 public class StubServer {
 
-    private final JavalinApplication app = new JavalinApplication();
-
     public static final int PORT = 8080;
     public static final Path PATH_GET_TITLE = Path.of("/title/{uuid}");
     public static final Path PATH_GET_TITLE_BY_QUERY = Path.of("/title/");
@@ -46,6 +45,7 @@ public class StubServer {
     public static final Path PATH_DELETE_TITLE = Path.of("/auth/title/{uuid}");
     public static final Path PATH_HELLO_WORLD = Path.of("/hello/world");
     public static final Path PATH_HEADERS = Path.of("/headers");
+    private final JavalinApplication app = new JavalinApplication();
     private final Route routeHelloWorld = aRoute()
           .path(PATH_HELLO_WORLD)
           .verb(GET)
@@ -97,10 +97,31 @@ public class StubServer {
 
     public void cleanup() {
         app.shutdown();
+        database.clear();
     }
 
-    public ServerConfig serverConfig(Collection<Route> extraRoutes,
-                                     Collection<Filter> extraFilters) {
+    public Optional<String> addToDatabase(UUID uuid, String title) {
+        return Optional.ofNullable(database.put(uuid, title));
+    }
+
+    public Optional<String> findInDatabase(UUID uuid) {
+        return Optional.ofNullable(database.get(uuid));
+    }
+
+    public String getFromDatabase(UUID uuid) {
+        return Optional.ofNullable(database.get(uuid)).orElseThrow();
+    }
+
+    public Map<UUID, String> getDatabase() {
+        return unmodifiableMap(database);
+    }
+
+    public ServerStatus serverStatus() {
+        return app.serverStatus();
+    }
+
+    private ServerConfig serverConfig(Collection<Route> extraRoutes,
+                                      Collection<Filter> extraFilters) {
         return aServerConfig()
               .routes(routes(extraRoutes))
               .filters(filters(extraFilters))
@@ -128,7 +149,7 @@ public class StubServer {
     }
 
 
-    public Response getTitle(Request request) {
+    private Response getTitle(Request request) {
 
         var uuid = request.pathParams().get(PathParamName.of("uuid"));
 
@@ -142,7 +163,7 @@ public class StubServer {
                     .build());
     }
 
-    public Response getTitleByQuery(Request request) {
+    private Response getTitleByQuery(Request request) {
 
         var firstLetter = request.queryParams().getFirst(QueryParamName.of("firstLetter"));
         var ignoreCase = request.queryParams()
@@ -167,7 +188,7 @@ public class StubServer {
               .build();
     }
 
-    public Response postTitle(Request request) {
+    private Response postTitle(Request request) {
         String body;
         try {
             body = request.request()
@@ -194,7 +215,7 @@ public class StubServer {
               .build();
     }
 
-    public Response deleteTitle(Request request) {
+    private Response deleteTitle(Request request) {
         var uuid = request.pathParams().get(PathParamName.of("uuid"));
 
         var deleted = Optional.ofNullable(database.remove(UUID.fromString(uuid.value())))
@@ -206,7 +227,7 @@ public class StubServer {
               .build();
     }
 
-    public Response helloWorld(Request request) {
+    private Response helloWorld(Request request) {
 
         return responseBuilder()
               .statusCode(HttpCode.OK)
@@ -214,7 +235,7 @@ public class StubServer {
               .build();
     }
 
-    public Response getHeaders(Request request) {
+    private Response getHeaders(Request request) {
 
         var statusCode = Optional.ofNullable(request.request()
                     .getHeader("req-header-name"))
@@ -226,13 +247,5 @@ public class StubServer {
               .responseBody(ResponseBody.of("Hello world"))
               .headers(Headers.of("resp-header-name", "resp-header-value"))
               .build();
-    }
-
-    public Map<UUID, String> getDatabase() {
-        return unmodifiableMap(database);
-    }
-
-    public ServerStatus serverStatus() {
-        return app.serverStatus();
     }
 }

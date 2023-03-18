@@ -1,5 +1,7 @@
 package io.samituga.slumber.bard.javalin
 
+import static io.samituga.slumber.bard.javalin.stub.StubServer.PATH_HELLO_WORLD
+
 import io.samituga.bard.ServerStatus
 import io.samituga.bard.endpoint.HttpCode
 import io.samituga.bard.filter.Precedence
@@ -17,8 +19,6 @@ import java.time.Duration
 import java.time.Instant
 import java.util.function.BiConsumer
 
-import static io.samituga.slumber.bard.javalin.stub.StubServer.PATH_HELLO_WORLD
-
 class JavalinApplicationSpec extends Specification {
 
 
@@ -30,10 +30,9 @@ class JavalinApplicationSpec extends Specification {
         client = new StubClient()
     }
 
-    def cleanup(){
+    def cleanup() {
         application.cleanup()
     }
-
 
     def 'should start server and create endpoint'() {
         given: 'server initialization'
@@ -50,6 +49,24 @@ class JavalinApplicationSpec extends Specification {
         result.body() == "Hello world"
     }
 
+    def "should make get request and get title"() {
+        given: 'server initialization'
+        application.init()
+        def title = "The Big And The Small"
+        def titleUuid = UUID.randomUUID()
+        application.addToDatabase(titleUuid, title)
+
+        and: 'wait for the server to be initialized'
+        waitForServerInit()
+
+        when: 'make get request'
+        def resultTitle = client.getTitle(titleUuid)
+
+        then: 'should be correct title'
+        resultTitle.statusCode() == HttpCode.OK.code()
+        resultTitle.body() == title
+    }
+
     def 'should make post request and create title'() {
         given: 'server initialization'
         application.init()
@@ -58,7 +75,7 @@ class JavalinApplicationSpec extends Specification {
         and: 'wait for the server to be initialized'
         waitForServerInit()
 
-        when: 'makes request'
+        when: 'makes post request'
         def postTitleResponse = client.postTitle(title)
 
         then: 'result should have correct values'
@@ -68,14 +85,10 @@ class JavalinApplicationSpec extends Specification {
         def uuid = UUID.fromString(resultBody)
         uuid != null
 
-        and: 'should get the newly crated title'
-        def getTitleResponse = client.getTitle(uuid)
-
-        then:
-        getTitleResponse.statusCode() == HttpCode.OK.code()
-        getTitleResponse.body() == title
+        and: 'title should be available in the database'
+        def resultTitle = application.getFromDatabase(uuid)
+        resultTitle == title
     }
-
 
     def 'should execute filter doBefore before doAfter'() {
         given: 'server initialization'
@@ -156,7 +169,7 @@ class JavalinApplicationSpec extends Specification {
           .path(PATH_HELLO_WORLD)
           .build()
 
-        application.init(Collections.emptyList(), List.of(middleFilter, lastFilter,firstFilter))
+        application.init(Collections.emptyList(), List.of(middleFilter, lastFilter, firstFilter))
 
         and: 'wait for the server to be initialized'
         waitForServerInit()
