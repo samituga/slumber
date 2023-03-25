@@ -1,5 +1,6 @@
 package io.samituga.bard.endpoint.route;
 
+import static io.samituga.bard.endpoint.route.RouteBuilder.routeBuilder;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 
 import io.samituga.bard.endpoint.request.HttpRequest;
@@ -16,5 +17,13 @@ record RouteImpl(Verb verb,
         this.verb = required("verb", verb);
         this.path = required("path", path);
         this.handler = required("handler", handler);
+    }
+
+    @Override
+    public RouteBuilder copy() {
+        return routeBuilder()
+              .verb(verb)
+              .path(path)
+              .handler(handler);
     }
 }

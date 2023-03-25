@@ -21,7 +21,7 @@ record HttpRequestImpl(PathParams pathParams,
     }
 
     @Override
-    public HttpRequestBuilder copy(HttpRequest httpRequest) {
+    public HttpRequestBuilder copy() {
         return httpRequestBuilder()
               .pathParams(pathParams)
               .queryParams(queryParams)

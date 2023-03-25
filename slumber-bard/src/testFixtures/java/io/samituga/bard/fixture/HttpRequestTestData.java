@@ -12,6 +12,8 @@ import io.samituga.bard.endpoint.request.type.QueryParams;
 
 public class HttpRequestTestData {
 
+    // TODO: 2023-03-25 how to build with HttpServeletRequest?
+
     public static HttpRequestBuilder aRequest() {
         return requestBuilder()
               .pathParams(PathParams.of(PathParamName.of("name"), PathParamValue.of("value")))
