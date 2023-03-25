@@ -7,14 +7,14 @@ import io.samituga.bard.endpoint.request.type.PathParams;
 import io.samituga.bard.endpoint.request.type.QueryParams;
 import jakarta.servlet.http.HttpServletRequest;
 
-record HttpRequestImpl(PathParams pathParams,
-                       QueryParams queryParams,
-                       HttpServletRequest request)
+record HttpRequestStruct(PathParams pathParams,
+                         QueryParams queryParams,
+                         HttpServletRequest request)
       implements HttpRequest {
 
-    HttpRequestImpl(PathParams pathParams,
-                    QueryParams queryParams,
-                    HttpServletRequest request) {
+    HttpRequestStruct(PathParams pathParams,
+                      QueryParams queryParams,
+                      HttpServletRequest request) {
         this.pathParams = required("pathParams", pathParams);
         this.queryParams = required("queryParams", queryParams);
         this.request = required("request", request);

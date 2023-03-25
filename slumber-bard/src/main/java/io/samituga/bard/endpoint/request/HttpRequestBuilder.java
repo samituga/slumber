@@ -34,7 +34,7 @@ public class HttpRequestBuilder implements Builder<HttpRequest> {
 
 
     public HttpRequest build() {
-        return new HttpRequestImpl(pathParams, queryParams, request);
+        return new HttpRequestStruct(pathParams, queryParams, request);
     }
 }
 

@@ -6,14 +6,14 @@ import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 import io.samituga.slumber.ivern.http.type.Headers;
 import java.util.Optional;
 
-record HttpResponseImpl(HttpCode statusCode,
-                        Headers headers,
-                        Optional<ResponseBody> responseBody)
+record HttpResponseStruct(HttpCode statusCode,
+                          Headers headers,
+                          Optional<ResponseBody> responseBody)
       implements HttpResponse {
 
-    HttpResponseImpl(HttpCode statusCode,
-                     Headers headers,
-                     Optional<ResponseBody> responseBody) {
+    HttpResponseStruct(HttpCode statusCode,
+                       Headers headers,
+                       Optional<ResponseBody> responseBody) {
         this.statusCode = required("statusCode", statusCode);
         this.headers = required("headers", headers);
         this.responseBody = required("responseBody", responseBody);

@@ -33,6 +33,6 @@ public class RouteBuilder implements Builder<Route> {
     }
 
     public Route build() {
-        return new RouteImpl(verb, path, handler);
+        return new RouteStruct(verb, path, handler);
     }
 }

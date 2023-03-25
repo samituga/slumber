@@ -38,6 +38,6 @@ public class HttpResponseBuilder implements Builder<HttpResponse> {
     }
 
     public HttpResponse build() {
-        return new HttpResponseImpl(statusCode, headers, responseBody);
+        return new HttpResponseStruct(statusCode, headers, responseBody);
     }
 }
