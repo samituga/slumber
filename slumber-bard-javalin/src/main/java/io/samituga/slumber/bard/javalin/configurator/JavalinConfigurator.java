@@ -1,4 +1,4 @@
-package io.samituga.slumber.bard.javalin;
+package io.samituga.slumber.bard.javalin.configurator;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;

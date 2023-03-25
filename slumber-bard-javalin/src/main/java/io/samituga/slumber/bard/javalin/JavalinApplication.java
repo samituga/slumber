@@ -12,6 +12,7 @@ import io.samituga.bard.application.SlumberApplication;
 import io.samituga.bard.configuration.ServerConfig;
 import io.samituga.bard.exception.ServerInitException;
 import io.samituga.bard.exception.ServerShutdownException;
+import io.samituga.slumber.bard.javalin.configurator.JavalinConfigurator;
 import java.util.function.Consumer;
 
 public class JavalinApplication implements SlumberApplication {
