@@ -1,7 +1,7 @@
 package io.samituga.slumber.bard.javalin.mapper;
 
 import io.javalin.http.Context;
-import io.samituga.bard.endpoint.HttpRequest;
+import io.samituga.bard.endpoint.request.HttpRequest;
 import io.samituga.bard.endpoint.type.PathParamName;
 import io.samituga.bard.endpoint.type.PathParamValue;
 import io.samituga.bard.endpoint.type.PathParams;

@@ -1,12 +1,12 @@
 package io.samituga.bard.fixture;
 
-import static io.samituga.bard.fixture.ResponseTestData.aResponse;
+import static io.samituga.bard.fixture.HttpResponseTestData.aResponse;
 import static io.samituga.bard.fixture.RouteTestData.routeBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import io.samituga.bard.endpoint.HttpRequest;
-import io.samituga.bard.endpoint.HttpResponse;
+import io.samituga.bard.endpoint.request.HttpRequest;
+import io.samituga.bard.endpoint.response.HttpResponse;
 import io.samituga.bard.endpoint.Verb;
 import io.samituga.bard.endpoint.type.Path;
 import io.samituga.slumber.heimer.validator.exception.AssertionException;

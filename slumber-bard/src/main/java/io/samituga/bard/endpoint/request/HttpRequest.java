@@ -1,4 +1,4 @@
-package io.samituga.bard.endpoint;
+package io.samituga.bard.endpoint.request;
 
 import io.samituga.bard.endpoint.type.PathParams;
 import io.samituga.bard.endpoint.type.QueryParams;

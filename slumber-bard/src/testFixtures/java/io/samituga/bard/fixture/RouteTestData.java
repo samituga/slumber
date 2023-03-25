@@ -1,10 +1,10 @@
 package io.samituga.bard.fixture;
 
-import static io.samituga.bard.fixture.ResponseTestData.aResponse;
+import static io.samituga.bard.fixture.HttpResponseTestData.aResponse;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 
-import io.samituga.bard.endpoint.HttpRequest;
-import io.samituga.bard.endpoint.HttpResponse;
+import io.samituga.bard.endpoint.request.HttpRequest;
+import io.samituga.bard.endpoint.response.HttpResponse;
 import io.samituga.bard.endpoint.Route;
 import io.samituga.bard.endpoint.Verb;
 import io.samituga.bard.endpoint.type.Path;

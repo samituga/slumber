@@ -6,7 +6,7 @@ import static io.samituga.bard.endpoint.HttpCode.OK;
 import static io.samituga.bard.endpoint.Verb.DELETE;
 import static io.samituga.bard.endpoint.Verb.GET;
 import static io.samituga.bard.endpoint.Verb.POST;
-import static io.samituga.bard.fixture.ResponseTestData.responseBuilder;
+import static io.samituga.bard.endpoint.response.HttpResponseBuilder.httpResponseBuilder;
 import static io.samituga.bard.fixture.RouteTestData.aRoute;
 import static io.samituga.bard.fixture.ServerConfigTestData.aServerConfig;
 import static java.util.Collections.emptyList;
@@ -16,10 +16,10 @@ import static java.util.stream.Collectors.toList;
 import io.samituga.bard.ServerStatus;
 import io.samituga.bard.configuration.ServerConfig;
 import io.samituga.bard.endpoint.HttpCode;
-import io.samituga.bard.endpoint.HttpRequest;
-import io.samituga.bard.endpoint.HttpResponse;
 import io.samituga.bard.endpoint.Route;
-import io.samituga.bard.endpoint.type.ByteResponseBody;
+import io.samituga.bard.endpoint.request.HttpRequest;
+import io.samituga.bard.endpoint.response.HttpResponse;
+import io.samituga.bard.endpoint.response.type.ByteResponseBody;
 import io.samituga.bard.endpoint.type.Path;
 import io.samituga.bard.endpoint.type.PathParamName;
 import io.samituga.bard.endpoint.type.QueryParamName;
@@ -153,11 +153,11 @@ public class StubServer {
         var uuid = httpRequest.pathParams().get(PathParamName.of("uuid"));
 
         return Optional.ofNullable(database.get(UUID.fromString(uuid.value())))
-              .map(title -> responseBuilder()
+              .map(title -> httpResponseBuilder()
                     .statusCode(HttpCode.OK)
                     .responseBody(ByteResponseBody.of(title))
                     .build())
-              .orElse(responseBuilder()
+              .orElse(httpResponseBuilder()
                     .statusCode(HttpCode.NOT_FOUND)
                     .build());
     }
@@ -181,7 +181,7 @@ public class StubServer {
             statusCode = HttpCode.NOT_FOUND;
         }
 
-        return responseBuilder()
+        return httpResponseBuilder()
               .statusCode(statusCode)
               .responseBody(ByteResponseBody.of(result))
               .build();
@@ -208,7 +208,7 @@ public class StubServer {
             statusCode = HttpCode.CREATED;
         }
 
-        return responseBuilder()
+        return httpResponseBuilder()
               .statusCode(statusCode)
               .responseBody(ByteResponseBody.of(uuid.toString()))
               .build();
@@ -221,14 +221,14 @@ public class StubServer {
               .isPresent();
         var statusCode = deleted ? HttpCode.NO_CONTENT : HttpCode.NOT_FOUND;
 
-        return responseBuilder()
+        return httpResponseBuilder()
               .statusCode(statusCode)
               .build();
     }
 
     private HttpResponse helloWorld(HttpRequest httpRequest) {
 
-        return responseBuilder()
+        return httpResponseBuilder()
               .statusCode(HttpCode.OK)
               .responseBody(ByteResponseBody.of("Hello world"))
               .build();
@@ -241,7 +241,7 @@ public class StubServer {
               .map(headerValue -> headerValue.equals("req-header-value") ? OK : EXPECTATION_FAILED)
               .orElse(BAD_REQUEST);
 
-        return responseBuilder()
+        return httpResponseBuilder()
               .statusCode(statusCode)
               .responseBody(ByteResponseBody.of("Hello world"))
               .headers(Headers.of("resp-header-name", "resp-header-value"))

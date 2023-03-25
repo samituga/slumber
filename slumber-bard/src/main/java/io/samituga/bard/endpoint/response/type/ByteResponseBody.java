@@ -1,8 +1,8 @@
-package io.samituga.bard.endpoint.type;
+package io.samituga.bard.endpoint.response.type;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import io.samituga.bard.endpoint.ResponseBody;
+import io.samituga.bard.endpoint.response.ResponseBody;
 import io.samituga.slumber.heimer.validator.AssertionUtility;
 import io.samituga.slumber.ivern.type.Type;
 
