@@ -32,6 +32,7 @@ public class RouteBuilder implements Builder<Route> {
         return this;
     }
 
+    @Override
     public Route build() {
         return new RouteStruct(verb, path, handler);
     }

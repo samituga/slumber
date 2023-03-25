@@ -1,6 +1,6 @@
 package io.samituga.slumber.ivern.builder;
 
-public interface Structure<T, B extends Builder<T>> {
+public interface Structure<T extends Structure<T, B>, B extends Builder<T>> {
 
     B copy();
 }

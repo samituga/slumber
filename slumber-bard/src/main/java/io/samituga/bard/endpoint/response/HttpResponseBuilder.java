@@ -37,6 +37,7 @@ public class HttpResponseBuilder implements Builder<HttpResponse> {
         return this;
     }
 
+    @Override
     public HttpResponse build() {
         return new HttpResponseStruct(statusCode, headers, responseBody);
     }

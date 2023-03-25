@@ -33,6 +33,7 @@ public class HttpRequestBuilder implements Builder<HttpRequest> {
     }
 
 
+    @Override
     public HttpRequest build() {
         return new HttpRequestStruct(pathParams, queryParams, request);
     }

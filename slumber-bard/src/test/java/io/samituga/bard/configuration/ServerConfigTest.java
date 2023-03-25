@@ -1,48 +1,30 @@
-package io.samituga.bard.fixture;
+package io.samituga.bard.configuration;
 
 import static io.samituga.bard.configuration.ServerConfigBuilder.serverConfigBuilder;
 import static io.samituga.bard.fixture.FilterTestData.aFilter;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import io.samituga.bard.filter.Filter;
 import io.samituga.bard.filter.Precedence;
 import io.samituga.bard.filter.type.Order;
+import io.samituga.bard.fixture.ServerConfigTestData;
 import io.samituga.slumber.heimer.validator.exception.AssertionException;
 import org.junit.jupiter.api.Test;
 
-class ServerConfigTestDataTest {
+class ServerConfigTest {
 
-    private final static int VALID_PORT = 8080;
-    private final static Filter FILTER = aFilter().build();
-
+    private final static int PORT = 8080;
 
     @Test
-    void should_build_server_config() {
-        // given when
-        var result = serverConfigBuilder()
-              .port(VALID_PORT)
-              .filter(FILTER)
-              .build();
+    void should_make_exact_copy() {
+        // given
+        var serverConfig = ServerConfigTestData.aServerConfig().build();
+
+        // when
+        var copy = serverConfig.copy().build();
 
         // then
-        assertThat(result).isNotNull();
-        assertThat(result.port()).isEqualTo(VALID_PORT);
-        assertThat(result.filters()).containsExactly(FILTER);
-    }
-
-    @Test
-    void should_throw_exception_if_port_is_invalid() {
-        // given
-        var invalidPort = -1;
-
-        var builder = serverConfigBuilder()
-              .port(invalidPort)
-              .filter(FILTER);
-
-        // when then
-        assertThatThrownBy(builder::build)
-              .isInstanceOf(AssertionException.class);
+        assertThat(copy).isEqualTo(serverConfig);
     }
 
     @Test
@@ -52,7 +34,7 @@ class ServerConfigTestDataTest {
         var filter2 = aFilter().order(Order.of(Precedence.FIRST)).build();
 
         var builder = serverConfigBuilder()
-              .port(VALID_PORT)
+              .port(PORT)
               .filters(filter1, filter2);
 
         // when then
@@ -67,7 +49,7 @@ class ServerConfigTestDataTest {
         var filter2 = aFilter().order(Order.of(Precedence.LAST)).build();
 
         var builder = serverConfigBuilder()
-              .port(VALID_PORT)
+              .port(PORT)
               .filters(filter1, filter2);
 
         // when then
