@@ -3,7 +3,7 @@ package io.samituga.bard.filter;
 
 import io.samituga.bard.type.Path;
 import io.samituga.bard.filter.type.Order;
-import io.samituga.slumber.ivern.builder.Structure;
+import io.samituga.slumber.ivern.structure.Structure;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;

@@ -1,6 +1,6 @@
 package io.samituga.bard.endpoint.response;
 
-import io.samituga.slumber.ivern.builder.Structure;
+import io.samituga.slumber.ivern.structure.Structure;
 import io.samituga.slumber.ivern.http.type.Headers;
 import java.util.Optional;
 
