@@ -1,10 +1,10 @@
-package io.samituga.slumber.malz.jooq.config;
+package io.samituga.slumber.malz.database;
 
-
-import org.junit.jupiter.params.provider.Arguments;
-import java.util.stream.Stream;
 
 import static io.samituga.slumber.malz.driver.Driver.POSTGRES;
+
+import java.util.stream.Stream;
+import org.junit.jupiter.params.provider.Arguments;
 
 public class DataSourceConfigDataProvider {
 
