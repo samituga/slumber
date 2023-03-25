@@ -1,16 +1,15 @@
 package io.samituga.bard.fixture;
 
+import static io.samituga.bard.filter.FilterBuilder.filterBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import io.samituga.bard.type.Path;
 import io.samituga.bard.filter.type.Order;
+import io.samituga.bard.type.Path;
 import io.samituga.slumber.heimer.validator.exception.AssertionException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.util.function.BiConsumer;
-
 import org.junit.jupiter.api.Test;
 
 class FilterTestDataTest {
@@ -26,7 +25,7 @@ class FilterTestDataTest {
     @Test
     void should_build_filter() {
         // given when
-        var result = FilterTestData.filterBuilder()
+        var result = filterBuilder()
               .order(ORDER)
               .path(PATH)
               .doBefore(DO_BEFORE)
@@ -42,27 +41,9 @@ class FilterTestDataTest {
     }
 
     @Test
-    void should_build_filter_with_invalid_data_if_skip_validation_is_true() {
-        // given when
-        var result = FilterTestData.filterBuilder()
-              .order(null)
-              .path(PATH)
-              .doBefore(DO_BEFORE)
-              .doAfter(DO_AFTER)
-              .build(true);
-
-        // then
-        assertThat(result).isNotNull();
-        assertThat(result.order()).isNull();
-        assertThat(result.path()).isEqualTo(PATH);
-        assertThat(result.doBefore()).isPresent().get().isEqualTo(DO_BEFORE);
-        assertThat(result.doAfter()).isPresent().get().isEqualTo(DO_AFTER);
-    }
-
-    @Test
     void should_build_filter_when_do_before_or_do_after_is_not_present() {
         // given when
-        var result = FilterTestData.filterBuilder()
+        var result = filterBuilder()
               .order(ORDER)
               .path(PATH)
               .build();
@@ -78,7 +59,7 @@ class FilterTestDataTest {
     @Test
     void should_throw_exception_if_order_is_null() {
         // given
-        var builder = FilterTestData.filterBuilder()
+        var builder = filterBuilder()
               .order(null)
               .path(PATH)
               .doBefore(DO_BEFORE)
@@ -92,7 +73,7 @@ class FilterTestDataTest {
     @Test
     void should_throw_exception_if_path_is_null() {
         // given
-        var builder = FilterTestData.filterBuilder()
+        var builder = filterBuilder()
               .order(ORDER)
               .path(null)
               .doBefore(DO_BEFORE)
