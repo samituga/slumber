@@ -1,6 +1,6 @@
 package io.samituga.slumber.ivern.type;
 
-import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotEmpty;
+import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 
 import java.util.Collections;
 import java.util.Map;
@@ -14,7 +14,7 @@ public abstract class MapType<K, V> extends Type<Map<K, V>> {
     }
 
     protected MapType(Map<K, V> value) {
-        super(requiredNotEmpty("value", Map.copyOf(value)));
+        super(required("value", Map.copyOf(value)));
     }
 
     public V get(K key) {
