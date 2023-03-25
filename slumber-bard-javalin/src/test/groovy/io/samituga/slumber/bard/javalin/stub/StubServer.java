@@ -19,14 +19,13 @@ import io.samituga.bard.endpoint.HttpCode;
 import io.samituga.bard.endpoint.Request;
 import io.samituga.bard.endpoint.Response;
 import io.samituga.bard.endpoint.Route;
+import io.samituga.bard.endpoint.type.ByteResponseBody;
 import io.samituga.bard.endpoint.type.Path;
 import io.samituga.bard.endpoint.type.PathParamName;
 import io.samituga.bard.endpoint.type.QueryParamName;
-import io.samituga.bard.endpoint.type.ResponseBody;
 import io.samituga.bard.filter.Filter;
 import io.samituga.slumber.bard.javalin.JavalinApplication;
 import io.samituga.slumber.ivern.http.type.Headers;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -156,7 +155,7 @@ public class StubServer {
         return Optional.ofNullable(database.get(UUID.fromString(uuid.value())))
               .map(title -> responseBuilder()
                     .statusCode(HttpCode.OK)
-                    .responseBody(ResponseBody.of(title))
+                    .responseBody(ByteResponseBody.of(title))
                     .build())
               .orElse(responseBuilder()
                     .statusCode(HttpCode.NOT_FOUND)
@@ -184,7 +183,7 @@ public class StubServer {
 
         return responseBuilder()
               .statusCode(statusCode)
-              .responseBody(ResponseBody.of(result))
+              .responseBody(ByteResponseBody.of(result))
               .build();
     }
 
@@ -211,7 +210,7 @@ public class StubServer {
 
         return responseBuilder()
               .statusCode(statusCode)
-              .responseBody(ResponseBody.of(uuid.toString()))
+              .responseBody(ByteResponseBody.of(uuid.toString()))
               .build();
     }
 
@@ -231,7 +230,7 @@ public class StubServer {
 
         return responseBuilder()
               .statusCode(HttpCode.OK)
-              .responseBody(ResponseBody.of("Hello world"))
+              .responseBody(ByteResponseBody.of("Hello world"))
               .build();
     }
 
@@ -244,7 +243,7 @@ public class StubServer {
 
         return responseBuilder()
               .statusCode(statusCode)
-              .responseBody(ResponseBody.of("Hello world"))
+              .responseBody(ByteResponseBody.of("Hello world"))
               .headers(Headers.of("resp-header-name", "resp-header-value"))
               .build();
     }

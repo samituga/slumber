@@ -4,7 +4,7 @@ import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 
 import io.samituga.bard.endpoint.HttpCode;
 import io.samituga.bard.endpoint.Response;
-import io.samituga.bard.endpoint.type.ResponseBody;
+import io.samituga.bard.endpoint.ResponseBody;
 import io.samituga.slumber.ivern.http.type.Headers;
 import java.util.Optional;
 

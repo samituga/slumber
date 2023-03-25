@@ -5,13 +5,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.samituga.bard.endpoint.HttpCode;
-import io.samituga.bard.endpoint.type.ResponseBody;
+import io.samituga.bard.endpoint.ResponseBody;
+import io.samituga.bard.endpoint.type.ByteResponseBody;
 import io.samituga.slumber.heimer.validator.exception.AssertionException;
 import org.junit.jupiter.api.Test;
 
 class ResponseTestDataTest {
 
-    private static final ResponseBody RESPONSE_BODY = ResponseBody.of("Hello World");
+    private static final ResponseBody RESPONSE_BODY = ByteResponseBody.of("Hello World");
 
     @Test
     void should_build_response() {

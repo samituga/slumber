@@ -6,7 +6,11 @@ import io.javalin.http.Handler;
 import io.samituga.bard.configuration.ServerConfig;
 import io.samituga.bard.endpoint.Request;
 import io.samituga.bard.endpoint.Response;
+import io.samituga.bard.endpoint.ResponseBody;
 import io.samituga.bard.endpoint.Route;
+import io.samituga.bard.endpoint.type.ByteResponseBody;
+import io.samituga.bard.endpoint.type.InputStreamResponseBody;
+import io.samituga.bard.exception.UnsupportedResponseTypeException;
 import io.samituga.bard.filter.Filter;
 import io.samituga.slumber.bard.javalin.mapper.RequestMapper;
 import io.samituga.slumber.bard.javalin.mapper.VerbToHandlerType;
@@ -48,16 +52,26 @@ public class JavalinConfigurator {
         }
     }
 
-    private static <T> Handler converToHandler(Function<Request, Response> function) {
+    private static Handler converToHandler(Function<Request, Response> function) {
         return ctx -> {
             final var response = function.apply(RequestMapper.fromContext(ctx));
 
             if (response.responseBody().isPresent()) {
-                ctx.result(response.responseBody().get().value());
+                handleResponseType(response.responseBody().get(), ctx);
             }
             ctx.status(response.statusCode().code());
             ctxWithHeaders(ctx, response.headers());
         };
+    }
+
+    private static void handleResponseType(ResponseBody responseBody, Context ctx) {
+        if (responseBody instanceof InputStreamResponseBody inputStreamResponseBody) {
+            ctx.result(inputStreamResponseBody.responseBody());
+        } else if (responseBody instanceof ByteResponseBody byteResponseBody) {
+            ctx.result(byteResponseBody.responseBody());
+        } else {
+            throw new UnsupportedResponseTypeException();
+        }
     }
 
     private static void ctxWithHeaders(Context ctx, Headers headers) {
