@@ -16,8 +16,8 @@ import static java.util.stream.Collectors.toList;
 import io.samituga.bard.ServerStatus;
 import io.samituga.bard.configuration.ServerConfig;
 import io.samituga.bard.endpoint.HttpCode;
-import io.samituga.bard.endpoint.Request;
-import io.samituga.bard.endpoint.Response;
+import io.samituga.bard.endpoint.HttpRequest;
+import io.samituga.bard.endpoint.HttpResponse;
 import io.samituga.bard.endpoint.Route;
 import io.samituga.bard.endpoint.type.ByteResponseBody;
 import io.samituga.bard.endpoint.type.Path;
@@ -148,9 +148,9 @@ public class StubServer {
     }
 
 
-    private Response getTitle(Request request) {
+    private HttpResponse getTitle(HttpRequest httpRequest) {
 
-        var uuid = request.pathParams().get(PathParamName.of("uuid"));
+        var uuid = httpRequest.pathParams().get(PathParamName.of("uuid"));
 
         return Optional.ofNullable(database.get(UUID.fromString(uuid.value())))
               .map(title -> responseBuilder()
@@ -162,10 +162,10 @@ public class StubServer {
                     .build());
     }
 
-    private Response getTitleByQuery(Request request) {
+    private HttpResponse getTitleByQuery(HttpRequest httpRequest) {
 
-        var firstLetter = request.queryParams().getFirst(QueryParamName.of("firstLetter"));
-        var ignoreCase = request.queryParams()
+        var firstLetter = httpRequest.queryParams().getFirst(QueryParamName.of("firstLetter"));
+        var ignoreCase = httpRequest.queryParams()
               .findFirst(QueryParamName.of("ignoreCase"))
               .map(ignoreCaseStr -> Boolean.parseBoolean(ignoreCaseStr.value()))
               .orElse(false);
@@ -187,10 +187,10 @@ public class StubServer {
               .build();
     }
 
-    private Response postTitle(Request request) {
+    private HttpResponse postTitle(HttpRequest httpRequest) {
         String body;
         try {
-            body = request.request()
+            body = httpRequest.request()
                   .getReader()
                   .lines()
                   .collect(Collectors.joining(System.lineSeparator()));
@@ -214,8 +214,8 @@ public class StubServer {
               .build();
     }
 
-    private Response deleteTitle(Request request) {
-        var uuid = request.pathParams().get(PathParamName.of("uuid"));
+    private HttpResponse deleteTitle(HttpRequest httpRequest) {
+        var uuid = httpRequest.pathParams().get(PathParamName.of("uuid"));
 
         var deleted = Optional.ofNullable(database.remove(UUID.fromString(uuid.value())))
               .isPresent();
@@ -226,7 +226,7 @@ public class StubServer {
               .build();
     }
 
-    private Response helloWorld(Request request) {
+    private HttpResponse helloWorld(HttpRequest httpRequest) {
 
         return responseBuilder()
               .statusCode(HttpCode.OK)
@@ -234,9 +234,9 @@ public class StubServer {
               .build();
     }
 
-    private Response getHeaders(Request request) {
+    private HttpResponse getHeaders(HttpRequest httpRequest) {
 
-        var statusCode = Optional.ofNullable(request.request()
+        var statusCode = Optional.ofNullable(httpRequest.request()
                     .getHeader("req-header-name"))
               .map(headerValue -> headerValue.equals("req-header-value") ? OK : EXPECTATION_FAILED)
               .orElse(BAD_REQUEST);

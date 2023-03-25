@@ -2,7 +2,7 @@ package io.samituga.bard.fixture;
 
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 
-import io.samituga.bard.endpoint.Request;
+import io.samituga.bard.endpoint.HttpRequest;
 import io.samituga.bard.endpoint.type.PathParamName;
 import io.samituga.bard.endpoint.type.PathParamValue;
 import io.samituga.bard.endpoint.type.PathParams;
@@ -46,15 +46,15 @@ public class RequestTestData {
             return this;
         }
 
-        public Request build() {
+        public HttpRequest build() {
             return build(false);
         }
 
-        public Request build(boolean skipValidation) {
+        public HttpRequest build(boolean skipValidation) {
             if (!skipValidation) {
                 validate(this);
             }
-            return new Request() {
+            return new HttpRequest() {
 
                 @Override
                 public PathParams pathParams() {

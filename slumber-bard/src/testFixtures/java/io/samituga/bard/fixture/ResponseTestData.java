@@ -3,7 +3,7 @@ package io.samituga.bard.fixture;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 
 import io.samituga.bard.endpoint.HttpCode;
-import io.samituga.bard.endpoint.Response;
+import io.samituga.bard.endpoint.HttpResponse;
 import io.samituga.bard.endpoint.ResponseBody;
 import io.samituga.slumber.ivern.http.type.Headers;
 import java.util.Optional;
@@ -41,15 +41,15 @@ public class ResponseTestData {
             return this;
         }
 
-        public Response build() {
+        public HttpResponse build() {
             return build(false);
         }
 
-        public Response build(boolean skipValidation) {
+        public HttpResponse build(boolean skipValidation) {
             if (!skipValidation) {
                 validate(this);
             }
-            return new Response() {
+            return new HttpResponse() {
                 @Override
                 public HttpCode statusCode() {
                     return statusCode;

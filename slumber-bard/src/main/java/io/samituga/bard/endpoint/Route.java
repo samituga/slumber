@@ -9,5 +9,5 @@ public interface Route {
 
     Path path();
 
-    Function<Request, Response> handler();
+    Function<HttpRequest, HttpResponse> handler();
 }

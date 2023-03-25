@@ -5,8 +5,8 @@ import static io.samituga.bard.fixture.RouteTestData.routeBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import io.samituga.bard.endpoint.Request;
-import io.samituga.bard.endpoint.Response;
+import io.samituga.bard.endpoint.HttpRequest;
+import io.samituga.bard.endpoint.HttpResponse;
 import io.samituga.bard.endpoint.Verb;
 import io.samituga.bard.endpoint.type.Path;
 import io.samituga.slumber.heimer.validator.exception.AssertionException;
@@ -17,7 +17,7 @@ class RouteTestDataTest {
 
     private static final Verb VERB = Verb.GET;
     private static final Path PATH = Path.of("/hello");
-    private static final Function<Request, Response> HANDLER =
+    private static final Function<HttpRequest, HttpResponse> HANDLER =
           req -> aResponse().build();
 
     @Test

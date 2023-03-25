@@ -10,7 +10,7 @@ import io.samituga.bard.endpoint.type.ByteResponseBody;
 import io.samituga.slumber.heimer.validator.exception.AssertionException;
 import org.junit.jupiter.api.Test;
 
-class ResponseTestDataTest {
+class HttpResponseTestDataTest {
 
     private static final ResponseBody RESPONSE_BODY = ByteResponseBody.of("Hello World");
 

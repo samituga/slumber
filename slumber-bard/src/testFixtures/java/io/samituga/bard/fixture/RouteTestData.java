@@ -3,8 +3,8 @@ package io.samituga.bard.fixture;
 import static io.samituga.bard.fixture.ResponseTestData.aResponse;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 
-import io.samituga.bard.endpoint.Request;
-import io.samituga.bard.endpoint.Response;
+import io.samituga.bard.endpoint.HttpRequest;
+import io.samituga.bard.endpoint.HttpResponse;
 import io.samituga.bard.endpoint.Route;
 import io.samituga.bard.endpoint.Verb;
 import io.samituga.bard.endpoint.type.Path;
@@ -27,7 +27,7 @@ public class RouteTestData {
 
         private Verb verb;
         private Path path;
-        Function<Request, Response> handler;
+        Function<HttpRequest, HttpResponse> handler;
 
         private RouteBuilder() {}
 
@@ -41,7 +41,7 @@ public class RouteTestData {
             return this;
         }
 
-        public RouteBuilder handler(Function<Request, Response> handler) {
+        public RouteBuilder handler(Function<HttpRequest, HttpResponse> handler) {
             this.handler = handler;
             return this;
         }
@@ -66,7 +66,7 @@ public class RouteTestData {
                 }
 
                 @Override
-                public Function<Request, Response> handler() {
+                public Function<HttpRequest, HttpResponse> handler() {
                     return handler;
                 }
             };
@@ -87,7 +87,7 @@ public class RouteTestData {
         required("path", path);
     }
 
-    private static void validateHandler(Function<Request, ? extends Response> handler) {
+    private static void validateHandler(Function<HttpRequest, ? extends HttpResponse> handler) {
         required("handler", handler);
     }
 }

@@ -4,8 +4,8 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.samituga.bard.configuration.ServerConfig;
-import io.samituga.bard.endpoint.Request;
-import io.samituga.bard.endpoint.Response;
+import io.samituga.bard.endpoint.HttpRequest;
+import io.samituga.bard.endpoint.HttpResponse;
 import io.samituga.bard.endpoint.ResponseBody;
 import io.samituga.bard.endpoint.Route;
 import io.samituga.bard.endpoint.type.ByteResponseBody;
@@ -52,7 +52,7 @@ public class JavalinConfigurator {
         }
     }
 
-    private static Handler converToHandler(Function<Request, Response> function) {
+    private static Handler converToHandler(Function<HttpRequest, HttpResponse> function) {
         return ctx -> {
             final var response = function.apply(RequestMapper.fromContext(ctx));
 

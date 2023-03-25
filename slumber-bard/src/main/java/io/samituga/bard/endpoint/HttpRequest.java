@@ -4,10 +4,7 @@ import io.samituga.bard.endpoint.type.PathParams;
 import io.samituga.bard.endpoint.type.QueryParams;
 import jakarta.servlet.http.HttpServletRequest;
 
-/**
- * HTTP request.
- */
-public interface Request {
+public interface HttpRequest {
 
     PathParams pathParams();
 

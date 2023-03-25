@@ -1,7 +1,7 @@
 package io.samituga.slumber.bard.javalin.mapper;
 
 import io.javalin.http.Context;
-import io.samituga.bard.endpoint.Request;
+import io.samituga.bard.endpoint.HttpRequest;
 import io.samituga.bard.endpoint.type.PathParamName;
 import io.samituga.bard.endpoint.type.PathParamValue;
 import io.samituga.bard.endpoint.type.PathParams;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class RequestMapper {
 
-    public static Request fromContext(Context context) {
+    public static HttpRequest fromContext(Context context) {
 
         var pathParams = context.pathParamMap().entrySet().stream()
               .map(entry -> Map.entry(
@@ -29,7 +29,7 @@ public class RequestMapper {
               ))
               .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        return new Request() {
+        return new HttpRequest() {
             @Override
             public PathParams pathParams() {
                 return PathParams.of(pathParams);
