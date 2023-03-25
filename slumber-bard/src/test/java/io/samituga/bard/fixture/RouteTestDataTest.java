@@ -1,14 +1,14 @@
 package io.samituga.bard.fixture;
 
-import static io.samituga.bard.fixture.ResponseTestData.aResponse;
-import static io.samituga.bard.fixture.RouteTestData.routeBuilder;
+import static io.samituga.bard.endpoint.route.RouteBuilder.routeBuilder;
+import static io.samituga.bard.fixture.HttpResponseTestData.aResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import io.samituga.bard.endpoint.HttpRequest;
-import io.samituga.bard.endpoint.HttpResponse;
-import io.samituga.bard.endpoint.Verb;
-import io.samituga.bard.endpoint.type.Path;
+import io.samituga.bard.endpoint.request.HttpRequest;
+import io.samituga.bard.endpoint.response.HttpResponse;
+import io.samituga.bard.endpoint.route.Verb;
+import io.samituga.bard.type.Path;
 import io.samituga.slumber.heimer.validator.exception.AssertionException;
 import java.util.function.Function;
 import org.junit.jupiter.api.Test;
@@ -32,22 +32,6 @@ class RouteTestDataTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.verb()).isEqualTo(VERB);
-        assertThat(result.path()).isEqualTo(PATH);
-        assertThat(result.handler()).isEqualTo(HANDLER);
-    }
-
-    @Test
-    void should_build_response_with_invalid_data_if_skip_validation_is_true() {
-        // given when
-        var result = routeBuilder()
-              .verb(null)
-              .path(PATH)
-              .handler(HANDLER)
-              .build(true);
-
-        // then
-        assertThat(result).isNotNull();
-        assertThat(result.verb()).isNull();
         assertThat(result.path()).isEqualTo(PATH);
         assertThat(result.handler()).isEqualTo(HANDLER);
     }

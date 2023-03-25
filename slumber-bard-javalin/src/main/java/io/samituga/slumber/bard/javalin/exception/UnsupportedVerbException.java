@@ -1,6 +1,6 @@
 package io.samituga.slumber.bard.javalin.exception;
 
-import io.samituga.bard.endpoint.Verb;
+import io.samituga.bard.endpoint.route.Verb;
 
 public class UnsupportedVerbException extends RuntimeException {
 

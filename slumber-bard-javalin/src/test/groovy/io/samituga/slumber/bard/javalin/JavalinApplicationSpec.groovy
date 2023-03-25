@@ -1,12 +1,12 @@
 package io.samituga.slumber.bard.javalin
 
+import static io.samituga.bard.filter.FilterBuilder.filterBuilder
 import static io.samituga.slumber.bard.javalin.stub.StubServer.PATH_HELLO_WORLD
 
-import io.samituga.bard.ServerStatus
-import io.samituga.bard.endpoint.HttpCode
+import io.samituga.bard.application.ServerStatus
+import io.samituga.bard.endpoint.response.HttpCode
 import io.samituga.bard.filter.Precedence
 import io.samituga.bard.filter.type.Order
-import io.samituga.bard.fixture.FilterTestData
 import io.samituga.slumber.bard.javalin.stub.StubClient
 import io.samituga.slumber.bard.javalin.stub.StubServer
 import io.samituga.slumber.ivern.http.type.Headers
@@ -100,7 +100,7 @@ class JavalinApplicationSpec extends Specification {
         BiConsumer<HttpServletRequest, HttpServletResponse> doAfter =
           (req, resp) -> { doAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
-        def filter = FilterTestData.filterBuilder()
+        def filter = filterBuilder()
           .doBefore(doBefore)
           .doAfter(doAfter)
           .order(Order.of(0))
@@ -132,7 +132,7 @@ class JavalinApplicationSpec extends Specification {
         BiConsumer<HttpServletRequest, HttpServletResponse> firstDoAfter =
           (req, resp) -> { firstDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
-        def firstFilter = FilterTestData.filterBuilder()
+        def firstFilter = filterBuilder()
           .doBefore(firstDoBefore)
           .doAfter(firstDoAfter)
           .order(Order.of(Precedence.FIRST))
@@ -147,7 +147,7 @@ class JavalinApplicationSpec extends Specification {
         BiConsumer<HttpServletRequest, HttpServletResponse> middleDoAfter =
           (req, resp) -> { middleDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
-        def middleFilter = FilterTestData.filterBuilder()
+        def middleFilter = filterBuilder()
           .doBefore(middleDoBefore)
           .doAfter(middleDoAfter)
           .order(Order.of(0))
@@ -162,7 +162,7 @@ class JavalinApplicationSpec extends Specification {
         BiConsumer<HttpServletRequest, HttpServletResponse> lastDoAfter =
           (req, resp) -> { lastDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
-        def lastFilter = FilterTestData.filterBuilder()
+        def lastFilter = filterBuilder()
           .doBefore(lastDoBefore)
           .doAfter(lastDoAfter)
           .order(Order.of(Precedence.LAST))

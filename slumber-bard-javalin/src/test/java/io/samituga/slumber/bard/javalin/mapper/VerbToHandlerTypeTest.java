@@ -1,11 +1,11 @@
 package io.samituga.slumber.bard.javalin.mapper;
 
-import static io.samituga.bard.endpoint.Verb.PATH;
+import static io.samituga.bard.endpoint.route.Verb.PATH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.javalin.http.HandlerType;
-import io.samituga.bard.endpoint.Verb;
+import io.samituga.bard.endpoint.route.Verb;
 import io.samituga.slumber.bard.javalin.exception.UnsupportedVerbException;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;

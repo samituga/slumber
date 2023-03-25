@@ -1,7 +1,7 @@
 package io.samituga.bard.fixture;
 
+import static io.samituga.bard.configuration.ServerConfigBuilder.serverConfigBuilder;
 import static io.samituga.bard.fixture.FilterTestData.aFilter;
-import static io.samituga.bard.fixture.ServerConfigTestData.serverConfigBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -28,23 +28,6 @@ class ServerConfigTestDataTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.port()).isEqualTo(VALID_PORT);
-        assertThat(result.filters()).containsExactly(FILTER);
-    }
-
-    @Test
-    void should_build_server_config_with_invalid_data_if_skip_validation_is_true() {
-        // given
-        var invalidPort = -1;
-
-        // when
-        var result = serverConfigBuilder()
-              .port(invalidPort)
-              .filter(FILTER)
-              .build(true);
-
-        // then
-        assertThat(result).isNotNull();
-        assertThat(result.port()).isEqualTo(invalidPort);
         assertThat(result.filters()).containsExactly(FILTER);
     }
 

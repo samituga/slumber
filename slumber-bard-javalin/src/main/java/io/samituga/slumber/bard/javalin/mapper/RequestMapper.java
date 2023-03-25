@@ -1,14 +1,15 @@
 package io.samituga.slumber.bard.javalin.mapper;
 
+import static io.samituga.bard.endpoint.request.HttpRequestBuilder.httpRequestBuilder;
+
 import io.javalin.http.Context;
-import io.samituga.bard.endpoint.HttpRequest;
-import io.samituga.bard.endpoint.type.PathParamName;
-import io.samituga.bard.endpoint.type.PathParamValue;
-import io.samituga.bard.endpoint.type.PathParams;
-import io.samituga.bard.endpoint.type.QueryParamName;
-import io.samituga.bard.endpoint.type.QueryParamValue;
-import io.samituga.bard.endpoint.type.QueryParams;
-import jakarta.servlet.http.HttpServletRequest;
+import io.samituga.bard.endpoint.request.HttpRequest;
+import io.samituga.bard.endpoint.request.type.PathParamName;
+import io.samituga.bard.endpoint.request.type.PathParamValue;
+import io.samituga.bard.endpoint.request.type.PathParams;
+import io.samituga.bard.endpoint.request.type.QueryParamName;
+import io.samituga.bard.endpoint.request.type.QueryParamValue;
+import io.samituga.bard.endpoint.request.type.QueryParams;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -29,22 +30,10 @@ public class RequestMapper {
               ))
               .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        return new HttpRequest() {
-            @Override
-            public PathParams pathParams() {
-                return PathParams.of(pathParams);
-            }
-
-            @Override
-            public QueryParams queryParams() {
-                return QueryParams.of(queryParams);
-            }
-
-            @Override
-            public HttpServletRequest request() {
-                return context.req();
-            }
-        };
+        return httpRequestBuilder()
+              .pathParams(PathParams.of(pathParams))
+              .queryParams(QueryParams.of(queryParams))
+              .request(context.req())
+              .build();
     }
-
 }
