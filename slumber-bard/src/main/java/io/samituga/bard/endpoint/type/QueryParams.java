@@ -1,25 +1,50 @@
 package io.samituga.bard.endpoint.type;
 
-import io.samituga.slumber.ivern.type.Type;
-import java.util.Collections;
-import java.util.List;
+import io.samituga.slumber.ivern.type.MapType;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
-public class QueryParams extends Type<Map<String, List<String>>> {
+public class QueryParams extends MapType<QueryParamName, Set<QueryParamValue>> {
 
-    private QueryParams(Map<String, List<String>> value) {
+    private QueryParams() {
+        super();
+    }
+
+    private QueryParams(Map<QueryParamName, Set<QueryParamValue>> value) {
         super(value);
     }
 
-    public static QueryParams of(Map<String, List<String>> value) {
-        return new QueryParams(Map.copyOf(value));
+
+    public static QueryParams of(Map<QueryParamName, Set<QueryParamValue>> value) {
+        return new QueryParams(value);
     }
 
-    public static QueryParams of(Map.Entry<String, List<String>> value) {
+    public static QueryParams of(Map.Entry<QueryParamName, Set<QueryParamValue>> value) {
         return new QueryParams(Map.ofEntries(value));
     }
 
+    public static QueryParams of(QueryParamName name, Set<QueryParamValue> value) {
+        return new QueryParams(Map.of(name, value));
+    }
+
+    public static QueryParams of(QueryParamName name, QueryParamValue value) {
+        return new QueryParams(Map.of(name, Set.of(value)));
+    }
+
+    public QueryParamValue getFirst(QueryParamName paramName) {
+        return get(paramName).stream()
+              .findFirst()
+              .orElseThrow();
+    }
+
+
+    public Optional<QueryParamValue> findFirst(QueryParamName paramName) {
+        return get(paramName).stream()
+              .findFirst();
+    }
+
     public static QueryParams empty() {
-        return new QueryParams(Collections.emptyMap());
+        return new QueryParams();
     }
 }

@@ -3,6 +3,7 @@ package io.samituga.bard.endpoint.type;
 import io.samituga.slumber.ivern.type.Type;
 
 public class PathParamName extends Type<String> {
+
     private PathParamName(String value) {
         super(value);
     }

@@ -2,7 +2,7 @@ package io.samituga.slumber.ivern.type;
 
 import java.util.Objects;
 
-public class Type<T> {
+public abstract class Type<T> {
 
     private final T value;
 
@@ -29,5 +29,10 @@ public class Type<T> {
     @Override
     public int hashCode() {
         return Objects.hash(value);
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
     }
 }

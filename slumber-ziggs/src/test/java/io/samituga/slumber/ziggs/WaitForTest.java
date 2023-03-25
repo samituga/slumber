@@ -1,12 +1,15 @@
 package io.samituga.slumber.ziggs;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.function.Supplier;
-
-import org.junit.jupiter.api.Test;
 
 class WaitForTest {
 
@@ -56,5 +59,22 @@ class WaitForTest {
         // then
         assertThat(result).isTrue();
         assertThat(elapsedTimeMinusTimeout).isLessThan(THRESHOLD);
+    }
+
+    @Test
+    void should_be_possible_to_use_mocked_clock() {
+        // given
+        var now = Instant.now();
+        var mockedClocked = Mockito.mock(Clock.class);
+        given(mockedClocked.instant()).willAnswer((__) -> Instant.now());
+
+        // when
+        var result = WaitFor.waitFor(() -> false, TIMEOUT, mockedClocked);
+        var elapsedTime = Duration.between(now, Instant.now());
+        var elapsedTimeMinusTimeout = elapsedTime.minus(TIMEOUT);
+
+        // then
+        assertThat(result).isFalse();
+        assertThat(elapsedTimeMinusTimeout).isGreaterThan(TIMEOUT);
     }
 }

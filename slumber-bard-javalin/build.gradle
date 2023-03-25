@@ -1,0 +1,20 @@
+plugins {
+    id 'java-library'
+    id 'groovy'
+}
+
+
+dependencies {
+    api project(':slumber-heimer')
+    api project(':slumber-bard')
+
+    implementation "io.javalin:javalin:${javalinVersion}"
+
+    compileOnly "jakarta.servlet:jakarta.servlet-api:${jakartaServletApiVersion}"
+
+    testImplementation(testFixtures(project(':slumber-bard')))
+    testImplementation("org.spockframework:spock-core:${spockVersion}")
+    testImplementation("org.codehaus.groovy:groovy-all:${groovyVersion}")
+    testImplementation(project(":slumber-rakan"))
+    testImplementation(project(":slumber-ziggs"))
+}

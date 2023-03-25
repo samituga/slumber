@@ -3,15 +3,15 @@ package io.samituga.bard.filter;
 
 import io.samituga.bard.endpoint.type.Path;
 import io.samituga.bard.filter.type.Order;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
 /**
  * Interface representing a web server filter.
  */
-public interface Filter {
+public interface Filter extends Comparable<Filter> {
 
     /**
      * <p>
@@ -41,7 +41,7 @@ public interface Filter {
      * @return A consumer that will do the filtering before the request,
      *       {@link Optional#empty() empty} if there is nothing to do before
      */
-    Optional<BiConsumer<ServletRequest, ServletResponse>> doBefore();
+    Optional<BiConsumer<HttpServletRequest, HttpServletResponse>> doBefore();
 
     /**
      * Operation to be executed after the request leaves the handler.
@@ -49,5 +49,5 @@ public interface Filter {
      * @return A consumer that will do the filtering after the request,
      *       {@link Optional#empty() empty} if there is nothing to do after
      */
-    Optional<BiConsumer<ServletRequest, ServletResponse>> doAfter();
+    Optional<BiConsumer<HttpServletRequest, HttpServletResponse>> doAfter();
 }

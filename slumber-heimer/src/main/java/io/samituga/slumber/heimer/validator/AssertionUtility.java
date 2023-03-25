@@ -61,6 +61,34 @@ public final class AssertionUtility {
      * @return the value if passes validation
      * @throws AssertionException if the value fails the validation
      */
+    public static byte[] requiredNotEmpty(String name, byte[] value) {
+        validate(() -> value == null || value.length == 0, REQUIRED_NOT_EMPTY,
+              name);
+        return value;
+    }
+
+    /**
+     * Validates if collection input is not null and not empty.
+     *
+     * @param name  the name of the parameter
+     * @param value the value of the parameter
+     * @return the value if passes validation
+     * @throws AssertionException if the value fails the validation
+     */
+    public static <T> T[] requiredNotEmpty(String name, T[] value) {
+        validate(() -> value == null || value.length == 0, REQUIRED_NOT_EMPTY,
+              name);
+        return value;
+    }
+
+    /**
+     * Validates if collection input is not null and not empty.
+     *
+     * @param name  the name of the parameter
+     * @param value the value of the parameter
+     * @return the value if passes validation
+     * @throws AssertionException if the value fails the validation
+     */
     public static <T> Collection<T> requiredNotEmpty(String name, Collection<T> value) {
         validate(() -> value == null || value.isEmpty(), REQUIRED_NOT_EMPTY,
               name);

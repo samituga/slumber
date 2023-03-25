@@ -8,7 +8,6 @@ import io.samituga.bard.configuration.ServerConfig;
  * when the server is already initialized.
  */
 public class ServerInitException extends RuntimeException {
-
     private static final String ERROR_MESSAGE = "The server is already online";
 
     public ServerInitException() {
