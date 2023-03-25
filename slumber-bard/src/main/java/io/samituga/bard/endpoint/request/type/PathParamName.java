@@ -1,4 +1,4 @@
-package io.samituga.bard.endpoint.type;
+package io.samituga.bard.endpoint.request.type;
 
 import io.samituga.slumber.ivern.type.Type;
 

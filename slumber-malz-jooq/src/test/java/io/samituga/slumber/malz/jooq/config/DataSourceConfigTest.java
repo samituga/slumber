@@ -52,25 +52,4 @@ class DataSourceConfigTest {
                     .build())
               .isInstanceOf(AssertionException.class);
     }
-
-    @Test
-    void should_create_exact_copy() {
-        // given
-        var jdbcUrl = "jdbc:postgresql://host:port/database?properties";
-        var user = "user";
-        var password = "password";
-
-        var dbConfig = DataSourceConfigBuilder.builder()
-              .driverClass(POSTGRES)
-              .jdbcUrl(jdbcUrl)
-              .user(user)
-              .password(password)
-              .build();
-
-        // when
-        var copy = DataSourceConfigBuilder.builder().copy(dbConfig).build();
-
-        // then
-        assertThat(copy).isEqualTo(dbConfig);
-    }
 }

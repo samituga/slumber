@@ -1,6 +1,6 @@
 package io.samituga.bard.configuration;
 
-import io.samituga.bard.endpoint.Route;
+import io.samituga.bard.endpoint.route.Route;
 import io.samituga.bard.filter.Filter;
 
 import java.util.Collection;

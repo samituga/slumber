@@ -3,7 +3,7 @@ package io.samituga.bard.fixture;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import io.samituga.bard.endpoint.type.Path;
+import io.samituga.bard.type.Path;
 import io.samituga.bard.filter.type.Order;
 import io.samituga.slumber.heimer.validator.exception.AssertionException;
 import jakarta.servlet.http.HttpServletRequest;

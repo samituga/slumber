@@ -3,12 +3,12 @@ package io.samituga.bard.fixture;
 import static io.samituga.bard.endpoint.request.HttpRequestBuilder.httpRequestBuilder;
 
 import io.samituga.bard.endpoint.request.HttpRequestBuilder;
-import io.samituga.bard.endpoint.type.PathParamName;
-import io.samituga.bard.endpoint.type.PathParamValue;
-import io.samituga.bard.endpoint.type.PathParams;
-import io.samituga.bard.endpoint.type.QueryParamName;
-import io.samituga.bard.endpoint.type.QueryParamValue;
-import io.samituga.bard.endpoint.type.QueryParams;
+import io.samituga.bard.endpoint.request.type.PathParamName;
+import io.samituga.bard.endpoint.request.type.PathParamValue;
+import io.samituga.bard.endpoint.request.type.PathParams;
+import io.samituga.bard.endpoint.request.type.QueryParamName;
+import io.samituga.bard.endpoint.request.type.QueryParamValue;
+import io.samituga.bard.endpoint.request.type.QueryParams;
 
 public class HttpRequestTestData {
 

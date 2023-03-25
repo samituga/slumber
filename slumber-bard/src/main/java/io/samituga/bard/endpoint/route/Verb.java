@@ -1,4 +1,4 @@
-package io.samituga.bard.endpoint;
+package io.samituga.bard.endpoint.route;
 
 public enum Verb {
     GET,

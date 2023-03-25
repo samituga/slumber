@@ -1,10 +1,11 @@
 package io.samituga.bard.endpoint.request;
 
-import io.samituga.bard.endpoint.type.PathParams;
-import io.samituga.bard.endpoint.type.QueryParams;
+import io.samituga.bard.endpoint.request.type.PathParams;
+import io.samituga.bard.endpoint.request.type.QueryParams;
+import io.samituga.slumber.ivern.builder.Builder;
 import jakarta.servlet.http.HttpServletRequest;
 
-public class HttpRequestBuilder {
+public class HttpRequestBuilder implements Builder<HttpRequest> {
 
     private PathParams pathParams;
     private QueryParams queryParams;
@@ -33,23 +34,7 @@ public class HttpRequestBuilder {
 
 
     public HttpRequest build() {
-        return new HttpRequest() {
-
-            @Override
-            public PathParams pathParams() {
-                return pathParams;
-            }
-
-            @Override
-            public QueryParams queryParams() {
-                return queryParams;
-            }
-
-            @Override
-            public HttpServletRequest request() {
-                return request;
-            }
-        };
+        return new HttpRequestImpl(pathParams, queryParams, request);
     }
 }
 

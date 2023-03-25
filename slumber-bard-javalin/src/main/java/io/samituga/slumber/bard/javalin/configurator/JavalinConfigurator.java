@@ -7,7 +7,7 @@ import io.samituga.bard.configuration.ServerConfig;
 import io.samituga.bard.endpoint.request.HttpRequest;
 import io.samituga.bard.endpoint.response.HttpResponse;
 import io.samituga.bard.endpoint.response.ResponseBody;
-import io.samituga.bard.endpoint.Route;
+import io.samituga.bard.endpoint.route.Route;
 import io.samituga.bard.endpoint.response.type.ByteResponseBody;
 import io.samituga.bard.endpoint.response.type.InputStreamResponseBody;
 import io.samituga.bard.exception.UnsupportedResponseTypeException;

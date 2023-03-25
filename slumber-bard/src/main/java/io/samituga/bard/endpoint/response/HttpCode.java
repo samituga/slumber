@@ -1,4 +1,4 @@
-package io.samituga.bard.endpoint;
+package io.samituga.bard.endpoint.response;
 
 public enum HttpCode {
 

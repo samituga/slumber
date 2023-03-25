@@ -1,13 +1,13 @@
 package io.samituga.slumber.bard.javalin;
 
-import static io.samituga.bard.ServerStatus.STARTED;
-import static io.samituga.bard.ServerStatus.STARTING;
-import static io.samituga.bard.ServerStatus.STOPPED;
-import static io.samituga.bard.ServerStatus.STOPPING;
+import static io.samituga.bard.application.ServerStatus.STARTED;
+import static io.samituga.bard.application.ServerStatus.STARTING;
+import static io.samituga.bard.application.ServerStatus.STOPPED;
+import static io.samituga.bard.application.ServerStatus.STOPPING;
 
 import io.javalin.Javalin;
 import io.javalin.event.EventListener;
-import io.samituga.bard.ServerStatus;
+import io.samituga.bard.application.ServerStatus;
 import io.samituga.bard.application.SlumberApplication;
 import io.samituga.bard.configuration.ServerConfig;
 import io.samituga.bard.exception.ServerInitException;

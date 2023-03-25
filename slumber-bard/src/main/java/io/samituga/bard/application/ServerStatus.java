@@ -1,4 +1,4 @@
-package io.samituga.bard;
+package io.samituga.bard.application;
 
 public enum ServerStatus {
     STARTING,

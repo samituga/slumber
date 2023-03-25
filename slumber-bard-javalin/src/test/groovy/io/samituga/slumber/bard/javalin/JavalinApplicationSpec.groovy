@@ -2,8 +2,8 @@ package io.samituga.slumber.bard.javalin
 
 import static io.samituga.slumber.bard.javalin.stub.StubServer.PATH_HELLO_WORLD
 
-import io.samituga.bard.ServerStatus
-import io.samituga.bard.endpoint.HttpCode
+import io.samituga.bard.application.ServerStatus
+import io.samituga.bard.endpoint.response.HttpCode
 import io.samituga.bard.filter.Precedence
 import io.samituga.bard.filter.type.Order
 import io.samituga.bard.fixture.FilterTestData

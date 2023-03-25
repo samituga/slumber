@@ -1,7 +1,6 @@
 package io.samituga.bard.application;
 
 
-import io.samituga.bard.ServerStatus;
 import io.samituga.bard.configuration.ServerConfig;
 import io.samituga.bard.exception.ServerInitException;
 import io.samituga.bard.exception.ServerShutdownException;

@@ -5,7 +5,7 @@ import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredValidPort;
 
 import io.samituga.bard.configuration.ServerConfig;
-import io.samituga.bard.endpoint.Route;
+import io.samituga.bard.endpoint.route.Route;
 import io.samituga.bard.filter.Filter;
 import io.samituga.bard.filter.Precedence;
 import io.samituga.slumber.heimer.validator.AssertionUtility;

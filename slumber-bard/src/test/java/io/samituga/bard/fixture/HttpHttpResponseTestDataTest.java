@@ -4,7 +4,7 @@ import static io.samituga.bard.endpoint.response.HttpResponseBuilder.httpRespons
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import io.samituga.bard.endpoint.HttpCode;
+import io.samituga.bard.endpoint.response.HttpCode;
 import io.samituga.bard.endpoint.response.ResponseBody;
 import io.samituga.bard.endpoint.response.type.ByteResponseBody;
 import io.samituga.slumber.heimer.validator.exception.AssertionException;

@@ -1,4 +1,4 @@
-package io.samituga.bard.endpoint.type;
+package io.samituga.bard.type;
 
 import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredNotBlank;
 

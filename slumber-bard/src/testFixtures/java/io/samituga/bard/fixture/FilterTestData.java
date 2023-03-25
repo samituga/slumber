@@ -1,6 +1,6 @@
 package io.samituga.bard.fixture;
 
-import io.samituga.bard.endpoint.type.Path;
+import io.samituga.bard.type.Path;
 import io.samituga.bard.filter.Filter;
 import io.samituga.bard.filter.type.Order;
 import io.samituga.slumber.heimer.validator.AssertionUtility;

@@ -1,6 +1,5 @@
 package io.samituga.bard.endpoint.response;
 
-import io.samituga.bard.endpoint.HttpCode;
 import io.samituga.slumber.ivern.builder.Builder;
 import io.samituga.slumber.ivern.http.type.Headers;
 
@@ -40,13 +39,5 @@ public class HttpResponseBuilder implements Builder<HttpResponse> {
 
     public HttpResponse build() {
         return new HttpResponseImpl(statusCode, headers, responseBody);
-    }
-
-    @Override
-    public Builder<HttpResponse> copy(HttpResponse httpResponse) {
-        return new HttpResponseBuilder()
-              .statusCode(statusCode)
-              .headers(headers)
-              .responseBody(responseBody);
     }
 }
