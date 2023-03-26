@@ -16,9 +16,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class RequestMapper {
+public class HttpRequestMapper {
 
-    public static HttpRequest fromContext(Context ctx) {
+    public static HttpRequest fromJavalinContext(Context ctx) {
 
         var pathParams = getPathParams(ctx);
         var queryParams = getQueryParams(ctx);

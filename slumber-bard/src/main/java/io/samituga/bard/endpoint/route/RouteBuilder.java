@@ -1,7 +1,6 @@
 package io.samituga.bard.endpoint.route;
 
-import io.samituga.bard.endpoint.request.HttpRequest;
-import io.samituga.bard.endpoint.response.HttpResponse;
+import io.samituga.bard.endpoint.context.HttpContext;
 import io.samituga.bard.type.Path;
 import io.samituga.slumber.ivern.builder.Builder;
 import java.util.function.Function;
@@ -9,7 +8,7 @@ import java.util.function.Function;
 public class RouteBuilder implements Builder<Route> {
     private Verb verb;
     private Path path;
-    private Function<HttpRequest, HttpResponse> handler;
+    private Function<HttpContext, HttpContext> handler;
 
     private RouteBuilder() {}
 
@@ -27,7 +26,7 @@ public class RouteBuilder implements Builder<Route> {
         return this;
     }
 
-    public RouteBuilder handler(Function<HttpRequest, HttpResponse> handler) {
+    public RouteBuilder handler(Function<HttpContext, HttpContext> handler) {
         this.handler = handler;
         return this;
     }

@@ -1,7 +1,6 @@
 package io.samituga.bard.endpoint.route;
 
-import io.samituga.bard.endpoint.request.HttpRequest;
-import io.samituga.bard.endpoint.response.HttpResponse;
+import io.samituga.bard.endpoint.context.HttpContext;
 import io.samituga.bard.type.Path;
 import io.samituga.slumber.ivern.structure.Structure;
 import java.util.function.Function;
@@ -12,5 +11,6 @@ public interface Route extends Structure<Route, RouteBuilder> {
 
     Path path();
 
-    Function<HttpRequest, HttpResponse> handler();
+//    Function<HttpRequest, HttpResponse> handler();
+    Function<HttpContext, HttpContext> handler();
 }

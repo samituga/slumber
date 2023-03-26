@@ -4,17 +4,17 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.samituga.bard.configuration.ServerConfig;
-import io.samituga.bard.endpoint.request.HttpRequest;
-import io.samituga.bard.endpoint.response.HttpResponse;
+import io.samituga.bard.endpoint.context.HttpContext;
 import io.samituga.bard.endpoint.response.ResponseBody;
-import io.samituga.bard.endpoint.route.Route;
 import io.samituga.bard.endpoint.response.type.ByteResponseBody;
 import io.samituga.bard.endpoint.response.type.InputStreamResponseBody;
+import io.samituga.bard.endpoint.route.Route;
 import io.samituga.bard.exception.UnsupportedResponseTypeException;
 import io.samituga.bard.filter.Filter;
-import io.samituga.slumber.bard.javalin.mapper.RequestMapper;
+import io.samituga.slumber.bard.javalin.mapper.HttpContextMapper;
 import io.samituga.slumber.bard.javalin.mapper.VerbToHandlerType;
 import io.samituga.slumber.ivern.http.type.Headers;
+
 import java.util.Collection;
 import java.util.function.Function;
 
@@ -48,14 +48,27 @@ public class JavalinConfigurator {
     public static void addRoutes(Javalin javalin, Collection<Route> routes) {
         for (Route route : routes) {
             javalin.addHandler(VerbToHandlerType.toHandlerType(route.verb()), route.path().value(),
-                  converToHandler(route.handler()));
+                  handle(route.handler()));
         }
     }
 
-    private static Handler converToHandler(Function<HttpRequest, HttpResponse> function) {
-        return ctx -> {
-            final var response = function.apply(RequestMapper.fromContext(ctx));
+//    public static void addExceptionHandlers(Javalin javalin, Collection<ExceptionHandler<?>> exceptionHandlers) {
+//
+//        for (ExceptionHandler<?> exceptionHandler : exceptionHandlers) {
+//
+//            javalin.exception(exceptionHandler.exceptionClass(), (e, ctx) ->{
+//                ctx.
+//            });
+//        }
+//
+//        javalin.exception()
+//    }
 
+    private static Handler handle(Function<HttpContext, HttpContext> function) {
+        return ctx -> {
+            var httpContext = HttpContextMapper.fromJavalinContext(ctx);
+            httpContext = function.apply(httpContext);
+            var response = httpContext.response();
             if (response.responseBody().isPresent()) {
                 handleResponseType(response.responseBody().get(), ctx);
             }
