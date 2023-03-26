@@ -10,7 +10,7 @@ public class HttpResponseBuilder implements Builder<HttpResponse> {
     private HttpCode statusCode;
     private Headers headers = Headers.empty();
     private HttpServletResponse response;
-    private Optional<ResponseBody> responseBody;
+    private Optional<ResponseBody> responseBody = Optional.empty();
 
     private HttpResponseBuilder() {}
 

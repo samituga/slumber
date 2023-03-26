@@ -25,14 +25,15 @@ public class HttpRequestMapper {
         var requestBody = getRequestBody(ctx);
 
         return httpRequestBuilder()
-              .pathParams(PathParams.of(pathParams))
-              .queryParams(QueryParams.of(queryParams))
+              .pathParams(PathParams.ofString(ctx.pathParamMap()))
+              .queryParams(QueryParams.ofString(ctx.queryParamMap()))
               .request(ctx.req())
               .requestBody(requestBody)
               .build();
     }
 
     private static Map<PathParamName, PathParamValue> getPathParams(Context ctx) {
+
         return ctx.pathParamMap().entrySet().stream()
               .map(entry -> Map.entry(
                     PathParamName.of(entry.getKey()),
