@@ -6,4 +6,5 @@ module slumber.bard.javalin {
     requires slumber.ivern;
     requires io.javalin;
     requires jakarta.servlet;
+    requires kotlin.stdlib;
 }

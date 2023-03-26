@@ -1,12 +1,12 @@
 package io.samituga.slumber.malz.database;
 
 import static io.samituga.slumber.malz.driver.Driver.POSTGRES;
+import static io.samituga.slumber.malz.fixture.DataSourceConfigTestData.aDataSourceConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.samituga.slumber.heimer.validator.exception.AssertionException;
 import io.samituga.slumber.malz.driver.Driver;
-import io.samituga.slumber.malz.fixture.DataSourceConfigTestData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -17,7 +17,7 @@ class DataSourceConfigTest {
     @Test
     void should_make_exact_copy() {
         // given
-        var dataSourceConfig = DataSourceConfigTestData.aDataSourceConfig();
+        var dataSourceConfig = aDataSourceConfig().build();
 
         // when
         var copy = dataSourceConfig.copy().build();

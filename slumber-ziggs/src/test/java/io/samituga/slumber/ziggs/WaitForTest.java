@@ -33,9 +33,7 @@ class WaitForTest {
     @Test
     void should_return_false_when_timeout_is_reached() {
         // given
-        var now = Instant.now();
-        Supplier<Boolean> action =
-              () -> Duration.between(now, Instant.now()).compareTo(TIMEOUT.plus(THRESHOLD)) > 0;
+        Supplier<Boolean> action = () -> false;
 
         // when
         var result = WaitFor.waitFor(action, TIMEOUT);

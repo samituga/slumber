@@ -2,6 +2,7 @@ package io.samituga.slumber.bard.javalin
 
 import static io.samituga.bard.filter.FilterBuilder.filterBuilder
 import static io.samituga.slumber.bard.javalin.stub.StubServer.PATH_HELLO_WORLD
+import static java.util.UUID.randomUUID
 
 import io.samituga.bard.application.ServerStatus
 import io.samituga.bard.endpoint.response.HttpCode
@@ -53,7 +54,7 @@ class JavalinApplicationSpec extends Specification {
         given: 'server initialization'
         application.init()
         def title = "The Big And The Small"
-        def titleUuid = UUID.randomUUID()
+        def titleUuid = randomUUID()
         application.addToDatabase(titleUuid, title)
 
         and: 'wait for the server to be initialized'
@@ -197,19 +198,13 @@ class JavalinApplicationSpec extends Specification {
         and: 'wait for the server to be initialized'
         waitForServerInit()
 
-        when: 'makes request'
-        def postTitleResponse1 = client.postTitle(titleStartsWithT1)
-        def postTitleResponse2 = client.postTitle(titleStartsWithT2)
-        def postTitleResponse3 = client.postTitle(title3)
-        def postTitleResponse4 = client.postTitle(title4)
+        and: 'populates db with titles'
+        application.addToDatabase(randomUUID(), titleStartsWithT1)
+        application.addToDatabase(randomUUID(), titleStartsWithT2)
+        application.addToDatabase(randomUUID(), title3)
+        application.addToDatabase(randomUUID(), title4)
 
-        then: 'should have CREATED status code'
-        postTitleResponse1.statusCode() == HttpCode.CREATED.code()
-        postTitleResponse2.statusCode() == HttpCode.CREATED.code()
-        postTitleResponse3.statusCode() == HttpCode.CREATED.code()
-        postTitleResponse4.statusCode() == HttpCode.CREATED.code()
-
-        and: 'should get the newly crated title'
+        when: 'should get the correct titles by the query'
         def getTitleResponse = client.getTitlesByQuery("t", true)
 
         then:
@@ -226,22 +221,16 @@ class JavalinApplicationSpec extends Specification {
     def 'should delete title'() {
         given: 'server initialization'
         application.init()
-        def title = "The Big And The Small"
 
         and: 'wait for the server to be initialized'
         waitForServerInit()
 
-        when: 'makes request'
-        def postTitleResponse = client.postTitle(title)
+        and: 'populates db with title'
+        def title = "The Big And The Small"
+        var uuid = randomUUID()
+        application.addToDatabase(uuid, title)
 
-        then: 'result should have correct values'
-        postTitleResponse.statusCode() == HttpCode.CREATED.code()
-        !postTitleResponse.body().isBlank()
-        def resultBody = postTitleResponse.body()
-        def uuid = UUID.fromString(resultBody)
-        uuid != null
-
-        and: 'should delete the newly crated title'
+        when: 'should delete the newly crated title'
         def getTitleResponse = client.deleteTitle(uuid)
 
         then:

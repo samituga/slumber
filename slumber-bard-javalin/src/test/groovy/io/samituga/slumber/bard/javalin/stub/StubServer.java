@@ -3,10 +3,10 @@ package io.samituga.slumber.bard.javalin.stub;
 import static io.samituga.bard.endpoint.response.HttpCode.BAD_REQUEST;
 import static io.samituga.bard.endpoint.response.HttpCode.EXPECTATION_FAILED;
 import static io.samituga.bard.endpoint.response.HttpCode.OK;
+import static io.samituga.bard.endpoint.response.HttpResponseBuilder.httpResponseBuilder;
 import static io.samituga.bard.endpoint.route.Verb.DELETE;
 import static io.samituga.bard.endpoint.route.Verb.GET;
 import static io.samituga.bard.endpoint.route.Verb.POST;
-import static io.samituga.bard.endpoint.response.HttpResponseBuilder.httpResponseBuilder;
 import static io.samituga.bard.fixture.RouteTestData.aRoute;
 import static io.samituga.bard.fixture.ServerConfigTestData.aServerConfig;
 import static java.util.Collections.emptyList;
@@ -15,18 +15,18 @@ import static java.util.stream.Collectors.toList;
 
 import io.samituga.bard.application.ServerStatus;
 import io.samituga.bard.configuration.ServerConfig;
-import io.samituga.bard.endpoint.response.HttpCode;
-import io.samituga.bard.endpoint.route.Route;
 import io.samituga.bard.endpoint.request.HttpRequest;
-import io.samituga.bard.endpoint.response.HttpResponse;
-import io.samituga.bard.endpoint.response.type.ByteResponseBody;
-import io.samituga.bard.type.Path;
 import io.samituga.bard.endpoint.request.type.PathParamName;
 import io.samituga.bard.endpoint.request.type.QueryParamName;
+import io.samituga.bard.endpoint.response.HttpCode;
+import io.samituga.bard.endpoint.response.HttpResponse;
+import io.samituga.bard.endpoint.response.type.ByteResponseBody;
+import io.samituga.bard.endpoint.route.Route;
 import io.samituga.bard.filter.Filter;
+import io.samituga.bard.type.Path;
 import io.samituga.slumber.bard.javalin.JavalinApplication;
 import io.samituga.slumber.ivern.http.type.Headers;
-import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,9 +41,11 @@ public class StubServer {
     public static final Path PATH_GET_TITLE = Path.of("/title/{uuid}");
     public static final Path PATH_GET_TITLE_BY_QUERY = Path.of("/title/");
     public static final Path PATH_POST_TITLE = Path.of("/title");
+    public static final Path PATH_POST_BODY = Path.of("/titleBody");
     public static final Path PATH_DELETE_TITLE = Path.of("/auth/title/{uuid}");
     public static final Path PATH_HELLO_WORLD = Path.of("/hello/world");
     public static final Path PATH_HEADERS = Path.of("/headers");
+
     private final JavalinApplication app = new JavalinApplication();
     private final Route routeHelloWorld = aRoute()
           .path(PATH_HELLO_WORLD)
@@ -71,6 +73,12 @@ public class StubServer {
 
     private final Route routePostTitle = aRoute()
           .path(PATH_POST_TITLE)
+          .verb(POST)
+          .handler(this::postTitle)
+          .build();
+
+    private final Route routePostBodyTitle = aRoute()
+          .path(PATH_POST_BODY)
           .verb(POST)
           .handler(this::postTitle)
           .build();
@@ -188,15 +196,12 @@ public class StubServer {
     }
 
     private HttpResponse postTitle(HttpRequest httpRequest) {
-        String body;
-        try {
-            body = httpRequest.request()
-                  .getReader()
-                  .lines()
-                  .collect(Collectors.joining(System.lineSeparator()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (httpRequest.requestBody().isEmpty()) {
+            return httpResponseBuilder()
+                  .statusCode(BAD_REQUEST)
+                  .build();
         }
+        String body = new String(httpRequest.requestBody().get().value(), StandardCharsets.UTF_8);
 
         var uuid = UUID.randomUUID();
 
