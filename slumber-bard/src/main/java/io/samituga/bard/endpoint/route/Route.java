@@ -11,6 +11,5 @@ public interface Route extends Structure<Route, RouteBuilder> {
 
     Path path();
 
-//    Function<HttpRequest, HttpResponse> handler();
     Function<HttpContext, HttpContext> handler();
 }
