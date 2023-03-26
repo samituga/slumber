@@ -1,5 +1,7 @@
 package io.samituga.slumber.bard.javalin.configurator;
 
+import static io.samituga.slumber.bard.javalin.mapper.HttpContextMapper.fromJavalinContext;
+
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
@@ -11,10 +13,8 @@ import io.samituga.bard.endpoint.response.type.InputStreamResponseBody;
 import io.samituga.bard.endpoint.route.Route;
 import io.samituga.bard.exception.UnsupportedResponseTypeException;
 import io.samituga.bard.filter.Filter;
-import io.samituga.slumber.bard.javalin.mapper.HttpContextMapper;
 import io.samituga.slumber.bard.javalin.mapper.VerbToHandlerType;
 import io.samituga.slumber.ivern.http.type.Headers;
-
 import java.util.Collection;
 import java.util.function.Function;
 
@@ -34,13 +34,13 @@ public class JavalinConfigurator {
                   if (filter.doBefore().isPresent()) {
                       var doBeforeConsumer = filter.doBefore().get();
                       javalin.before(filter.path().value(),
-                            ctx -> doBeforeConsumer.accept(ctx.req(), ctx.res()));
+                            ctx -> doBeforeConsumer.accept(fromJavalinContext(ctx)));
                   }
 
                   if (filter.doAfter().isPresent()) {
                       var doAfterConsumer = filter.doAfter().get();
                       javalin.after(filter.path().value(),
-                            ctx -> doAfterConsumer.accept(ctx.req(), ctx.res()));
+                            ctx -> doAfterConsumer.accept(fromJavalinContext(ctx)));
                   }
               });
     }
@@ -66,7 +66,7 @@ public class JavalinConfigurator {
 
     private static Handler handle(Function<HttpContext, HttpContext> function) {
         return ctx -> {
-            var httpContext = HttpContextMapper.fromJavalinContext(ctx);
+            var httpContext = fromJavalinContext(ctx);
             httpContext = function.apply(httpContext);
             var response = httpContext.response();
             if (response.responseBody().isPresent()) {

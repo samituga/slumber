@@ -1,18 +1,17 @@
 package io.samituga.bard.filter;
 
+import io.samituga.bard.endpoint.context.HttpContext;
 import io.samituga.bard.filter.type.Order;
 import io.samituga.bard.type.Path;
 import io.samituga.slumber.ivern.builder.Builder;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class FilterBuilder implements Builder<Filter> {
     private Order order;
     private Path path;
-    private Optional<BiConsumer<HttpServletRequest, HttpServletResponse>> doBefore = Optional.empty();
-    private Optional<BiConsumer<HttpServletRequest, HttpServletResponse>> doAfter = Optional.empty();
+    private Optional<Consumer<HttpContext>> doBefore = Optional.empty();
+    private Optional<Consumer<HttpContext>> doAfter = Optional.empty();
 
     private FilterBuilder() {}
 
@@ -30,24 +29,23 @@ public class FilterBuilder implements Builder<Filter> {
         return this;
     }
 
-    public FilterBuilder doBefore(BiConsumer<HttpServletRequest, HttpServletResponse> doBefore) {
+    public FilterBuilder doBefore(Consumer<HttpContext> doBefore) {
         this.doBefore = Optional.of(doBefore);
         return this;
     }
 
-    public FilterBuilder doBefore(
-          Optional<BiConsumer<HttpServletRequest, HttpServletResponse>> doBefore) {
+    public FilterBuilder doBefore(Optional<Consumer<HttpContext>> doBefore) {
         this.doBefore = doBefore;
         return this;
     }
 
-    public FilterBuilder doAfter(BiConsumer<HttpServletRequest, HttpServletResponse> doAfter) {
+    public FilterBuilder doAfter(Consumer<HttpContext> doAfter) {
         this.doAfter = Optional.of(doAfter);
         return this;
     }
 
     public FilterBuilder doAfter(
-          Optional<BiConsumer<HttpServletRequest, HttpServletResponse>> doAfter) {
+          Optional<Consumer<HttpContext>> doAfter) {
         this.doAfter = doAfter;
         return this;
     }

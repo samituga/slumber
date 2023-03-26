@@ -5,6 +5,7 @@ import static io.samituga.slumber.bard.javalin.stub.StubServer.PATH_HELLO_WORLD
 import static java.util.UUID.randomUUID
 
 import io.samituga.bard.application.ServerStatus
+import io.samituga.bard.endpoint.context.HttpContext
 import io.samituga.bard.endpoint.response.HttpCode
 import io.samituga.bard.filter.Precedence
 import io.samituga.bard.filter.type.Order
@@ -12,13 +13,11 @@ import io.samituga.slumber.bard.javalin.stub.StubClient
 import io.samituga.slumber.bard.javalin.stub.StubServer
 import io.samituga.slumber.ivern.http.type.Headers
 import io.samituga.slumber.ziggs.WaitFor
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.HttpServletResponse
 import spock.lang.Specification
 
 import java.time.Duration
 import java.time.Instant
-import java.util.function.BiConsumer
+import java.util.function.Consumer 
 
 class JavalinApplicationSpec extends Specification {
 
@@ -96,10 +95,10 @@ class JavalinApplicationSpec extends Specification {
         Instant doBeforeTimestamp = null
         Instant doAfterTimestamp = null
 
-        BiConsumer<HttpServletRequest, HttpServletResponse> doBefore =
-          (req, resp) -> { doBeforeTimestamp = Instant.now(); Thread.sleep(2) }
-        BiConsumer<HttpServletRequest, HttpServletResponse> doAfter =
-          (req, resp) -> { doAfterTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> doBefore =
+          (ctx) -> { doBeforeTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> doAfter =
+          (ctx) -> { doAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
         def filter = filterBuilder()
           .doBefore(doBefore)
@@ -128,10 +127,10 @@ class JavalinApplicationSpec extends Specification {
         Instant firstDoBeforeTimestamp = null
         Instant firstDoAfterTimestamp = null
 
-        BiConsumer<HttpServletRequest, HttpServletResponse> firstDoBefore =
-          (req, resp) -> { firstDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
-        BiConsumer<HttpServletRequest, HttpServletResponse> firstDoAfter =
-          (req, resp) -> { firstDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> firstDoBefore =
+          (ctx) -> { firstDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> firstDoAfter =
+          (ctx) -> { firstDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
         def firstFilter = filterBuilder()
           .doBefore(firstDoBefore)
@@ -143,10 +142,10 @@ class JavalinApplicationSpec extends Specification {
         Instant middleDoBeforeTimestamp = null
         Instant middleDoAfterTimestamp = null
 
-        BiConsumer<HttpServletRequest, HttpServletResponse> middleDoBefore =
-          (req, resp) -> { middleDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
-        BiConsumer<HttpServletRequest, HttpServletResponse> middleDoAfter =
-          (req, resp) -> { middleDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> middleDoBefore =
+          (ctx) -> { middleDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> middleDoAfter =
+          (ctx) -> { middleDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
         def middleFilter = filterBuilder()
           .doBefore(middleDoBefore)
@@ -158,10 +157,10 @@ class JavalinApplicationSpec extends Specification {
         Instant lastDoBeforeTimestamp = null
         Instant lastDoAfterTimestamp = null
 
-        BiConsumer<HttpServletRequest, HttpServletResponse> lastDoBefore =
-          (req, resp) -> { lastDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
-        BiConsumer<HttpServletRequest, HttpServletResponse> lastDoAfter =
-          (req, resp) -> { lastDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> lastDoBefore =
+          (ctx) -> { lastDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> lastDoAfter =
+          (ctx) -> { lastDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
         def lastFilter = filterBuilder()
           .doBefore(lastDoBefore)
