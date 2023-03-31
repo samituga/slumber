@@ -9,4 +9,8 @@ public class UnsupportedVerbException extends RuntimeException {
     public UnsupportedVerbException(Verb verb) {
         super(String.format(ERROR_MESSAGE, verb.name()));
     }
+
+    public void a() {
+
+    }
 }
