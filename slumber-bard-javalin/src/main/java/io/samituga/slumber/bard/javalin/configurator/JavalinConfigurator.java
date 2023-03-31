@@ -69,7 +69,6 @@ public class JavalinConfigurator {
         }
     }
 
-
     private static Handler handle(Function<HttpContext, HttpContext> function) {
         return ctx -> {
             var httpContext = fromJavalinContext(ctx);
