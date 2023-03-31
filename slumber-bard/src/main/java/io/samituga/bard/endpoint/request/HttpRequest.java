@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface HttpRequest extends Structure<HttpRequest, HttpRequestBuilder> {
 
+    // TODO: 2023-03-26 headers maybe?
+
     PathParams pathParams();
 
     QueryParams queryParams();

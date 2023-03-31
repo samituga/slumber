@@ -1,9 +1,11 @@
 package io.samituga.bard.endpoint.request.type;
 
 import io.samituga.slumber.ivern.type.MapType;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class QueryParams extends MapType<QueryParamName, Set<QueryParamValue>> {
 
@@ -32,12 +34,28 @@ public class QueryParams extends MapType<QueryParamName, Set<QueryParamValue>> {
         return new QueryParams(Map.of(name, Set.of(value)));
     }
 
+    public static QueryParams ofString(String name, String value) {
+        return ofString(Map.of(name, List.of(value)));
+    }
+
+    public static QueryParams ofString(String name, List<String> value) {
+        return ofString(Map.of(name, value));
+    }
+
+    public static QueryParams ofString(Map.Entry<String, List<String>> value) {
+        return ofString(Map.ofEntries(value));
+    }
+
+    public static QueryParams ofString(Map<String, List<String>> value) {
+        return new QueryParams(convert(value));
+    }
+
+
     public QueryParamValue getFirst(QueryParamName paramName) {
         return get(paramName).stream()
               .findFirst()
               .orElseThrow();
     }
-
 
     public Optional<QueryParamValue> findFirst(QueryParamName paramName) {
         return get(paramName).stream()
@@ -46,5 +64,13 @@ public class QueryParams extends MapType<QueryParamName, Set<QueryParamValue>> {
 
     public static QueryParams empty() {
         return new QueryParams();
+    }
+
+    private static Map<QueryParamName, Set<QueryParamValue>> convert(Map<String, List<String>> queryParamMap) {
+        return queryParamMap.entrySet().stream()
+              .map(e -> Map.entry(
+                    QueryParamName.of(e.getKey()),
+                    e.getValue().stream().map(QueryParamValue::of).collect(Collectors.toSet())))
+              .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

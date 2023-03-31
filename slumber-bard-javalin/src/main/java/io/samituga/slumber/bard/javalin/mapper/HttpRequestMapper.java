@@ -16,23 +16,24 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class RequestMapper {
+public class HttpRequestMapper {
 
-    public static HttpRequest fromContext(Context ctx) {
+    public static HttpRequest fromJavalinContext(Context ctx) {
 
         var pathParams = getPathParams(ctx);
         var queryParams = getQueryParams(ctx);
         var requestBody = getRequestBody(ctx);
 
         return httpRequestBuilder()
-              .pathParams(PathParams.of(pathParams))
-              .queryParams(QueryParams.of(queryParams))
+              .pathParams(PathParams.ofString(ctx.pathParamMap()))
+              .queryParams(QueryParams.ofString(ctx.queryParamMap()))
               .request(ctx.req())
               .requestBody(requestBody)
               .build();
     }
 
     private static Map<PathParamName, PathParamValue> getPathParams(Context ctx) {
+
         return ctx.pathParamMap().entrySet().stream()
               .map(entry -> Map.entry(
                     PathParamName.of(entry.getKey()),

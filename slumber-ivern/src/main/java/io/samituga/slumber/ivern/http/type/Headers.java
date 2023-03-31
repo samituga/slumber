@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Headers extends MapType<String, String> {
+public class Headers extends MapType<String, String> { // TODO: 2023-03-26 Support multiple values?
 
     private Headers() {
         super();

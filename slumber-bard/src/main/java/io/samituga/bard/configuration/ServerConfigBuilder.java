@@ -2,6 +2,8 @@ package io.samituga.bard.configuration;
 
 import io.samituga.bard.endpoint.route.Route;
 import io.samituga.bard.filter.Filter;
+import io.samituga.bard.handler.ExceptionHandler;
+import io.samituga.bard.type.Port;
 import io.samituga.slumber.ivern.builder.Builder;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,9 +12,10 @@ import java.util.List;
 public class ServerConfigBuilder implements Builder<ServerConfig> {
 
 
-    private int port;
+    private Port port;
     private Collection<Filter> filters = new ArrayList<>();
     private Collection<Route> routes = new ArrayList<>();
+    private Collection<ExceptionHandler<? extends Exception>> exceptionHandlers = new ArrayList<>();
 
     private ServerConfigBuilder() {}
 
@@ -20,7 +23,7 @@ public class ServerConfigBuilder implements Builder<ServerConfig> {
         return new ServerConfigBuilder();
     }
 
-    public ServerConfigBuilder port(int port) {
+    public ServerConfigBuilder port(Port port) {
         this.port = port;
         return this;
     }
@@ -55,9 +58,24 @@ public class ServerConfigBuilder implements Builder<ServerConfig> {
         return this;
     }
 
+    public ServerConfigBuilder exceptionHandler(ExceptionHandler<?> exceptionHandler) {
+        this.exceptionHandlers.add(exceptionHandler);
+        return this;
+    }
+
+    public ServerConfigBuilder exceptionHandlers(ExceptionHandler<?>... exceptionHandlers) {
+        this.exceptionHandlers.addAll(List.of(exceptionHandlers));
+        return this;
+    }
+
+    public ServerConfigBuilder exceptionHandlers(Collection<ExceptionHandler<? extends Exception>> exceptionHandlers) {
+        this.exceptionHandlers = exceptionHandlers;
+        return this;
+    }
+
     @Override
     public ServerConfig build() {
-        return new ServerConfigStruct(port, filters, routes);
+        return new ServerConfigStruct(port, filters, routes, exceptionHandlers);
     }
 }
 

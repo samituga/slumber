@@ -1,5 +1,7 @@
 package io.samituga.bard.endpoint.response;
 
+import java.util.Arrays;
+
 public enum HttpCode {
 
     /** --- 1xx Informational --- */
@@ -89,5 +91,12 @@ public enum HttpCode {
 
     public int code() {
         return code;
+    }
+
+    public static HttpCode fromStatusCode(int statusCode) {
+        return Arrays.stream(values())
+              .filter(httpCode -> httpCode.code == statusCode)
+              .findFirst()
+              .orElseThrow();
     }
 }

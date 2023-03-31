@@ -5,20 +5,21 @@ import static io.samituga.slumber.bard.javalin.stub.StubServer.PATH_HELLO_WORLD
 import static java.util.UUID.randomUUID
 
 import io.samituga.bard.application.ServerStatus
+import io.samituga.bard.endpoint.context.HttpContext
 import io.samituga.bard.endpoint.response.HttpCode
+import io.samituga.bard.endpoint.response.type.ByteResponseBody
 import io.samituga.bard.filter.Precedence
 import io.samituga.bard.filter.type.Order
+import io.samituga.bard.handler.ExceptionHandler
 import io.samituga.slumber.bard.javalin.stub.StubClient
 import io.samituga.slumber.bard.javalin.stub.StubServer
 import io.samituga.slumber.ivern.http.type.Headers
 import io.samituga.slumber.ziggs.WaitFor
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.HttpServletResponse
 import spock.lang.Specification
 
 import java.time.Duration
 import java.time.Instant
-import java.util.function.BiConsumer
+import java.util.function.Consumer 
 
 class JavalinApplicationSpec extends Specification {
 
@@ -96,10 +97,10 @@ class JavalinApplicationSpec extends Specification {
         Instant doBeforeTimestamp = null
         Instant doAfterTimestamp = null
 
-        BiConsumer<HttpServletRequest, HttpServletResponse> doBefore =
-          (req, resp) -> { doBeforeTimestamp = Instant.now(); Thread.sleep(2) }
-        BiConsumer<HttpServletRequest, HttpServletResponse> doAfter =
-          (req, resp) -> { doAfterTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> doBefore =
+          (ctx) -> { doBeforeTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> doAfter =
+          (ctx) -> { doAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
         def filter = filterBuilder()
           .doBefore(doBefore)
@@ -108,7 +109,7 @@ class JavalinApplicationSpec extends Specification {
           .path(PATH_HELLO_WORLD)
           .build()
 
-        application.init(Collections.emptyList(), List.of(filter))
+        application.init(Collections.emptyList(), List.of(filter), Collections.emptyList())
 
 
         and: 'wait for the server to be initialized'
@@ -128,10 +129,10 @@ class JavalinApplicationSpec extends Specification {
         Instant firstDoBeforeTimestamp = null
         Instant firstDoAfterTimestamp = null
 
-        BiConsumer<HttpServletRequest, HttpServletResponse> firstDoBefore =
-          (req, resp) -> { firstDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
-        BiConsumer<HttpServletRequest, HttpServletResponse> firstDoAfter =
-          (req, resp) -> { firstDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> firstDoBefore =
+          (ctx) -> { firstDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> firstDoAfter =
+          (ctx) -> { firstDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
         def firstFilter = filterBuilder()
           .doBefore(firstDoBefore)
@@ -143,10 +144,10 @@ class JavalinApplicationSpec extends Specification {
         Instant middleDoBeforeTimestamp = null
         Instant middleDoAfterTimestamp = null
 
-        BiConsumer<HttpServletRequest, HttpServletResponse> middleDoBefore =
-          (req, resp) -> { middleDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
-        BiConsumer<HttpServletRequest, HttpServletResponse> middleDoAfter =
-          (req, resp) -> { middleDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> middleDoBefore =
+          (ctx) -> { middleDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> middleDoAfter =
+          (ctx) -> { middleDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
         def middleFilter = filterBuilder()
           .doBefore(middleDoBefore)
@@ -158,10 +159,10 @@ class JavalinApplicationSpec extends Specification {
         Instant lastDoBeforeTimestamp = null
         Instant lastDoAfterTimestamp = null
 
-        BiConsumer<HttpServletRequest, HttpServletResponse> lastDoBefore =
-          (req, resp) -> { lastDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
-        BiConsumer<HttpServletRequest, HttpServletResponse> lastDoAfter =
-          (req, resp) -> { lastDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> lastDoBefore =
+          (ctx) -> { lastDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> lastDoAfter =
+          (ctx) -> { lastDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
         def lastFilter = filterBuilder()
           .doBefore(lastDoBefore)
@@ -170,7 +171,7 @@ class JavalinApplicationSpec extends Specification {
           .path(PATH_HELLO_WORLD)
           .build()
 
-        application.init(Collections.emptyList(), List.of(middleFilter, lastFilter, firstFilter))
+        application.init(Collections.emptyList(), List.of(middleFilter, lastFilter, firstFilter), Collections.emptyList())
 
         and: 'wait for the server to be initialized'
         waitForServerInit()
@@ -254,6 +255,41 @@ class JavalinApplicationSpec extends Specification {
             it.firstValue("resp-header-name").orElseThrow() == "resp-header-value"
         }
     }
+
+    def 'should execute exception handler'() {
+        given: 'exception handler'
+        def statusCode = HttpCode.SERVICE_UNAVAILABLE
+        ExceptionHandler<RuntimeException> handler = new ExceptionHandler<RuntimeException>() {
+            @Override
+            Class<RuntimeException> exceptionClass() {
+                return RuntimeException.class
+            }
+
+            @Override
+            HttpContext handle(RuntimeException exception, HttpContext ctx) {
+                var response = ctx.response().copy()
+                  .statusCode(statusCode)
+                  .responseBody(ByteResponseBody.of(exception.message))
+                  .build()
+                ctx.withResponse(response)
+            }
+        }
+
+
+        and: 'server initialization with exception handler'
+        application.init(Collections.emptyList(), Collections.emptyList(), List.of(handler))
+
+        and: 'wait for the server to be initialized'
+        waitForServerInit()
+
+        when: 'makes request'
+        def result = client.throwsException()
+
+        then: 'result should have correct values'
+        result.statusCode() == statusCode.code()
+        result.body() == "Test message"
+    }
+
 
     def waitForServerInit() {
         waitForServerInit(Duration.ofSeconds(5))

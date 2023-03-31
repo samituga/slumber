@@ -2,13 +2,14 @@ package io.samituga.bard.endpoint.response;
 
 import io.samituga.slumber.ivern.builder.Builder;
 import io.samituga.slumber.ivern.http.type.Headers;
-
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 public class HttpResponseBuilder implements Builder<HttpResponse> {
 
     private HttpCode statusCode;
     private Headers headers = Headers.empty();
+    private HttpServletResponse response;
     private Optional<ResponseBody> responseBody = Optional.empty();
 
     private HttpResponseBuilder() {}
@@ -27,8 +28,13 @@ public class HttpResponseBuilder implements Builder<HttpResponse> {
         return this;
     }
 
+    public HttpResponseBuilder response(HttpServletResponse response) {
+        this.response = response;
+        return this;
+    }
+
     public HttpResponseBuilder responseBody(ResponseBody responseBody) {
-        this.responseBody = Optional.ofNullable(responseBody);
+        this.responseBody = Optional.of(responseBody);
         return this;
     }
 
@@ -39,6 +45,6 @@ public class HttpResponseBuilder implements Builder<HttpResponse> {
 
     @Override
     public HttpResponse build() {
-        return new HttpResponseStruct(statusCode, headers, responseBody);
+        return new HttpResponseStruct(statusCode, headers, response, responseBody);
     }
 }
