@@ -6,5 +6,5 @@ public interface ExceptionHandler<T extends Exception> {
 
     Class<T> exceptionClass();
 
-    void handler(T exception, HttpContext httpContext);
+    HttpContext handle(T exception, HttpContext httpContext);
 }

@@ -22,6 +22,7 @@ import io.samituga.bard.endpoint.response.HttpCode;
 import io.samituga.bard.endpoint.response.type.ByteResponseBody;
 import io.samituga.bard.endpoint.route.Route;
 import io.samituga.bard.filter.Filter;
+import io.samituga.bard.handler.ExceptionHandler;
 import io.samituga.bard.type.Path;
 import io.samituga.bard.type.Port;
 import io.samituga.slumber.bard.javalin.JavalinApplication;
@@ -45,6 +46,7 @@ public class StubServer {
     public static final Path PATH_DELETE_TITLE = Path.of("/auth/title/{uuid}");
     public static final Path PATH_HELLO_WORLD = Path.of("/hello/world");
     public static final Path PATH_HEADERS = Path.of("/headers");
+    public static final Path PATH_THROWS_EXCEPTION = Path.of("/exception");
 
     private final JavalinApplication app = new JavalinApplication();
     private final Route routeHelloWorld = routeBuilder()
@@ -89,17 +91,26 @@ public class StubServer {
           .handler(this::deleteTitle)
           .build();
 
+    private final Route routeThrowsException = routeBuilder()
+          .path(PATH_THROWS_EXCEPTION)
+          .verb(GET)
+          .handler(this::throwsRuntimeException)
+          .build();
+
     public StubServer() {
         this.database = new HashMap<>();
     }
 
 
     public void init() {
-        app.init(serverConfig(emptyList(), emptyList()));
+        app.init(serverConfig(emptyList(), emptyList(), emptyList()));
     }
 
-    public void init(Collection<Route> extraRoutes, Collection<Filter> extraFilters) {
-        app.init(serverConfig(extraRoutes, extraFilters));
+    // TODO: 2023-03-31 Clean this
+    public void init(Collection<Route> extraRoutes,
+                     Collection<Filter> extraFilters,
+                     Collection<ExceptionHandler<? extends Exception>> exceptionHandlers) {
+        app.init(serverConfig(extraRoutes, extraFilters, exceptionHandlers));
     }
 
     public void cleanup() {
@@ -128,10 +139,12 @@ public class StubServer {
     }
 
     private ServerConfig serverConfig(Collection<Route> extraRoutes,
-                                      Collection<Filter> extraFilters) {
+                                      Collection<Filter> extraFilters,
+                                      Collection<ExceptionHandler<? extends Exception>> extraExceptionHandlers) {
         return aServerConfig()
               .routes(routes(extraRoutes))
               .filters(filters(extraFilters))
+              .exceptionHandlers(exceptionHandlers(extraExceptionHandlers))
               .port(PORT)
               .build();
     }
@@ -143,7 +156,8 @@ public class StubServer {
                           routeGetTitle,
                           routeGetTitleByQuery,
                           routePostTitle,
-                          routeDeleteTitle),
+                          routeDeleteTitle,
+                          routeThrowsException),
                     extraRoutes.stream())
               .collect(toList());
     }
@@ -152,6 +166,14 @@ public class StubServer {
         return Stream.concat(
                     Stream.of(),
                     extraFilters.stream())
+              .collect(toList());
+    }
+
+    private Collection<ExceptionHandler<? extends Exception>> exceptionHandlers(
+          Collection<ExceptionHandler<? extends Exception>> exceptionHandlers) {
+        return Stream.concat(
+                    Stream.of(),
+                    exceptionHandlers.stream())
               .collect(toList());
     }
 
@@ -256,5 +278,9 @@ public class StubServer {
               .headers(Headers.of("resp-header-name", "resp-header-value"))
               .build();
         return ctx.withResponse(response);
+    }
+
+    private HttpContext throwsRuntimeException(HttpContext ctx) {
+        throw new RuntimeException("Test message");
     }
 }

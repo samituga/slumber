@@ -7,6 +7,7 @@ import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.samituga.bard.configuration.ServerConfig;
 import io.samituga.bard.endpoint.context.HttpContext;
+import io.samituga.bard.endpoint.response.HttpResponse;
 import io.samituga.bard.endpoint.response.ResponseBody;
 import io.samituga.bard.endpoint.response.type.ByteResponseBody;
 import io.samituga.bard.endpoint.response.type.InputStreamResponseBody;
@@ -53,16 +54,17 @@ public class JavalinConfigurator {
         }
     }
 
-    // TODO: 2023-03-31 Might be worth to check if there is a better way to do this
+    // TODO: 2023-03-31 Might be worth to check if there is a better way to do this (casting)
     @SuppressWarnings("unchecked cast")
     private static void withExceptionHandlers(Javalin javalin,
                                               Collection<ExceptionHandler<? extends Exception>> exceptionHandlers) {
-
         for (ExceptionHandler<?> exceptionHandler : exceptionHandlers) {
             Class<? extends Exception> exceptionClass = exceptionHandler.exceptionClass();
             javalin.exception(exceptionClass, (Exception e, Context ctx) -> {
                 var httpContext = fromJavalinContext(ctx);
-                ((ExceptionHandler<Exception>) exceptionHandler).handler(e, httpContext);
+                var response =
+                      ((ExceptionHandler<Exception>) exceptionHandler).handle(e, httpContext);
+                withResponse(ctx, response.response());
             });
         }
     }
@@ -73,15 +75,19 @@ public class JavalinConfigurator {
             var httpContext = fromJavalinContext(ctx);
             httpContext = function.apply(httpContext);
             var response = httpContext.response();
-            if (response.responseBody().isPresent()) {
-                handleResponseType(response.responseBody().get(), ctx);
-            }
-            ctx.status(response.statusCode().code());
-            ctxWithHeaders(ctx, response.headers());
+            withResponse(ctx, response);
         };
     }
 
-    private static void handleResponseType(ResponseBody responseBody, Context ctx) {
+    private static void withResponse(Context ctx, HttpResponse response) {
+        if (response.responseBody().isPresent()) {
+            withResponseBody(ctx, response.responseBody().get());
+        }
+        ctx.status(response.statusCode().code());
+        withResponseHeaders(ctx, response.headers());
+    }
+
+    private static void withResponseBody(Context ctx, ResponseBody responseBody) {
         if (responseBody instanceof InputStreamResponseBody inputStreamResponseBody) {
             ctx.result(inputStreamResponseBody.responseBody());
         } else if (responseBody instanceof ByteResponseBody byteResponseBody) {
@@ -91,7 +97,7 @@ public class JavalinConfigurator {
         }
     }
 
-    private static void ctxWithHeaders(Context ctx, Headers headers) {
+    private static void withResponseHeaders(Context ctx, Headers headers) {
         headers.value().forEach(ctx::header);
     }
 }

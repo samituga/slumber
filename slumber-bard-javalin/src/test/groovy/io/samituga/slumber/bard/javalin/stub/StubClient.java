@@ -3,6 +3,7 @@ package io.samituga.slumber.bard.javalin.stub;
 import static io.samituga.slumber.bard.javalin.stub.StubServer.PATH_HEADERS;
 import static io.samituga.slumber.bard.javalin.stub.StubServer.PATH_HELLO_WORLD;
 import static io.samituga.slumber.bard.javalin.stub.StubServer.PATH_POST_TITLE;
+import static io.samituga.slumber.bard.javalin.stub.StubServer.PATH_THROWS_EXCEPTION;
 import static io.samituga.slumber.bard.javalin.stub.StubServer.PORT;
 import static io.samituga.slumber.rakan.request.HttpRequestBuilderImpl.DEFAULT_HTTP_CLIENT;
 
@@ -70,6 +71,15 @@ public class StubClient {
               .uri(URI.create(BASE_URI + PATH_HEADERS))
               .responseBodyHandler(HttpResponse.BodyHandlers.ofString())
               .headers(headers)
+              .httpGet()
+              .execute();
+    }
+
+    public HttpResponse<String> throwsException() throws IOException, InterruptedException {
+        return HttpRequestBuilder.request(String.class)
+              .client(DEFAULT_HTTP_CLIENT)
+              .uri(URI.create(BASE_URI + PATH_THROWS_EXCEPTION))
+              .responseBodyHandler(HttpResponse.BodyHandlers.ofString())
               .httpGet()
               .execute();
     }

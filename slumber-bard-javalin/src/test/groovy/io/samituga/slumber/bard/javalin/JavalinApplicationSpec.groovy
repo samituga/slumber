@@ -7,8 +7,10 @@ import static java.util.UUID.randomUUID
 import io.samituga.bard.application.ServerStatus
 import io.samituga.bard.endpoint.context.HttpContext
 import io.samituga.bard.endpoint.response.HttpCode
+import io.samituga.bard.endpoint.response.type.ByteResponseBody
 import io.samituga.bard.filter.Precedence
 import io.samituga.bard.filter.type.Order
+import io.samituga.bard.handler.ExceptionHandler
 import io.samituga.slumber.bard.javalin.stub.StubClient
 import io.samituga.slumber.bard.javalin.stub.StubServer
 import io.samituga.slumber.ivern.http.type.Headers
@@ -107,7 +109,7 @@ class JavalinApplicationSpec extends Specification {
           .path(PATH_HELLO_WORLD)
           .build()
 
-        application.init(Collections.emptyList(), List.of(filter))
+        application.init(Collections.emptyList(), List.of(filter), Collections.emptyList())
 
 
         and: 'wait for the server to be initialized'
@@ -169,7 +171,7 @@ class JavalinApplicationSpec extends Specification {
           .path(PATH_HELLO_WORLD)
           .build()
 
-        application.init(Collections.emptyList(), List.of(middleFilter, lastFilter, firstFilter))
+        application.init(Collections.emptyList(), List.of(middleFilter, lastFilter, firstFilter), Collections.emptyList())
 
         and: 'wait for the server to be initialized'
         waitForServerInit()
@@ -253,6 +255,41 @@ class JavalinApplicationSpec extends Specification {
             it.firstValue("resp-header-name").orElseThrow() == "resp-header-value"
         }
     }
+
+    def 'should execute exception handler'() {
+        given: 'exception handler'
+        def statusCode = HttpCode.SERVICE_UNAVAILABLE
+        ExceptionHandler<RuntimeException> handler = new ExceptionHandler<RuntimeException>() {
+            @Override
+            Class<RuntimeException> exceptionClass() {
+                return RuntimeException.class
+            }
+
+            @Override
+            HttpContext handle(RuntimeException exception, HttpContext ctx) {
+                var response = ctx.response().copy()
+                  .statusCode(statusCode)
+                  .responseBody(ByteResponseBody.of(exception.message))
+                  .build()
+                ctx.withResponse(response)
+            }
+        }
+
+
+        and: 'server initialization with exception handler'
+        application.init(Collections.emptyList(), Collections.emptyList(), List.of(handler))
+
+        and: 'wait for the server to be initialized'
+        waitForServerInit()
+
+        when: 'makes request'
+        def result = client.throwsException()
+
+        then: 'result should have correct values'
+        result.statusCode() == statusCode.code()
+        result.body() == "Test message"
+    }
+
 
     def waitForServerInit() {
         waitForServerInit(Duration.ofSeconds(5))
