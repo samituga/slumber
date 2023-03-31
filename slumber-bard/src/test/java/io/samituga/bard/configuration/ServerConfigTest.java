@@ -8,12 +8,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import io.samituga.bard.filter.Precedence;
 import io.samituga.bard.filter.type.Order;
 import io.samituga.bard.fixture.ServerConfigTestData;
+import io.samituga.bard.type.Port;
 import io.samituga.slumber.heimer.validator.exception.AssertionException;
 import org.junit.jupiter.api.Test;
 
 class ServerConfigTest {
 
-    private final static int PORT = 8080;
+    private final static Port PORT = Port.of(8080);
 
     @Test
     void should_make_exact_copy() {

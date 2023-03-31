@@ -23,6 +23,7 @@ import io.samituga.bard.endpoint.response.type.ByteResponseBody;
 import io.samituga.bard.endpoint.route.Route;
 import io.samituga.bard.filter.Filter;
 import io.samituga.bard.type.Path;
+import io.samituga.bard.type.Port;
 import io.samituga.slumber.bard.javalin.JavalinApplication;
 import io.samituga.slumber.ivern.http.type.Headers;
 import java.nio.charset.StandardCharsets;
@@ -36,7 +37,7 @@ import java.util.stream.Stream;
 
 public class StubServer {
 
-    public static final int PORT = 8080;
+    public static final Port PORT = Port.of(8080);
     public static final Path PATH_GET_TITLE = Path.of("/title/{uuid}");
     public static final Path PATH_GET_TITLE_BY_QUERY = Path.of("/title/");
     public static final Path PATH_POST_TITLE = Path.of("/title");

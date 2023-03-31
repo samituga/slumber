@@ -8,20 +8,21 @@ import io.samituga.bard.endpoint.route.Route;
 import io.samituga.bard.filter.Filter;
 import io.samituga.bard.filter.Precedence;
 import io.samituga.bard.handler.ExceptionHandler;
+import io.samituga.bard.type.Port;
 import io.samituga.slumber.heimer.validator.AssertionUtility;
 import java.util.Collection;
 
-record ServerConfigStruct(int port,
+record ServerConfigStruct(Port port,
                           Collection<Filter> filters,
                           Collection<Route> routes,
                           Collection<ExceptionHandler<? extends Exception>> exceptionHandlers)
       implements ServerConfig {
 
-    ServerConfigStruct(int port,
+    ServerConfigStruct(Port port,
                        Collection<Filter> filters,
                        Collection<Route> routes,
                        Collection<ExceptionHandler<? extends Exception>> exceptionHandlers) {
-        this.port = requiredValidPort(port); // TODO: 2023-03-31 Port class 
+        this.port = required("port", port);
         this.filters = validateFiltersOrder(filters);
         this.routes = required("routes", routes);
         this.exceptionHandlers = required("exceptionHandlers", exceptionHandlers);
@@ -29,7 +30,8 @@ record ServerConfigStruct(int port,
 
     @Override
     public ServerConfigBuilder copy() {
-        return serverConfigBuilder().port(port)
+        return serverConfigBuilder()
+              .port(port)
               .filters(filters)
               .routes(routes)
               .exceptionHandlers(exceptionHandlers);

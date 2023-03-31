@@ -39,7 +39,7 @@ public class JavalinApplication implements SlumberApplication {
 
         JavalinConfigurator.configure(javalin, config);
 
-        javalin.start(config.port());
+        javalin.start(config.port().value());
     }
 
     @Override
