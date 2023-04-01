@@ -21,6 +21,13 @@ record HttpContextStruct(HttpRequest request, HttpResponse response) implements 
     }
 
     @Override
+    public HttpContext withRequest(HttpRequest request) {
+        return copy()
+              .request(request)
+              .build();
+    }
+
+    @Override
     public HttpContext withResponse(HttpResponse response) {
         return copy()
               .response(response)

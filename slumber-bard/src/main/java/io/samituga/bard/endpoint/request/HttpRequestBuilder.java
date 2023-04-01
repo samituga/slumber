@@ -4,11 +4,13 @@ import io.samituga.bard.endpoint.request.type.PathParams;
 import io.samituga.bard.endpoint.request.type.QueryParams;
 import io.samituga.bard.endpoint.request.type.RequestBody;
 import io.samituga.slumber.ivern.builder.Builder;
+import io.samituga.slumber.ivern.http.type.Headers;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 public class HttpRequestBuilder implements Builder<HttpRequest> {
 
+    private Headers headers;
     private PathParams pathParams;
     private QueryParams queryParams;
     private HttpServletRequest request;
@@ -18,6 +20,11 @@ public class HttpRequestBuilder implements Builder<HttpRequest> {
 
     public static HttpRequestBuilder httpRequestBuilder() {
         return new HttpRequestBuilder();
+    }
+
+    public HttpRequestBuilder headers(Headers headers) {
+        this.headers = headers;
+        return this;
     }
 
     public HttpRequestBuilder pathParams(PathParams pathParams) {
@@ -43,7 +50,7 @@ public class HttpRequestBuilder implements Builder<HttpRequest> {
 
     @Override
     public HttpRequest build() {
-        return new HttpRequestStruct(pathParams, queryParams, request, requestBody);
+        return new HttpRequestStruct(headers, pathParams, queryParams, request, requestBody);
     }
 }
 
