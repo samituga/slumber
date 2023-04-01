@@ -11,5 +11,5 @@ public interface Route extends Structure<Route, RouteBuilder> {
 
     Path path();
 
-    Function<HttpContext, HttpContext> handler(); // TODO: 2023-03-26 Can be of Consumer if HttpContext is mutable
+    Function<HttpContext, HttpContext> handler();
 }

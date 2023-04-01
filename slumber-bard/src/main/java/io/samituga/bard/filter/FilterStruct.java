@@ -7,18 +7,18 @@ import io.samituga.bard.endpoint.context.HttpContext;
 import io.samituga.bard.filter.type.Order;
 import io.samituga.bard.type.Path;
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 record FilterStruct(Order order,
                     Path path,
-                    Optional<Consumer<HttpContext>> doBefore,
-                    Optional<Consumer<HttpContext>> doAfter)
+                    Optional<Function<HttpContext, HttpContext>> doBefore,
+                    Optional<Function<HttpContext, HttpContext>> doAfter)
       implements Filter {
 
     FilterStruct(Order order,
                  Path path,
-                 Optional<Consumer<HttpContext>> doBefore,
-                 Optional<Consumer<HttpContext>> doAfter) {
+                 Optional<Function<HttpContext, HttpContext>> doBefore,
+                 Optional<Function<HttpContext, HttpContext>> doAfter) {
         this.order = required("order", order);
         this.path = required("path", path);
         this.doBefore = required("doBefore", doBefore);

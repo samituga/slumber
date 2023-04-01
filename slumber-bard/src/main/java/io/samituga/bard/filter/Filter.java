@@ -6,7 +6,7 @@ import io.samituga.bard.filter.type.Order;
 import io.samituga.bard.type.Path;
 import io.samituga.slumber.ivern.structure.Structure;
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Interface representing a web server filter.
@@ -41,7 +41,7 @@ public interface Filter extends Comparable<Filter>, Structure<Filter, FilterBuil
      * @return A consumer that will do the filtering before the request,
      *       {@link Optional#empty() empty} if there is nothing to do before
      */
-    Optional<Consumer<HttpContext>> doBefore();
+    Optional<Function<HttpContext, HttpContext>> doBefore();
 
     /**
      * Operation to be executed after the request leaves the handler.
@@ -49,5 +49,5 @@ public interface Filter extends Comparable<Filter>, Structure<Filter, FilterBuil
      * @return A consumer that will do the filtering after the request,
      *       {@link Optional#empty() empty} if there is nothing to do after
      */
-    Optional<Consumer<HttpContext>> doAfter();
+    Optional<Function<HttpContext, HttpContext>> doAfter();
 }
