@@ -1,7 +1,7 @@
 package io.samituga.bard.endpoint.request.type;
 
-import io.samituga.slumber.ivern.type.MapType;
 import java.util.List;
+import io.samituga.slumber.ivern.type.MapType;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;

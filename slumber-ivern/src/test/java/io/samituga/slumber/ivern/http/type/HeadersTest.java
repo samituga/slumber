@@ -38,4 +38,26 @@ class HeadersTest {
         assertThatThrownBy(() -> Headers.of(key1, value1, key2))
               .isInstanceOf(AssertionException.class);
     }
+
+    @Test
+    void should_create_new_instance_with_previous_and_new_values() {
+        // given
+        var key1 = "key1";
+        var value1 = "value1";
+        var key2 = "key2";
+        var value2 = "value2";
+        var headers = Headers.of(key1, value1, key2, value2);
+
+        var key3 = "key3";
+        var value3 = "value3";
+        var key4 = "key4";
+        var value4 = "value4";
+
+        // when
+        var result = headers.withHeaders(key3, value3, key4, value4);
+
+        // then
+        var expected = Map.of(key1, value1, key2, value2, key3, value3, key4, value4);
+        assertThat(result.value()).containsExactlyInAnyOrderEntriesOf(expected);
+    }
 }
