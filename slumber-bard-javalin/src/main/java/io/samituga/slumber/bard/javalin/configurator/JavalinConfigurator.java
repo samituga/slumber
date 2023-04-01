@@ -33,17 +33,19 @@ public class JavalinConfigurator {
         filters.stream()
               .sorted()
               .forEach(filter -> {
-                  if (filter.doBefore().isPresent()) {
-                      var doBeforeConsumer = filter.doBefore().get();
-                      javalin.before(filter.path().value(),
-                            ctx -> doBeforeConsumer.accept(fromJavalinContext(ctx)));
-                  }
-
-                  if (filter.doAfter().isPresent()) {
-                      var doAfterConsumer = filter.doAfter().get();
-                      javalin.after(filter.path().value(),
-                            ctx -> doAfterConsumer.accept(fromJavalinContext(ctx)));
-                  }
+                  filter.doBefore().ifPresent(doBefore ->
+                        javalin.before(filter.path().value(),
+                              ctx -> {
+                                  var httpContext = doBefore.apply(fromJavalinContext(ctx));
+                                  withResponse(ctx, httpContext.response());
+                              }));
+                  filter.doAfter().ifPresent(doAfter ->
+                        javalin.after(
+                              filter.path().value(),
+                              ctx -> {
+                                  var httpContext = doAfter.apply(fromJavalinContext(ctx));
+                                  withResponse(ctx, httpContext.response());
+                              }));
               });
     }
 

@@ -19,7 +19,7 @@ import spock.lang.Specification
 
 import java.time.Duration
 import java.time.Instant
-import java.util.function.Consumer 
+import java.util.function.Function
 
 class JavalinApplicationSpec extends Specification {
 
@@ -97,10 +97,10 @@ class JavalinApplicationSpec extends Specification {
         Instant doBeforeTimestamp = null
         Instant doAfterTimestamp = null
 
-        Consumer<HttpContext> doBefore =
-          (ctx) -> { doBeforeTimestamp = Instant.now(); Thread.sleep(2) }
-        Consumer<HttpContext> doAfter =
-          (ctx) -> { doAfterTimestamp = Instant.now(); Thread.sleep(2) }
+        Function<HttpContext, HttpContext> doBefore =
+          (ctx) -> { doBeforeTimestamp = Instant.now(); Thread.sleep(2); ctx }
+        Function<HttpContext, HttpContext> doAfter =
+          (ctx) -> { doAfterTimestamp = Instant.now(); Thread.sleep(2); ctx }
 
         def filter = filterBuilder()
           .doBefore(doBefore)
@@ -129,10 +129,10 @@ class JavalinApplicationSpec extends Specification {
         Instant firstDoBeforeTimestamp = null
         Instant firstDoAfterTimestamp = null
 
-        Consumer<HttpContext> firstDoBefore =
-          (ctx) -> { firstDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
-        Consumer<HttpContext> firstDoAfter =
-          (ctx) -> { firstDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
+        Function<HttpContext, HttpContext> firstDoBefore =
+          (ctx) -> { firstDoBeforeTimestamp = Instant.now(); Thread.sleep(2); ctx }
+        Function<HttpContext, HttpContext> firstDoAfter =
+          (ctx) -> { firstDoAfterTimestamp = Instant.now(); Thread.sleep(2); ctx }
 
         def firstFilter = filterBuilder()
           .doBefore(firstDoBefore)
@@ -144,10 +144,10 @@ class JavalinApplicationSpec extends Specification {
         Instant middleDoBeforeTimestamp = null
         Instant middleDoAfterTimestamp = null
 
-        Consumer<HttpContext> middleDoBefore =
-          (ctx) -> { middleDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
-        Consumer<HttpContext> middleDoAfter =
-          (ctx) -> { middleDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
+        Function<HttpContext, HttpContext> middleDoBefore =
+          (ctx) -> { middleDoBeforeTimestamp = Instant.now(); Thread.sleep(2); ctx }
+        Function<HttpContext, HttpContext> middleDoAfter =
+          (ctx) -> { middleDoAfterTimestamp = Instant.now(); Thread.sleep(2); ctx }
 
         def middleFilter = filterBuilder()
           .doBefore(middleDoBefore)
@@ -159,10 +159,10 @@ class JavalinApplicationSpec extends Specification {
         Instant lastDoBeforeTimestamp = null
         Instant lastDoAfterTimestamp = null
 
-        Consumer<HttpContext> lastDoBefore =
-          (ctx) -> { lastDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
-        Consumer<HttpContext> lastDoAfter =
-          (ctx) -> { lastDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
+        Function<HttpContext, HttpContext> lastDoBefore =
+          (ctx) -> { lastDoBeforeTimestamp = Instant.now(); Thread.sleep(2); ctx }
+        Function<HttpContext, HttpContext> lastDoAfter =
+          (ctx) -> { lastDoAfterTimestamp = Instant.now(); Thread.sleep(2); ctx }
 
         def lastFilter = filterBuilder()
           .doBefore(lastDoBefore)
@@ -271,7 +271,7 @@ class JavalinApplicationSpec extends Specification {
                   .statusCode(statusCode)
                   .responseBody(ByteResponseBody.of(exception.message))
                   .build()
-                ctx.withResponse(response)
+                return ctx.withResponse(response)
             }
         }
 
@@ -290,6 +290,35 @@ class JavalinApplicationSpec extends Specification {
         result.body() == "Test message"
     }
 
+    def "should modify HttpContext inside filter"() {
+        given: 'given filter'
+        def key = "My-Key"
+        def value = "My-Value"
+        Function<HttpContext, HttpContext> doBefore =
+          (ctx) -> {
+              def headers = ctx.response().headers()
+              def updatedHeaders = headers.withHeader(key, value)
+              ctx.withResponse(ctx.response().copy().headers(updatedHeaders).build())
+          }
+
+        def filter = filterBuilder()
+          .doBefore(doBefore)
+          .order(Order.of(0))
+          .path(PATH_HELLO_WORLD)
+          .build()
+
+        and: 'server initialization'
+        application.init(Collections.emptyList(), List.of(filter), Collections.emptyList())
+        waitForServerInit()
+
+        when: 'makes request'
+        def result = client.getHelloWorld()
+
+        then: 'result should have correct values'
+        result.statusCode() == HttpCode.OK.code()
+        result.body() == "Hello world"
+        result.headers().firstValue(key).orElseThrow() == value
+    }
 
     def waitForServerInit() {
         waitForServerInit(Duration.ofSeconds(5))

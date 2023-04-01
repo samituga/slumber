@@ -5,13 +5,13 @@ import io.samituga.bard.filter.type.Order;
 import io.samituga.bard.type.Path;
 import io.samituga.slumber.ivern.builder.Builder;
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class FilterBuilder implements Builder<Filter> {
     private Order order;
     private Path path;
-    private Optional<Consumer<HttpContext>> doBefore = Optional.empty();
-    private Optional<Consumer<HttpContext>> doAfter = Optional.empty();
+    private Optional<Function<HttpContext, HttpContext>> doBefore = Optional.empty();
+    private Optional<Function<HttpContext, HttpContext>> doAfter = Optional.empty();
 
     private FilterBuilder() {}
 
@@ -29,23 +29,23 @@ public class FilterBuilder implements Builder<Filter> {
         return this;
     }
 
-    public FilterBuilder doBefore(Consumer<HttpContext> doBefore) {
+    public FilterBuilder doBefore(Function<HttpContext, HttpContext> doBefore) {
         this.doBefore = Optional.of(doBefore);
         return this;
     }
 
-    public FilterBuilder doBefore(Optional<Consumer<HttpContext>> doBefore) {
+    public FilterBuilder doBefore(Optional<Function<HttpContext, HttpContext>> doBefore) {
         this.doBefore = doBefore;
         return this;
     }
 
-    public FilterBuilder doAfter(Consumer<HttpContext> doAfter) {
+    public FilterBuilder doAfter(Function<HttpContext, HttpContext> doAfter) {
         this.doAfter = Optional.of(doAfter);
         return this;
     }
 
     public FilterBuilder doAfter(
-          Optional<Consumer<HttpContext>> doAfter) {
+          Optional<Function<HttpContext, HttpContext>> doAfter) {
         this.doAfter = doAfter;
         return this;
     }
