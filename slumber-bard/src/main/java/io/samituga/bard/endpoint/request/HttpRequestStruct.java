@@ -14,24 +14,32 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
-record HttpRequestStruct(Headers headers,
-                         PathParams pathParams,
+record HttpRequestStruct(PathParams pathParams,
                          QueryParams queryParams,
                          HttpServletRequest request)
       implements HttpRequest {
 
-    HttpRequestStruct(Headers headers,
-                      PathParams pathParams,
+    HttpRequestStruct(PathParams pathParams,
                       QueryParams queryParams,
                       HttpServletRequest request) {
-        this.headers = required("headers", headers);
         this.pathParams = required("pathParams", pathParams);
         this.queryParams = required("queryParams", queryParams);
         this.request = required("request", request);
     }
 
+    @Override
+    public Headers headers() {
+        Map<String, String> headers = new HashMap<>();
+
+        request.getHeaderNames().asIterator().forEachRemaining(
+              headerName -> headers.put(headerName, request.getHeader(headerName)));
+
+        return Headers.of(headers);
+    }
 
     @Override
     public Optional<RequestBody> requestBody() {
@@ -46,7 +54,6 @@ record HttpRequestStruct(Headers headers,
     @Override
     public HttpRequestBuilder copy() {
         return httpRequestBuilder()
-              .headers(headers)
               .pathParams(pathParams)
               .queryParams(queryParams)
               .request(request);

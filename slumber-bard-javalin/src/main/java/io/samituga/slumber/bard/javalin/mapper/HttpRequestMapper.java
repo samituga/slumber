@@ -15,7 +15,6 @@ public class HttpRequestMapper {
     public static HttpRequest fromJavalinContext(Context ctx) {
 
         return httpRequestBuilder()
-              .headers(Headers.of(ctx.headerMap()))
               .pathParams(PathParams.ofString(ctx.pathParamMap()))
               .queryParams(QueryParams.ofString(ctx.queryParamMap()))
               .request(ctx.req())

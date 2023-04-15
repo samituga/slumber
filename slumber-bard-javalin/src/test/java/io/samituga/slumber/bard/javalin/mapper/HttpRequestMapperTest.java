@@ -1,6 +1,7 @@
 package io.samituga.slumber.bard.javalin.mapper;
 
 import static io.samituga.bard.endpoint.request.HttpRequestBuilder.httpRequestBuilder;
+import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -12,11 +13,14 @@ import io.samituga.slumber.ivern.http.type.Headers;
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 
 class HttpRequestMapperTest {
@@ -27,24 +31,29 @@ class HttpRequestMapperTest {
         var httpServletRequest = mock(HttpServletRequest.class);
         var ctx = mock(Context.class);
 
-        var headers = Map.of("key1", "value1", "key2", "value2");
+        var header1 = entry("key1", "value1");
+        var header2 = entry("key2", "value2");
+        var headers = Map.ofEntries(header1, header2);
 
-        var pathParam1 = Map.entry("one-path", "one-path");
-        var pathParam2 = Map.entry("two-path", "two-path");
+        var pathParam1 = entry("one-path", "one-path");
+        var pathParam2 = entry("two-path", "two-path");
         var pathParamMap = Map.ofEntries(pathParam1, pathParam2);
 
-        var queryParam1 = Map.entry("one-query", List.of("one-query"));
-        var queryParam2 = Map.entry("two-query", List.of("two-query"));
+        var queryParam1 = entry("one-query", List.of("one-query"));
+        var queryParam2 = entry("two-query", List.of("two-query"));
         var queryParamMap = Map.ofEntries(queryParam1, queryParam2);
 
         var body = "Hello World";
 
         var mockInputStream = new DelegatingServletInputStream(
               new ByteArrayInputStream(body.getBytes()));
+
         given(httpServletRequest.getInputStream()).willReturn(mockInputStream);
+        given(httpServletRequest.getHeaderNames())
+              .willReturn(Collections.enumeration(headers.keySet()));
+        headers.forEach((k, v) -> given(httpServletRequest.getHeader(k)).willReturn(v));
 
         given(ctx.req()).willReturn(httpServletRequest);
-        given(ctx.headerMap()).willReturn(headers);
         given(ctx.pathParamMap()).willReturn(pathParamMap);
         given(ctx.queryParamMap()).willReturn(queryParamMap);
 
@@ -53,13 +62,13 @@ class HttpRequestMapperTest {
 
         // then
         var expected = httpRequestBuilder()
-              .headers(Headers.of(headers))
               .pathParams(PathParams.ofString(pathParamMap))
               .queryParams(QueryParams.ofString(queryParamMap))
               .request(httpServletRequest)
               .build();
         var requestBody = result.requestBody();
         assertThat(result).isEqualTo(expected);
+        assertThat(result.headers()).isEqualTo(Headers.of(headers));
         // TODO: 15/04/2023 Should be able to compare Type directly
         assertThat(requestBody.orElseThrow().value()).isEqualTo(body.getBytes());
     }
