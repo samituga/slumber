@@ -62,9 +62,10 @@ public abstract class JooqRepositoryOperation<R extends Record> extends JooqRepo
         return updatedRows;
     }
 
-    protected void createAllRecords(Collection<R> records) {
+    protected int createAllRecords(Collection<R> records) {
         requiredNotEmpty("records", records);
         records.forEach(this::create); // TODO: 15/04/2023 What if something fails?
+        return records.size(); // TODO: 15/04/2023 fix
     }
 
     protected boolean updateWhere(Condition condition, R record) {
