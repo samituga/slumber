@@ -220,13 +220,14 @@ public class StubServer {
     }
 
     private HttpContext postTitle(HttpContext ctx) {
-        if (ctx.request().requestBody().isEmpty()) {
+        var requestBody = ctx.request().requestBody();
+        if (requestBody.isEmpty()) {
             var response = httpResponseBuilder()
                   .statusCode(BAD_REQUEST)
                   .build();
             return ctx.withResponse(response);
         }
-        String body = new String(ctx.request().requestBody().get().value(), StandardCharsets.UTF_8);
+        String body = new String(requestBody.get().value(), StandardCharsets.UTF_8);
 
         var uuid = UUID.randomUUID();
 

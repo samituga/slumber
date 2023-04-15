@@ -23,7 +23,7 @@ public abstract class Type<T> {
             return false;
         }
         Type<?> type = (Type<?>) o;
-        return value.equals(type.value);
+        return value.equals(type.value); // TODO: 15/04/2023 Doesn't work if T is array
     }
 
     @Override

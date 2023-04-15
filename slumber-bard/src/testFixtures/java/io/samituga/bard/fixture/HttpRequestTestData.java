@@ -23,7 +23,6 @@ public class HttpRequestTestData {
               .headers(Headers.of("Header-Key", "Header-Value"))
               .pathParams(PathParams.of(PathParamName.of("name"), PathParamValue.of("value")))
               .queryParams(QueryParams.of(QueryParamName.of("query"), QueryParamValue.of("Qvalue")))
-              .request(request)
-              .requestBody(Optional.of(RequestBody.of("body")));
+              .request(request);
     }
 }

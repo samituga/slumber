@@ -14,23 +14,11 @@ public class HttpRequestMapper {
 
     public static HttpRequest fromJavalinContext(Context ctx) {
 
-        var requestBody = getRequestBody(ctx);
-
         return httpRequestBuilder()
               .headers(Headers.of(ctx.headerMap()))
               .pathParams(PathParams.ofString(ctx.pathParamMap()))
               .queryParams(QueryParams.ofString(ctx.queryParamMap()))
               .request(ctx.req())
-              .requestBody(requestBody)
               .build();
-    }
-
-    private static Optional<RequestBody> getRequestBody(Context ctx) {
-        byte[] bytes = ctx.bodyAsBytes();
-
-        if (bytes == null || bytes.length == 0) {
-            return Optional.empty();
-        }
-        return Optional.of(RequestBody.of(bytes));
     }
 }
