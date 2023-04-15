@@ -53,6 +53,19 @@ public abstract class AbstractEntityJooqRepository<ID, E extends Entity<ID>, R e
     }
 
     @Override
+    public boolean create(E entity) {
+        required("entity", entity);
+
+        create(toRecord(entity));
+    }
+
+    @Override
+    public int createAll(Collection<E> entities) {
+        requiredNotEmpty("entities", entities);
+
+    }
+
+    @Override
     public boolean update(E entity) {
         required("entity", entity);
 

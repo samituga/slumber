@@ -6,6 +6,7 @@ module slumber.malz {
     exports io.samituga.slumber.malz.model;
     exports io.samituga.slumber.malz.driver;
     exports io.samituga.slumber.malz.error;
+    exports io.samituga.slumber.malz.error.message;
 
     requires slumber.ivern;
     requires slumber.heimer;
