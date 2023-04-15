@@ -19,6 +19,7 @@ import org.jooq.Table;
 import org.jooq.UpdateQuery;
 import org.jooq.exception.TooManyRowsException;
 
+// TODO: 15/04/2023 What if it throws error mid operation?
 public abstract class JooqRepositoryOperation<R extends Record> extends JooqRepository {
 
     protected final Table<R> table;
@@ -63,7 +64,7 @@ public abstract class JooqRepositoryOperation<R extends Record> extends JooqRepo
 
     protected void createAllRecords(Collection<R> records) {
         requiredNotEmpty("records", records);
-        records.forEach(this::create);
+        records.forEach(this::create); // TODO: 15/04/2023 What if something fails?
     }
 
     protected boolean updateWhere(Condition condition, R record) {
