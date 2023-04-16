@@ -1,6 +1,6 @@
 package io.samituga.slumber.heimer.validator;
 
-import static io.samituga.slumber.heimer.error.UtilityClassInstantiationError.MESSAGE_FORMAT;
+import static io.samituga.slumber.heimer.error.UtilityClassInstantiationError.UTILITY_CLASS_ERROR_FORMAT;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.NOT_BLANK;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED;
 import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIRED_EVEN_VALUES;
@@ -9,6 +9,7 @@ import static io.samituga.slumber.heimer.validator.ValidatorMessageFormat.REQUIR
 
 import io.samituga.slumber.heimer.error.UtilityClassInstantiationError;
 import io.samituga.slumber.heimer.validator.exception.AssertionException;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -22,7 +23,7 @@ public final class AssertionUtility {
 
     private AssertionUtility() {
         throw new UtilityClassInstantiationError(
-              String.format(MESSAGE_FORMAT, this.getClass().getSimpleName()));
+              String.format(UTILITY_CLASS_ERROR_FORMAT, this.getClass().getSimpleName()));
     }
 
     // TODO: 2022-12-05 Also receive execution location?
@@ -62,8 +63,7 @@ public final class AssertionUtility {
      * @throws AssertionException if the value fails the validation
      */
     public static byte[] requiredNotEmpty(String name, byte[] value) {
-        validate(() -> value == null || value.length == 0, REQUIRED_NOT_EMPTY,
-              name);
+        validate(() -> value == null || value.length == 0, REQUIRED_NOT_EMPTY, name);
         return value;
     }
 
@@ -90,8 +90,7 @@ public final class AssertionUtility {
      * @throws AssertionException if the value fails the validation
      */
     public static <T> Collection<T> requiredNotEmpty(String name, Collection<T> value) {
-        validate(() -> value == null || value.isEmpty(), REQUIRED_NOT_EMPTY,
-              name);
+        validate(() -> value == null || value.isEmpty(), REQUIRED_NOT_EMPTY, name);
         return value;
     }
 
@@ -128,10 +127,10 @@ public final class AssertionUtility {
     /**
      * Validates if number of parameters are even and not 0.
      *
-     * @param name the name of the parameter
+     * @param name   the name of the parameter
      * @param params the params
+     * @param <T>    The type of the params
      * @return The params as array if passes the validation
-     * @param <T> The type of the params
      */
     public static <T> T[] requiredArgsPair(String name, T... params) {
         validate(() -> params.length == 0

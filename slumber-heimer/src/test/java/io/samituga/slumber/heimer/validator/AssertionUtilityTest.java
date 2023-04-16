@@ -1,4 +1,4 @@
-package io.samituga.slumber.validator;
+package io.samituga.slumber.heimer.validator;
 
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredArgsPair;
