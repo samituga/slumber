@@ -8,7 +8,7 @@ import io.samituga.slumber.ivern.structure.Structure;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
-public interface HttpRequest extends Structure<HttpRequest, HttpRequestBuilder> {
+public interface HttpRequest {
 
     Headers headers();
 

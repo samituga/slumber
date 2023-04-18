@@ -1,6 +1,5 @@
 package io.samituga.slumber.bard.javalin.mapper;
 
-import static io.samituga.bard.endpoint.request.HttpRequestBuilder.httpRequestBuilder;
 import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -13,6 +12,7 @@ import io.samituga.slumber.ivern.http.type.Headers;
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -21,9 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.jupiter.api.Test;
-
-class HttpRequestMapperTest {
+class HttpRequestMapperTest { // TODO: 18/04/2023 Move this to HttpRequestTest class
 
     @Test
     void should_map_correctly() throws IOException {
@@ -51,24 +49,24 @@ class HttpRequestMapperTest {
         given(httpServletRequest.getInputStream()).willReturn(mockInputStream);
         given(httpServletRequest.getHeaderNames())
               .willReturn(Collections.enumeration(headers.keySet()));
+        given(httpServletRequest.getPathInfo())
+              .willReturn("/" + pathParam1.getValue() + "/" + pathParam2.getValue());
         headers.forEach((k, v) -> given(httpServletRequest.getHeader(k)).willReturn(v));
 
         given(ctx.req()).willReturn(httpServletRequest);
         given(ctx.pathParamMap()).willReturn(pathParamMap);
         given(ctx.queryParamMap()).willReturn(queryParamMap);
+        given(ctx.matchedPath()).willReturn(
+              "/{" + pathParam1.getKey() + "}/{" + pathParam2.getKey() + "}");
 
         // when
         var result = HttpRequestMapper.fromJavalinContext(ctx);
 
         // then
-        var expected = httpRequestBuilder()
-              .pathParams(PathParams.ofString(pathParamMap))
-              .queryParams(QueryParams.ofString(queryParamMap))
-              .request(httpServletRequest)
-              .build();
         var requestBody = result.requestBody();
-        assertThat(result).isEqualTo(expected);
         assertThat(result.headers()).isEqualTo(Headers.of(headers));
+        assertThat(result.pathParams()).isEqualTo(PathParams.ofString(pathParamMap));
+        assertThat(result.queryParams()).isEqualTo(QueryParams.ofString(queryParamMap));
         // TODO: 15/04/2023 Should be able to compare Type directly
         assertThat(requestBody.orElseThrow().value()).isEqualTo(body.getBytes());
     }
