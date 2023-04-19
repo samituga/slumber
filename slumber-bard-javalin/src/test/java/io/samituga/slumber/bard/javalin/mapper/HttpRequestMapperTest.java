@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import io.javalin.http.Context;
 import io.samituga.bard.endpoint.request.type.PathParams;
 import io.samituga.bard.endpoint.request.type.QueryParams;
+import io.samituga.slumber.heimer.util.UrlQueryUtils;
 import io.samituga.slumber.ivern.http.type.Headers;
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
@@ -51,11 +52,11 @@ class HttpRequestMapperTest { // TODO: 18/04/2023 Move this to HttpRequestTest c
               .willReturn(Collections.enumeration(headers.keySet()));
         given(httpServletRequest.getPathInfo())
               .willReturn("/" + pathParam1.getValue() + "/" + pathParam2.getValue());
+        given(httpServletRequest.getQueryString())
+              .willReturn(UrlQueryUtils.createQueryString(queryParamMap));
         headers.forEach((k, v) -> given(httpServletRequest.getHeader(k)).willReturn(v));
 
         given(ctx.req()).willReturn(httpServletRequest);
-        given(ctx.pathParamMap()).willReturn(pathParamMap);
-        given(ctx.queryParamMap()).willReturn(queryParamMap);
         given(ctx.matchedPath()).willReturn(
               "/{" + pathParam1.getKey() + "}/{" + pathParam2.getKey() + "}");
 

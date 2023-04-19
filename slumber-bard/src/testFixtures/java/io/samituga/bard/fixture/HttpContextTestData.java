@@ -13,7 +13,7 @@ public class HttpContextTestData {
     public static HttpContextBuilder aHttpContext(HttpServletRequest request,
                                                   HttpServletResponse response) {
         return httpContextBuilder()
-              .request(new HttpRequestImpl(QueryParams.empty(), request, ""))
+              .request(new HttpRequestImpl(request, "/test"))
               .response(HttpResponseTestData.aResponse(response).build());
     }
 }

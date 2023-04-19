@@ -9,6 +9,6 @@ public class HttpRequestMapper {
 
     public static HttpRequest fromJavalinContext(Context ctx) {
 
-        return new HttpRequestImpl(QueryParams.ofString(ctx.queryParamMap()), ctx.req(), ctx.matchedPath());
+        return new HttpRequestImpl(ctx.req(), ctx.matchedPath());
     }
 }
