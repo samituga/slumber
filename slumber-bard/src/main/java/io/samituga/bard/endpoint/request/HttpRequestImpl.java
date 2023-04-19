@@ -28,6 +28,16 @@ public class HttpRequestImpl implements HttpRequest {
     }
 
     @Override
+    public Headers headers() {
+        Map<String, String> headers = new HashMap<>();
+
+        request.getHeaderNames().asIterator().forEachRemaining(
+              headerName -> headers.put(headerName, request.getHeader(headerName)));
+
+        return Headers.of(headers);
+    }
+
+    @Override
     public PathParams pathParams() {
         var pathParamsMap = pathParser.extractPathParams(request.getPathInfo());
         return PathParams.of(pathParamsMap);
@@ -44,16 +54,6 @@ public class HttpRequestImpl implements HttpRequest {
     @Override
     public HttpServletRequest request() {
         return request;
-    }
-
-    @Override
-    public Headers headers() {
-        Map<String, String> headers = new HashMap<>();
-
-        request.getHeaderNames().asIterator().forEachRemaining(
-              headerName -> headers.put(headerName, request.getHeader(headerName)));
-
-        return Headers.of(headers);
     }
 
     @Override
