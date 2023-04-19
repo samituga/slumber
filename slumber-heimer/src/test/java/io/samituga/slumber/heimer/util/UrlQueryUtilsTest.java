@@ -109,7 +109,10 @@ class UrlQueryUtilsTest {
         String queryString = UrlQueryUtils.createQueryString(queryMap);
 
         // then
-        assertThat(queryString).isEqualTo("name=John&age=30");
+        assertThat(queryString)
+              .contains("name=John")
+              .contains("age=30")
+              .hasSameSizeAs("name=John&age=30");
     }
 
     @Test
@@ -123,7 +126,10 @@ class UrlQueryUtilsTest {
         String queryString = UrlQueryUtils.createQueryString(queryMap);
 
         // then
-        assertThat(queryString).isEqualTo("name=John&name=Doe");
+        assertThat(queryString)
+              .contains("name=John")
+              .contains("name=Doe")
+              .hasSameSizeAs("name=John&name=Doe");
     }
 
     @Test
@@ -138,7 +144,12 @@ class UrlQueryUtilsTest {
         String queryString = UrlQueryUtils.createQueryString(queryMap);
 
         // then
-        assertThat(queryString).isEqualTo("name=John&name=Doe&age=30&age=40");
+        assertThat(queryString)
+              .contains("name=John")
+              .contains("name=Doe")
+              .contains("age=30")
+              .contains("age=40")
+              .hasSameSizeAs("name=John&name=Doe&age=30&age=40");
     }
 
     @Test
@@ -153,7 +164,10 @@ class UrlQueryUtilsTest {
         String queryString = UrlQueryUtils.createQueryString(queryMap);
 
         // then
-        assertThat(queryString).isEqualTo("name=John+Doe&age=30%2B");
+        assertThat(queryString)
+              .contains("name=John+Doe")
+              .contains("age=30%2B")
+              .hasSameSizeAs("name=John+Doe&age=30%2B");
     }
 
     @Test

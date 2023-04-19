@@ -25,7 +25,7 @@ class AssertionUtilityTest {
 
 
     @ParameterizedTest
-    @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#null_and_blank_strings")
+    @MethodSource("io.samituga.slumber.heimer.validator.ValidatorDataProvider#null_and_blank_strings")
     void should_fail_not_empty_validation_when_strings_are_invalid(String paramName, String value) {
         // given
         String expectedMessage = String.format(NOT_BLANK.format(), paramName);
@@ -37,7 +37,7 @@ class AssertionUtilityTest {
     }
 
     @ParameterizedTest
-    @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#valid_strings")
+    @MethodSource("io.samituga.slumber.heimer.validator.ValidatorDataProvider#valid_strings")
     void should_return_value_when_strings_are_valid(String paramName, String value) {
         // given when
         String result = requiredNotBlank(paramName, value);
@@ -73,7 +73,7 @@ class AssertionUtilityTest {
     }
 
     @ParameterizedTest
-    @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#null_and_empty_collection")
+    @MethodSource("io.samituga.slumber.heimer.validator.ValidatorDataProvider#null_and_empty_collection")
     <T> void should_fail_required_and_not_empty_validation_when_collection_is_invalid(
           String paramName, Collection<T> value) {
         // given
@@ -98,7 +98,7 @@ class AssertionUtilityTest {
     }
 
     @ParameterizedTest
-    @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#null_and_empty_and_null_value_map")
+    @MethodSource("io.samituga.slumber.heimer.validator.ValidatorDataProvider#null_and_empty_and_null_value_map")
     <K, V> void should_fail_required_and_not_empty_validation_when_map_is_invalid(String paramName,
                                                                                   Map<K, V> value) {
         // given
@@ -123,7 +123,7 @@ class AssertionUtilityTest {
     }
 
     @ParameterizedTest
-    @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#valid_ports")
+    @MethodSource("io.samituga.slumber.heimer.validator.ValidatorDataProvider#valid_ports")
     void should_return_port_when_port_is_valid(int port) {
         // given when
         var result = requiredValidPort(port);
@@ -133,7 +133,7 @@ class AssertionUtilityTest {
     }
 
     @ParameterizedTest
-    @MethodSource("io.samituga.slumber.validator.ValidatorDataProvider#invalid_ports")
+    @MethodSource("io.samituga.slumber.heimer.validator.ValidatorDataProvider#invalid_ports")
     void should_fail_port_validation_when_port_is_not_valid(int port) {
         // given
         String expectedMessage = String.format(REQUIRED_VALID_PORT.format(), port);
