@@ -4,7 +4,6 @@ module slumber.ivern {
     exports io.samituga.slumber.ivern.builder;
     exports io.samituga.slumber.ivern.type;
     exports io.samituga.slumber.ivern.structure;
-    exports io.samituga.slumber.ivern.io;
 
     requires slumber.heimer;
 }

@@ -1,4 +1,4 @@
-package io.samituga.slumber.ivern.io;
+package io.samituga.slumber.heimer.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
