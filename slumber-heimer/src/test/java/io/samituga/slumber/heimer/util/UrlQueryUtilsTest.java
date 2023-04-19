@@ -3,10 +3,10 @@ package io.samituga.slumber.heimer.util;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.Test;
 
 class UrlQueryUtilsTest {
 
@@ -82,4 +82,90 @@ class UrlQueryUtilsTest {
         assertThatThrownBy(() -> UrlQueryUtils.parseQueryParams(query))
               .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @Test
+    void should_create_query_string_with_single_parameter() {
+        // given
+        Map<String, List<String>> queryMap = Map.of(
+              "name", List.of("John")
+        );
+
+        // when
+        String queryString = UrlQueryUtils.createQueryString(queryMap);
+
+        // then
+        assertThat(queryString).isEqualTo("name=John");
+    }
+
+    @Test
+    void should_create_query_string_with_multiple_parameters() {
+        // given
+        Map<String, List<String>> queryMap = Map.of(
+              "name", List.of("John"),
+              "age", List.of("30")
+        );
+
+        // when
+        String queryString = UrlQueryUtils.createQueryString(queryMap);
+
+        // then
+        assertThat(queryString).isEqualTo("name=John&age=30");
+    }
+
+    @Test
+    void should_create_query_string_with_multiple_values_for_same_parameter() {
+        // given
+        Map<String, List<String>> queryMap = Map.of(
+              "name", List.of("John", "Doe")
+        );
+
+        // when
+        String queryString = UrlQueryUtils.createQueryString(queryMap);
+
+        // then
+        assertThat(queryString).isEqualTo("name=John&name=Doe");
+    }
+
+    @Test
+    void should_create_query_string_with_multiple_values_for_different_parameters() {
+        // given
+        Map<String, List<String>> queryMap = Map.of(
+              "name", List.of("John", "Doe"),
+              "age", List.of("30", "40")
+        );
+
+        // when
+        String queryString = UrlQueryUtils.createQueryString(queryMap);
+
+        // then
+        assertThat(queryString).isEqualTo("name=John&name=Doe&age=30&age=40");
+    }
+
+    @Test
+    void should_create_query_string_with_special_characters() {
+        // given
+        Map<String, List<String>> queryMap = Map.of(
+              "name", List.of("John Doe"),
+              "age", List.of("30+")
+        );
+
+        // when
+        String queryString = UrlQueryUtils.createQueryString(queryMap);
+
+        // then
+        assertThat(queryString).isEqualTo("name=John+Doe&age=30%2B");
+    }
+
+    @Test
+    void should_create_empty_query_string() {
+        // given
+        Map<String, List<String>> queryMap = Collections.emptyMap();
+
+        // when
+        String queryString = UrlQueryUtils.createQueryString(queryMap);
+
+        // then
+        assertThat(queryString).isEmpty();
+    }
+
 }

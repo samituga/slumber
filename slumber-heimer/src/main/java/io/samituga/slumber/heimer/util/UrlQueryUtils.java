@@ -3,6 +3,7 @@ package io.samituga.slumber.heimer.util;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +32,24 @@ public class UrlQueryUtils {
                           .filter(Objects::nonNull)
                           .collect(Collectors.toList())));
     }
+
+    public static String createQueryString(Map<String, List<String>> queryMap) {
+        var sb = new StringBuilder();
+
+        queryMap.forEach((key, value1) -> {
+            value1.forEach(value -> {
+                if (sb.length() > 0) {
+                    sb.append("&");
+                }
+                sb.append(URLEncoder.encode(key, UTF_8));
+                sb.append("=");
+                sb.append(URLEncoder.encode(value, UTF_8));
+            });
+        });
+
+        return sb.toString();
+    }
+
 
     private static String decodeUrlComponent(String s) {
         try {
