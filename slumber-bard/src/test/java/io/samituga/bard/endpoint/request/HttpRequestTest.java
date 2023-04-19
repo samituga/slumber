@@ -127,7 +127,7 @@ public class HttpRequestTest {
 
         // then
         assertThat(requestBody).isPresent();
-        // TODO: 19/04/2023 Arrays equals() returns reference so can't compare RequestBody directly 
+        // TODO: 19/04/2023 Arrays equals() returns reference so can't compare RequestBody directly
         assertThat(requestBody.get().value()).isEqualTo(RequestBody.of(bodyStringBytes).value());
     }
 
