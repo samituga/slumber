@@ -16,8 +16,6 @@ import static java.util.stream.Collectors.toList;
 import io.samituga.bard.application.ServerStatus;
 import io.samituga.bard.configuration.ServerConfig;
 import io.samituga.bard.endpoint.context.HttpContext;
-import io.samituga.bard.endpoint.request.type.PathParamName;
-import io.samituga.bard.endpoint.request.type.QueryParamName;
 import io.samituga.bard.endpoint.response.HttpCode;
 import io.samituga.bard.endpoint.response.type.ByteResponseBody;
 import io.samituga.bard.endpoint.route.Route;
@@ -180,9 +178,9 @@ public class StubServer {
 
     private HttpContext getTitle(HttpContext ctx) {
 
-        var uuid = ctx.request().pathParams().get(PathParamName.of("uuid"));
+        var uuid = ctx.request().pathParams().get("uuid");
 
-        var response = Optional.ofNullable(database.get(UUID.fromString(uuid.value())))
+        var response = Optional.ofNullable(database.get(UUID.fromString(uuid)))
               .map(title -> ctx.response().copy()
                     .statusCode(HttpCode.OK)
                     .responseBody(ByteResponseBody.of(title))
@@ -195,16 +193,16 @@ public class StubServer {
 
     private HttpContext getTitleByQuery(HttpContext ctx) {
 
-        var firstLetter = ctx.request().queryParams().getFirst(QueryParamName.of("firstLetter"));
+        var firstLetter = ctx.request().queryParams().getFirst("firstLetter");
         var ignoreCase = ctx.request().queryParams()
-              .findFirst(QueryParamName.of("ignoreCase"))
-              .map(ignoreCaseStr -> Boolean.parseBoolean(ignoreCaseStr.value()))
+              .findFirst("ignoreCase")
+              .map(Boolean::parseBoolean)
               .orElse(false);
 
         var result = database.values().stream()
               .filter(tittle -> ignoreCase
-                    ? tittle.toLowerCase().startsWith(firstLetter.value().toLowerCase())
-                    : tittle.startsWith(firstLetter.value()))
+                    ? tittle.toLowerCase().startsWith(firstLetter.toLowerCase())
+                    : tittle.startsWith(firstLetter))
               .collect(Collectors.joining(","));
 
         var statusCode = HttpCode.OK;
@@ -247,9 +245,9 @@ public class StubServer {
     }
 
     private HttpContext deleteTitle(HttpContext ctx) {
-        var uuid = ctx.request().pathParams().get(PathParamName.of("uuid"));
+        var uuid = ctx.request().pathParams().get("uuid");
 
-        var deleted = Optional.ofNullable(database.remove(UUID.fromString(uuid.value())))
+        var deleted = Optional.ofNullable(database.remove(UUID.fromString(uuid)))
               .isPresent();
         var statusCode = deleted ? HttpCode.NO_CONTENT : HttpCode.NOT_FOUND;
 

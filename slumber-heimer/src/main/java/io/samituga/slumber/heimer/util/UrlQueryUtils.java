@@ -9,11 +9,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class UrlQueryUtils {
 
-    public static Map<String, List<String>> parseQueryParams(String query) {
+    public static Map<String, Set<String>> parseQueryParams(String query) {
         if (query.isEmpty()) {
             return Collections.emptyMap();
         }
@@ -30,10 +31,10 @@ public class UrlQueryUtils {
                     Map.Entry::getKey,
                     e -> e.getValue().stream()
                           .filter(Objects::nonNull)
-                          .collect(Collectors.toList())));
+                          .collect(Collectors.toSet())));
     }
 
-    public static String createQueryString(Map<String, List<String>> queryMap) {
+    public static String createQueryString(Map<String, Set<String>> queryMap) {
         var sb = new StringBuilder();
 
         queryMap.forEach((key, value1) -> {

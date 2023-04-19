@@ -30,14 +30,14 @@ public class HttpRequestImpl implements HttpRequest {
     @Override
     public PathParams pathParams() {
         var pathParamsMap = pathParser.extractPathParams(request.getPathInfo());
-        return PathParams.ofString(pathParamsMap);
+        return PathParams.of(pathParamsMap);
     }
 
     @Override
     public QueryParams queryParams() {
         return Optional.ofNullable(request.getQueryString())
               .map(query -> parseQueryParams(request.getQueryString()))
-              .map(QueryParams::ofString)
+              .map(queryParamsMap -> QueryParams.of(queryParamsMap))
               .orElse(QueryParams.empty());
     }
 

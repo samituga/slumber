@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class UrlQueryUtilsTest {
@@ -16,7 +17,7 @@ class UrlQueryUtilsTest {
         String emptyQuery = "";
 
         // when
-        Map<String, List<String>> queryParams = UrlQueryUtils.parseQueryParams(emptyQuery);
+        Map<String, Set<String>> queryParams = UrlQueryUtils.parseQueryParams(emptyQuery);
 
         // then
         assertThat(queryParams).isEmpty();
@@ -28,10 +29,10 @@ class UrlQueryUtilsTest {
         String query = "key=value";
 
         // when
-        Map<String, List<String>> queryParams = UrlQueryUtils.parseQueryParams(query);
+        Map<String, Set<String>> queryParams = UrlQueryUtils.parseQueryParams(query);
 
         // then
-        assertThat(queryParams).containsEntry("key", Collections.singletonList("value"));
+        assertThat(queryParams).containsEntry("key", Set.of("value"));
     }
 
     @Test
@@ -40,12 +41,12 @@ class UrlQueryUtilsTest {
         String query = "key1=value1&key2=value2";
 
         // when
-        Map<String, List<String>> queryParams = UrlQueryUtils.parseQueryParams(query);
+        Map<String, Set<String>> queryParams = UrlQueryUtils.parseQueryParams(query);
 
         // then
         assertThat(queryParams)
-              .containsEntry("key1", Collections.singletonList("value1"))
-              .containsEntry("key2", Collections.singletonList("value2"));
+              .containsEntry("key1", Set.of("value1"))
+              .containsEntry("key2", Set.of("value2"));
     }
 
     @Test
@@ -54,11 +55,11 @@ class UrlQueryUtilsTest {
         String query = "key=value1&key=value2";
 
         // when
-        Map<String, List<String>> queryParams = UrlQueryUtils.parseQueryParams(query);
+        Map<String, Set<String>> queryParams = UrlQueryUtils.parseQueryParams(query);
 
         // then
         assertThat(queryParams)
-              .containsEntry("key", List.of("value1", "value2"));
+              .containsEntry("key", Set.of("value1", "value2"));
     }
 
     @Test
@@ -67,10 +68,10 @@ class UrlQueryUtilsTest {
         String query = "key=value%201";
 
         // when
-        Map<String, List<String>> queryParams = UrlQueryUtils.parseQueryParams(query);
+        Map<String, Set<String>> queryParams = UrlQueryUtils.parseQueryParams(query);
 
         // then
-        assertThat(queryParams).containsEntry("key", Collections.singletonList("value 1"));
+        assertThat(queryParams).containsEntry("key", Set.of("value 1"));
     }
 
     @Test
@@ -86,8 +87,8 @@ class UrlQueryUtilsTest {
     @Test
     void should_create_query_string_with_single_parameter() {
         // given
-        Map<String, List<String>> queryMap = Map.of(
-              "name", List.of("John")
+        Map<String, Set<String>> queryMap = Map.of(
+              "name", Set.of("John")
         );
 
         // when
@@ -100,9 +101,9 @@ class UrlQueryUtilsTest {
     @Test
     void should_create_query_string_with_multiple_parameters() {
         // given
-        Map<String, List<String>> queryMap = Map.of(
-              "name", List.of("John"),
-              "age", List.of("30")
+        Map<String, Set<String>> queryMap = Map.of(
+              "name", Set.of("John"),
+              "age", Set.of("30")
         );
 
         // when
@@ -118,8 +119,8 @@ class UrlQueryUtilsTest {
     @Test
     void should_create_query_string_with_multiple_values_for_same_parameter() {
         // given
-        Map<String, List<String>> queryMap = Map.of(
-              "name", List.of("John", "Doe")
+        Map<String, Set<String>> queryMap = Map.of(
+              "name", Set.of("John", "Doe")
         );
 
         // when
@@ -135,9 +136,9 @@ class UrlQueryUtilsTest {
     @Test
     void should_create_query_string_with_multiple_values_for_different_parameters() {
         // given
-        Map<String, List<String>> queryMap = Map.of(
-              "name", List.of("John", "Doe"),
-              "age", List.of("30", "40")
+        Map<String, Set<String>> queryMap = Map.of(
+              "name", Set.of("John", "Doe"),
+              "age", Set.of("30", "40")
         );
 
         // when
@@ -155,9 +156,9 @@ class UrlQueryUtilsTest {
     @Test
     void should_create_query_string_with_special_characters() {
         // given
-        Map<String, List<String>> queryMap = Map.of(
-              "name", List.of("John Doe"),
-              "age", List.of("30+")
+        Map<String, Set<String>> queryMap = Map.of(
+              "name", Set.of("John Doe"),
+              "age", Set.of("30+")
         );
 
         // when
@@ -173,7 +174,7 @@ class UrlQueryUtilsTest {
     @Test
     void should_create_empty_query_string() {
         // given
-        Map<String, List<String>> queryMap = Collections.emptyMap();
+        Map<String, Set<String>> queryMap = Collections.emptyMap();
 
         // when
         String queryString = UrlQueryUtils.createQueryString(queryMap);
