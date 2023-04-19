@@ -37,7 +37,7 @@ public class HttpRequestImpl implements HttpRequest {
     public QueryParams queryParams() {
         return Optional.ofNullable(request.getQueryString())
               .map(query -> parseQueryParams(request.getQueryString()))
-              .map(queryParamsMap -> QueryParams.of(queryParamsMap))
+              .map(QueryParams::of)
               .orElse(QueryParams.empty());
     }
 
