@@ -1,4 +1,4 @@
-package io.samituga.slumber.validator;
+package io.samituga.slumber.heimer.validator;
 
 import java.util.Collections;
 import java.util.HashMap;

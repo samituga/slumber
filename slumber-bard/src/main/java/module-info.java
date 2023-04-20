@@ -12,6 +12,7 @@ module slumber.bard {
     exports io.samituga.bard.filter.type;
     exports io.samituga.bard.handler;
     exports io.samituga.bard.type;
+    exports io.samituga.bard.path;
 
     requires jakarta.servlet;
     requires slumber.heimer;

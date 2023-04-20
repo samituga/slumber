@@ -5,7 +5,7 @@ package io.samituga.slumber.heimer.error;
  */
 public class UtilityClassInstantiationError extends Error {
 
-    public static final String MESSAGE_FORMAT = "Cannot instantiate %s utility class.";
+    public static final String UTILITY_CLASS_ERROR_FORMAT = "Cannot instantiate %s utility class.";
 
     public UtilityClassInstantiationError(String message) {
         super(message);

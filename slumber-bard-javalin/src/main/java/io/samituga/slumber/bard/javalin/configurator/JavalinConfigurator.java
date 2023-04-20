@@ -51,12 +51,13 @@ public class JavalinConfigurator {
 
     private static void withRoutes(Javalin javalin, Collection<Route> routes) {
         for (Route route : routes) {
-            javalin.addHandler(VerbToHandlerType.toHandlerType(route.verb()), route.path().value(),
+            javalin.addHandler(
+                  VerbToHandlerType.toHandlerType(route.verb()),
+                  route.path().value(),
                   handle(route.handler()));
         }
     }
 
-    // TODO: 2023-03-31 Might be worth to check if there is a better way to do this (casting)
     @SuppressWarnings("unchecked cast")
     private static void withExceptionHandlers(Javalin javalin,
                                               Collection<ExceptionHandler<? extends Exception>> exceptionHandlers) {
