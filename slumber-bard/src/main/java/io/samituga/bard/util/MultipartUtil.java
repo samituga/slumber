@@ -10,6 +10,7 @@ import jakarta.servlet.http.Part;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -24,21 +25,20 @@ public class MultipartUtil {
         }
     };
 
-    public static List<MultipartRequestBody> getUploadedFiles(HttpServletRequest req,
-                                                              String partName)
-          throws ServletException, IOException {
-        preUploadFunction.accept(req);
-        return req.getParts().stream()
-              .filter(part -> isFile(part) && part.getName().equals(partName))
-              .map(MultipartRequestBody::new)
-              .collect(Collectors.toList());
-    }
 
     public static List<MultipartRequestBody> getUploadedFiles(HttpServletRequest req)
           throws ServletException, IOException {
+        return getUploadedFiles(req, Optional.empty());
+    }
+
+    public static List<MultipartRequestBody> getUploadedFiles(HttpServletRequest req,
+                                                              Optional<String> partName)
+          throws ServletException, IOException {
         preUploadFunction.accept(req);
         return req.getParts().stream()
-              .filter(MultipartUtil::isFile)
+              .filter(part -> !isFile(part)
+                    || partName.isEmpty()
+                    || part.getName().equals(partName.get()))
               .map(MultipartRequestBody::new)
               .collect(Collectors.toList());
     }
