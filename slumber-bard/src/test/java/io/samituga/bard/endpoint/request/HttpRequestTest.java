@@ -4,10 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
+import io.samituga.bard.endpoint.request.type.MultipartRequestBody;
 import io.samituga.bard.endpoint.request.type.RequestBody;
 import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Part;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -129,6 +132,46 @@ public class HttpRequestTest {
         assertThat(requestBody).isPresent();
         // TODO: 19/04/2023 Arrays equals() returns reference so can't compare RequestBody directly
         assertThat(requestBody.get().value()).isEqualTo(RequestBody.of(bodyStringBytes).value());
+    }
+
+    @Test
+    void should_return_multipart_file() throws IOException, ServletException {
+        // given
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpRequestImpl httpRequest = new HttpRequestImpl(request, "/path/{id}/value");
+        Part mockPart = mock(Part.class);
+        given(request.getParts()).willReturn(Set.of(mockPart));
+        given(mockPart.getName()).willReturn("fileName");
+        given(mockPart.getSubmittedFileName()).willReturn("testFile.txt");
+        given(mockPart.getInputStream()).willReturn(
+              new ByteArrayInputStream("file content".getBytes()));
+
+        // when
+        Optional<MultipartRequestBody> multipartFile = httpRequest.multipartFile("fileName");
+
+        // then
+        assertThat(multipartFile).isPresent();
+        assertThat(multipartFile.get().filename()).isEqualTo("testFile.txt");
+    }
+
+    @Test
+    void should_return_empty_optional_when_multipart_file_not_found()
+          throws IOException, ServletException {
+        // given
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpRequestImpl httpRequest = new HttpRequestImpl(request, "/path/{id}/value");
+        Part mockPart = mock(Part.class);
+        given(request.getParts()).willReturn(Set.of(mockPart));
+        given(mockPart.getName()).willReturn("otherFileName");
+        given(mockPart.getSubmittedFileName()).willReturn("testFile.txt");
+        given(mockPart.getInputStream()).willReturn(
+              new ByteArrayInputStream("file content".getBytes()));
+
+        // when
+        Optional<MultipartRequestBody> multipartFile = httpRequest.multipartFile("fileName");
+
+        // then
+        assertThat(multipartFile).isEmpty();
     }
 
 

@@ -1,5 +1,6 @@
 package io.samituga.bard.endpoint.request;
 
+import io.samituga.bard.endpoint.request.type.MultipartRequestBody;
 import io.samituga.bard.endpoint.request.type.PathParams;
 import io.samituga.bard.endpoint.request.type.QueryParams;
 import io.samituga.bard.endpoint.request.type.RequestBody;
@@ -19,4 +20,6 @@ public interface HttpRequest {
     HttpServletRequest request();
 
     Optional<RequestBody> requestBody();
+
+    Optional<MultipartRequestBody> multipartFile(String fileName);
 }

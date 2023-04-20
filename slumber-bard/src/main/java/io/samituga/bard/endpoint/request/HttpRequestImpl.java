@@ -3,10 +3,12 @@ package io.samituga.bard.endpoint.request;
 import static io.samituga.slumber.heimer.util.UrlQueryUtils.parseQueryParams;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 
+import io.samituga.bard.endpoint.request.type.MultipartRequestBody;
 import io.samituga.bard.endpoint.request.type.PathParams;
 import io.samituga.bard.endpoint.request.type.QueryParams;
 import io.samituga.bard.endpoint.request.type.RequestBody;
 import io.samituga.bard.path.PathParser;
+import io.samituga.bard.util.MultipartUtil;
 import io.samituga.slumber.heimer.util.IoUtils;
 import io.samituga.slumber.ivern.http.type.Headers;
 import jakarta.servlet.http.HttpServletRequest;
@@ -64,5 +66,10 @@ public class HttpRequestImpl implements HttpRequest {
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to read the request body", e);
         }
+    }
+
+    @Override
+    public Optional<MultipartRequestBody> multipartFile(String fileName) {
+        return MultipartUtil.getUploadedFiles(request, Optional.of(fileName)).stream().findFirst();
     }
 }
