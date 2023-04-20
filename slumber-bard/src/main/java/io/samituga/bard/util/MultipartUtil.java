@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,28 +21,38 @@ public final class MultipartUtil {
     private MultipartUtil() {
     }
 
-    public static List<MultipartRequestBody> getUploadedFiles(HttpServletRequest req)
-          throws ServletException, IOException {
+    public static List<MultipartRequestBody> getUploadedFiles(HttpServletRequest req) {
         return getUploadedFiles(req, Optional.empty());
     }
 
     public static List<MultipartRequestBody> getUploadedFiles(HttpServletRequest req,
-                                                              Optional<String> partName)
-          throws ServletException, IOException {
+                                                              Optional<String> partName) {
         ensureMultipartConfig(req);
-        return req.getParts().stream()
-              .filter(part -> isValidFile(part, partName))
-              .map(MultipartRequestBody::new)
-              .collect(Collectors.toList());
+        try {
+            return req.getParts().stream()
+                  .filter(part -> isValidFile(part, partName))
+                  .map(MultipartRequestBody::new)
+                  .collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static Map<String, List<MultipartRequestBody>> getUploadedFileMap(HttpServletRequest req)
-          throws ServletException, IOException {
+    public static Map<String, List<MultipartRequestBody>> getUploadedFileMap(
+          HttpServletRequest req) {
         ensureMultipartConfig(req);
-        return req.getParts().stream()
-              .filter(MultipartUtil::isFile)
-              .collect(Collectors.groupingBy(Part::getName,
-                    Collectors.mapping(MultipartRequestBody::new, Collectors.toList())));
+        try {
+            return req.getParts().stream()
+                  .filter(MultipartUtil::isFile)
+                  .collect(Collectors.groupingBy(Part::getName,
+                        Collectors.mapping(MultipartRequestBody::new, Collectors.toList())));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void ensureMultipartConfig(HttpServletRequest req) {
