@@ -1,5 +1,8 @@
 package io.samituga.bard.util;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+
 import io.samituga.bard.endpoint.request.type.MultipartRequestBody;
 import jakarta.servlet.MultipartConfigElement;
 import jakarta.servlet.ServletException;
@@ -13,8 +16,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public final class MultipartUtil {
     static final String MULTIPART_CONFIG_ATTRIBUTE = "org.eclipse.jetty.multipartConfig";
+    private static final Logger LOG = LoggerFactory.getLogger(MultipartUtil.class);
     private static final MultipartConfigElement DEFAULT_CONFIG =
           new MultipartConfigElement(System.getProperty("java.io.tmpdir"));
 
@@ -36,7 +43,8 @@ public final class MultipartUtil {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         } catch (ServletException e) {
-            throw new RuntimeException(e);
+            LOG.warn(e.getLocalizedMessage(), e);
+            return emptyList();
         }
     }
 
@@ -51,7 +59,8 @@ public final class MultipartUtil {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         } catch (ServletException e) {
-            throw new RuntimeException(e);
+            LOG.warn(e.getLocalizedMessage(), e);
+            return emptyMap();
         }
     }
 
