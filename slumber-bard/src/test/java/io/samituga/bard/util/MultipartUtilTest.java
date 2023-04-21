@@ -15,6 +15,7 @@ import java.util.Optional;
 
 class MultipartUtilTest {
 
+    private static final String ERROR_MESSAGE = "jakarta.servlet.ServletException: Unsupported Content-Type [null], expected [multipart/form-data]";
     private final HttpServletRequest request = mock(HttpServletRequest.class);
 
     private final Part part = mock(Part.class);
@@ -65,5 +66,33 @@ class MultipartUtilTest {
         assertThat(result).isNotEmpty();
         assertThat(result.get("file")).isNotEmpty();
         assertThat(result.get("file").get(0).filename()).isEqualTo("test.txt");
+    }
+
+    @Test
+    void should_return_empty_when_uploaded_files_request_throws_servlet_exception()
+          throws ServletException, IOException {
+        // given
+        when(request.getAttribute(MultipartUtil.MULTIPART_CONFIG_ATTRIBUTE)).thenReturn(null);
+        when(request.getParts()).thenThrow(new ServletException(ERROR_MESSAGE));
+
+        // when
+        var result = MultipartUtil.getUploadedFiles(request, Optional.of("file"));
+
+        // then
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void should_return_empty_when_uploaded_file_maprequest_throws_servlet_exception()
+          throws ServletException, IOException {
+        // given
+        when(request.getAttribute(MultipartUtil.MULTIPART_CONFIG_ATTRIBUTE)).thenReturn(null);
+        when(request.getParts()).thenThrow(new ServletException(ERROR_MESSAGE));
+
+        // when
+        var result = MultipartUtil.getUploadedFileMap(request);
+
+        // then
+        assertThat(result).isEmpty();
     }
 }

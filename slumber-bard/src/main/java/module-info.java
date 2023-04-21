@@ -17,4 +17,5 @@ module slumber.bard {
     requires jakarta.servlet;
     requires slumber.heimer;
     requires slumber.ivern;
+    requires org.slf4j;
 }
