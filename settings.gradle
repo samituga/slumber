@@ -8,3 +8,5 @@ include 'slumber-bard-javalin'
 include 'slumber-ivern'
 include 'slumber-rakan'
 include 'slumber-ziggs'
+include 'slumber-jayce'
+
