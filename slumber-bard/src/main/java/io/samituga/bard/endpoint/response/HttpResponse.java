@@ -1,17 +1,19 @@
 package io.samituga.bard.endpoint.response;
 
+import io.samituga.bard.endpoint.response.type.ByteResponseBody;
+import io.samituga.bard.endpoint.response.type.InputStreamResponseBody;
 import io.samituga.slumber.ivern.http.type.Headers;
-import io.samituga.slumber.ivern.structure.Structure;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
-public interface HttpResponse extends Structure<HttpResponse, HttpResponseBuilder> {
+public interface HttpResponse {
 
-    HttpCode statusCode();
+    HttpResponse statusCode(HttpCode statusCode);
 
-    Headers headers();
+    HttpResponse headers(Headers headers);
+
+    HttpResponse responseBody(ByteResponseBody responseBody);
+    HttpResponse responseBody(InputStreamResponseBody responseBody);
 
     HttpServletResponse response();
 
-    Optional<ResponseBody> responseBody();
 }

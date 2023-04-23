@@ -3,6 +3,7 @@ package io.samituga.bard.endpoint.route;
 import io.samituga.bard.endpoint.context.HttpContext;
 import io.samituga.bard.type.Path;
 import io.samituga.slumber.ivern.structure.Structure;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public interface Route extends Structure<Route, RouteBuilder> {
@@ -11,5 +12,5 @@ public interface Route extends Structure<Route, RouteBuilder> {
 
     Path path();
 
-    Function<HttpContext, HttpContext> handler();
+    Consumer<HttpContext> handler();
 }

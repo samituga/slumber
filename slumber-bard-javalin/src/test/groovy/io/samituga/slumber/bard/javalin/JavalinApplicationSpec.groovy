@@ -19,7 +19,7 @@ import spock.lang.Specification
 
 import java.time.Duration
 import java.time.Instant
-import java.util.function.Function
+import java.util.function.Consumer
 
 class JavalinApplicationSpec extends Specification {
 
@@ -97,17 +97,17 @@ class JavalinApplicationSpec extends Specification {
         Instant doBeforeTimestamp = null
         Instant doAfterTimestamp = null
 
-        Function<HttpContext, HttpContext> doBefore =
-          (ctx) -> { doBeforeTimestamp = Instant.now(); Thread.sleep(2); ctx }
-        Function<HttpContext, HttpContext> doAfter =
-          (ctx) -> { doAfterTimestamp = Instant.now(); Thread.sleep(2); ctx }
+        Consumer<HttpContext> doBefore =
+              (ctx) -> { doBeforeTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> doAfter =
+              (ctx) -> { doAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
         def filter = filterBuilder()
-          .doBefore(doBefore)
-          .doAfter(doAfter)
-          .order(Order.of(0))
-          .path(PATH_HELLO_WORLD)
-          .build()
+              .doBefore(doBefore)
+              .doAfter(doAfter)
+              .order(Order.of(0))
+              .path(PATH_HELLO_WORLD)
+              .build()
 
         application.init(Collections.emptyList(), List.of(filter), Collections.emptyList())
 
@@ -129,47 +129,47 @@ class JavalinApplicationSpec extends Specification {
         Instant firstDoBeforeTimestamp = null
         Instant firstDoAfterTimestamp = null
 
-        Function<HttpContext, HttpContext> firstDoBefore =
-          (ctx) -> { firstDoBeforeTimestamp = Instant.now(); Thread.sleep(2); ctx }
-        Function<HttpContext, HttpContext> firstDoAfter =
-          (ctx) -> { firstDoAfterTimestamp = Instant.now(); Thread.sleep(2); ctx }
+        Consumer<HttpContext> firstDoBefore =
+              (ctx) -> { firstDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> firstDoAfter =
+              (ctx) -> { firstDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
         def firstFilter = filterBuilder()
-          .doBefore(firstDoBefore)
-          .doAfter(firstDoAfter)
-          .order(Order.of(Precedence.FIRST))
-          .path(PATH_HELLO_WORLD)
-          .build()
+              .doBefore(firstDoBefore)
+              .doAfter(firstDoAfter)
+              .order(Order.of(Precedence.FIRST))
+              .path(PATH_HELLO_WORLD)
+              .build()
 
         Instant middleDoBeforeTimestamp = null
         Instant middleDoAfterTimestamp = null
 
-        Function<HttpContext, HttpContext> middleDoBefore =
-          (ctx) -> { middleDoBeforeTimestamp = Instant.now(); Thread.sleep(2); ctx }
-        Function<HttpContext, HttpContext> middleDoAfter =
-          (ctx) -> { middleDoAfterTimestamp = Instant.now(); Thread.sleep(2); ctx }
+        Consumer<HttpContext> middleDoBefore =
+              (ctx) -> { middleDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> middleDoAfter =
+              (ctx) -> { middleDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
         def middleFilter = filterBuilder()
-          .doBefore(middleDoBefore)
-          .doAfter(middleDoAfter)
-          .order(Order.of(0))
-          .path(PATH_HELLO_WORLD)
-          .build()
+              .doBefore(middleDoBefore)
+              .doAfter(middleDoAfter)
+              .order(Order.of(0))
+              .path(PATH_HELLO_WORLD)
+              .build()
 
         Instant lastDoBeforeTimestamp = null
         Instant lastDoAfterTimestamp = null
 
-        Function<HttpContext, HttpContext> lastDoBefore =
-          (ctx) -> { lastDoBeforeTimestamp = Instant.now(); Thread.sleep(2); ctx }
-        Function<HttpContext, HttpContext> lastDoAfter =
-          (ctx) -> { lastDoAfterTimestamp = Instant.now(); Thread.sleep(2); ctx }
+        Consumer<HttpContext> lastDoBefore =
+              (ctx) -> { lastDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> lastDoAfter =
+              (ctx) -> { lastDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
         def lastFilter = filterBuilder()
-          .doBefore(lastDoBefore)
-          .doAfter(lastDoAfter)
-          .order(Order.of(Precedence.LAST))
-          .path(PATH_HELLO_WORLD)
-          .build()
+              .doBefore(lastDoBefore)
+              .doAfter(lastDoAfter)
+              .order(Order.of(Precedence.LAST))
+              .path(PATH_HELLO_WORLD)
+              .build()
 
         application.init(Collections.emptyList(), List.of(middleFilter, lastFilter, firstFilter), Collections.emptyList())
 
@@ -266,12 +266,10 @@ class JavalinApplicationSpec extends Specification {
             }
 
             @Override
-            HttpContext handle(RuntimeException exception, HttpContext ctx) {
-                var response = ctx.response().copy()
-                  .statusCode(statusCode)
-                  .responseBody(ByteResponseBody.of(exception.message))
-                  .build()
-                return ctx.withResponse(response)
+            void handle(RuntimeException exception, HttpContext ctx) {
+                ctx.response()
+                      .statusCode(statusCode)
+                      .responseBody(ByteResponseBody.of(exception.message))
             }
         }
 
@@ -294,18 +292,15 @@ class JavalinApplicationSpec extends Specification {
         given: 'given filter'
         def key = "My-Key"
         def value = "My-Value"
-        Function<HttpContext, HttpContext> doBefore =
-          (ctx) -> {
-              def headers = ctx.response().headers()
-              def updatedHeaders = headers.withHeader(key, value)
-              ctx.withResponse(ctx.response().copy().headers(updatedHeaders).build())
-          }
+        Consumer<HttpContext> doBefore = (ctx) -> {
+            ctx.response().headers(Headers.of(key, value))
+        }
 
         def filter = filterBuilder()
-          .doBefore(doBefore)
-          .order(Order.of(0))
-          .path(PATH_HELLO_WORLD)
-          .build()
+              .doBefore(doBefore)
+              .order(Order.of(0))
+              .path(PATH_HELLO_WORLD)
+              .build()
 
         and: 'server initialization'
         application.init(Collections.emptyList(), List.of(filter), Collections.emptyList())
