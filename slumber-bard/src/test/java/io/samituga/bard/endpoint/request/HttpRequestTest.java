@@ -1,11 +1,15 @@
 package io.samituga.bard.endpoint.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.samituga.bard.endpoint.request.type.MultipartRequestBody;
+import io.samituga.bard.endpoint.request.type.RequestAsTypeBody;
 import io.samituga.bard.endpoint.request.type.RequestBody;
+import io.samituga.jayce.JsonException;
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
@@ -174,6 +178,64 @@ public class HttpRequestTest {
         assertThat(multipartFile).isEmpty();
     }
 
+    @Test
+    void should_return_empty_optional_for_empty_request_body() throws IOException {
+        // given
+        var mockInputStream = new DelegatingServletInputStream(
+              new ByteArrayInputStream(new byte[0]));
+        given(request.getInputStream()).willReturn(mockInputStream);
+
+        // when
+        Optional<RequestAsTypeBody<String>> requestBody = httpRequest.requestBodyAsType(
+              String.class);
+
+        // then
+        assertThat(requestBody).isEmpty();
+    }
+
+    @Test
+    void should_return_request_body_as_type() throws IOException {
+        // given
+        var bodyString = """
+              {
+                "name" : "John Doe",
+                "age" : 25
+              }
+              """;
+        var bodyStringBytes = bodyString.getBytes();
+        var mockInputStream = new DelegatingServletInputStream(
+              new ByteArrayInputStream(bodyStringBytes));
+        given(request.getInputStream()).willReturn(mockInputStream);
+
+        // when
+        var requestBody = httpRequest.requestBodyAsType(Person.class);
+
+        // then
+        Person expected = new Person("John Doe", 25);
+
+        assertThat(requestBody).isPresent();
+        assertThat(requestBody.get().value()).isEqualTo(expected);
+    }
+
+    @Test
+    void should_throw_exception_for_invalid_request_body_type() throws IOException {
+        // given
+        var bodyString = """
+              {
+                "name" : "John Doe",
+                "age" : 25
+              }
+              """;
+        var bodyStringBytes = bodyString.getBytes();
+        var mockInputStream = new DelegatingServletInputStream(
+              new ByteArrayInputStream(bodyStringBytes));
+        given(request.getInputStream()).willReturn(mockInputStream);
+
+        // when, then
+        assertThatThrownBy(() -> httpRequest.requestBodyAsType(Car.class))
+              .isInstanceOf(JsonException.class);
+    }
+
 
     private static class DelegatingServletInputStream extends ServletInputStream {
         private final InputStream delegate;
@@ -207,5 +269,10 @@ public class HttpRequestTest {
 
         }
     }
-}
 
+    private record Person(@JsonProperty("name") String name, @JsonProperty("age") int age) {
+    }
+
+    private record Car(@JsonProperty("color") String color) {
+    }
+}

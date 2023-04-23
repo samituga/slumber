@@ -7,6 +7,9 @@ plugins {
 dependencies {
     api project(':slumber-heimer')
     api project(':slumber-ivern')
+    api project(':slumber-jayce')
 
     api "jakarta.servlet:jakarta.servlet-api:${jakartaServletApiVersion}"
+
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
 }

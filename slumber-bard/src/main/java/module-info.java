@@ -14,8 +14,10 @@ module slumber.bard {
     exports io.samituga.bard.type;
     exports io.samituga.bard.path;
 
-    requires jakarta.servlet;
     requires slumber.heimer;
     requires slumber.ivern;
+    requires slumber.jayce;
+    requires jakarta.servlet;
     requires org.slf4j;
+    requires com.fasterxml.jackson.databind;
 }

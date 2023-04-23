@@ -41,10 +41,10 @@ public class HttpResponseImpl implements HttpResponse {
     public HttpResponse responseBody(InputStreamResponseBody responseBody) {
         try {
             IoUtils.copyTo(responseBody.responseBody(), response.getOutputStream());
+            return this;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        return this;
     }
 
     @Override

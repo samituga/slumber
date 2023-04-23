@@ -12,8 +12,8 @@ public interface HttpResponse {
     HttpResponse headers(Headers headers);
 
     HttpResponse responseBody(ByteResponseBody responseBody);
+
     HttpResponse responseBody(InputStreamResponseBody responseBody);
 
     HttpServletResponse response();
-
 }
