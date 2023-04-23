@@ -1,6 +1,6 @@
 package io.samituga.slumber.bard.javalin.configurator;
 
-import static io.samituga.slumber.bard.javalin.mapper.HttpContextMapper.fromJavalinContext;
+import static io.samituga.slumber.bard.javalin.mapper.HttpContextMapper.toHttpContext;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -31,11 +31,11 @@ public class JavalinConfigurator {
                   filter.doBefore().ifPresent(doBefore ->
                         javalin.before(
                               filter.path().value(),
-                              ctx -> doBefore.accept(fromJavalinContext(ctx))));
+                              javalinCtx -> doBefore.accept(toHttpContext(javalinCtx))));
                   filter.doAfter().ifPresent(doAfter ->
                         javalin.after(
                               filter.path().value(),
-                              ctx -> doAfter.accept(fromJavalinContext(ctx))));
+                              javalinCtx -> doAfter.accept(toHttpContext(javalinCtx))));
               });
     }
 
@@ -53,16 +53,16 @@ public class JavalinConfigurator {
                                               Collection<ExceptionHandler<? extends Exception>> exceptionHandlers) {
         for (ExceptionHandler<?> exceptionHandler : exceptionHandlers) {
             Class<? extends Exception> exceptionClass = exceptionHandler.exceptionClass();
-            javalin.exception(exceptionClass, (Exception e, Context ctx) -> {
-                var httpContext = fromJavalinContext(ctx);
+            javalin.exception(exceptionClass, (Exception e, Context javalinCtx) -> {
+                var httpContext = toHttpContext(javalinCtx);
                 ((ExceptionHandler<Exception>) exceptionHandler).handle(e, httpContext);
             });
         }
     }
 
     private static Handler handle(Consumer<HttpContext> function) {
-        return ctx -> {
-            var httpContext = fromJavalinContext(ctx);
+        return javalinCtx -> {
+            var httpContext = toHttpContext(javalinCtx);
             function.accept(httpContext);
         };
     }
