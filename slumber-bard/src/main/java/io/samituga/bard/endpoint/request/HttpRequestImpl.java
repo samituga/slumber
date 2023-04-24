@@ -59,7 +59,7 @@ public class HttpRequestImpl implements HttpRequest {
     }
 
     @Override
-    public Optional<RequestBody> requestBody() {
+    public Optional<RequestBody> body() {
         try {
             byte[] bytes = IoUtils.toBytes(request.getInputStream());
             return bytes.length > 0 ? Optional.of(RequestBody.of(bytes)) : Optional.empty();
@@ -69,7 +69,7 @@ public class HttpRequestImpl implements HttpRequest {
     }
 
     @Override
-    public <T> Optional<RequestAsTypeBody<T>> requestBodyAsType(Class<T> type) {
+    public <T> Optional<RequestAsTypeBody<T>> bodyAsType(Class<T> type) {
         try {
             byte[] bytes = IoUtils.toBytes(request.getInputStream());
             return bytes.length > 0

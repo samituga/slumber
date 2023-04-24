@@ -227,7 +227,7 @@ public class StubServer {
     }
 
     private void postTitle(HttpContext ctx) {
-        var requestBody = ctx.request().requestBody();
+        var requestBody = ctx.request().body();
         if (requestBody.isEmpty()) {
             ctx.response().statusCode(BAD_REQUEST);
             return;
@@ -278,7 +278,7 @@ public class StubServer {
     }
 
     private void jsonModule(HttpContext ctx) {
-        var reqBody = ctx.request().requestBodyAsType(StubPerson.class);
+        var reqBody = ctx.request().bodyAsType(StubPerson.class);
 
         if (reqBody.isEmpty()) {
             ctx.response().statusCode(BAD_REQUEST);

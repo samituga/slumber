@@ -115,7 +115,7 @@ public class HttpRequestTest {
         given(request.getInputStream()).willReturn(mockInputStream);
 
         // when
-        Optional<RequestBody> requestBody = httpRequest.requestBody();
+        Optional<RequestBody> requestBody = httpRequest.body();
 
         // then
         assertThat(requestBody).isEmpty();
@@ -130,7 +130,7 @@ public class HttpRequestTest {
         given(request.getInputStream()).willReturn(mockInputStream);
 
         // when
-        var requestBody = httpRequest.requestBody();
+        var requestBody = httpRequest.body();
 
         // then
         assertThat(requestBody).isPresent();
@@ -186,7 +186,7 @@ public class HttpRequestTest {
         given(request.getInputStream()).willReturn(mockInputStream);
 
         // when
-        Optional<RequestAsTypeBody<String>> requestBody = httpRequest.requestBodyAsType(
+        Optional<RequestAsTypeBody<String>> requestBody = httpRequest.bodyAsType(
               String.class);
 
         // then
@@ -208,7 +208,7 @@ public class HttpRequestTest {
         given(request.getInputStream()).willReturn(mockInputStream);
 
         // when
-        var requestBody = httpRequest.requestBodyAsType(Person.class);
+        var requestBody = httpRequest.bodyAsType(Person.class);
 
         // then
         Person expected = new Person("John Doe", 25);
@@ -232,7 +232,7 @@ public class HttpRequestTest {
         given(request.getInputStream()).willReturn(mockInputStream);
 
         // when, then
-        assertThatThrownBy(() -> httpRequest.requestBodyAsType(Car.class))
+        assertThatThrownBy(() -> httpRequest.bodyAsType(Car.class))
               .isInstanceOf(JsonException.class);
     }
 

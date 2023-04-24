@@ -6,8 +6,8 @@ import io.samituga.bard.endpoint.request.type.QueryParams;
 import io.samituga.bard.endpoint.request.type.RequestAsTypeBody;
 import io.samituga.bard.endpoint.request.type.RequestBody;
 import io.samituga.slumber.ivern.http.type.Headers;
-import io.samituga.slumber.ivern.structure.Structure;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.Optional;
 
 public interface HttpRequest {
@@ -20,9 +20,9 @@ public interface HttpRequest {
 
     HttpServletRequest request();
 
-    Optional<RequestBody> requestBody();
+    Optional<RequestBody> body();
 
-    <T> Optional<RequestAsTypeBody<T>> requestBodyAsType(Class<T> type); // TODO: 23/04/2023 remove request suffix
+    <T> Optional<RequestAsTypeBody<T>> bodyAsType(Class<T> type);
 
     Optional<MultipartRequestBody> multipartFile(String fileName);
 }
