@@ -2,12 +2,10 @@ package io.samituga.bard.endpoint.response;
 
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 
-import io.samituga.bard.endpoint.response.type.ByteResponseBody;
-import io.samituga.bard.endpoint.response.type.InputStreamResponseBody;
 import io.samituga.slumber.heimer.util.IoUtils;
 import io.samituga.slumber.ivern.http.type.Headers;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
@@ -32,15 +30,10 @@ public class HttpResponseImpl implements HttpResponse {
     }
 
     @Override
-    public HttpResponse responseBody(ByteResponseBody responseBody) {
-        var byteArrayInputStream = new ByteArrayInputStream(responseBody.responseBody());
-        return responseBody(new InputStreamResponseBody(byteArrayInputStream));
-    }
-
-    @Override
-    public HttpResponse responseBody(InputStreamResponseBody responseBody) {
+    public HttpResponse responseBody(ResponseBody responseBody) {
         try {
-            IoUtils.copyTo(responseBody.responseBody(), response.getOutputStream());
+            IoUtils.copyTo(responseBody.toInputStream(), response.getOutputStream());
+            response.setHeader("Content-Type", responseBody.contentType().value());
             return this;
         } catch (IOException e) {
             throw new UncheckedIOException(e);

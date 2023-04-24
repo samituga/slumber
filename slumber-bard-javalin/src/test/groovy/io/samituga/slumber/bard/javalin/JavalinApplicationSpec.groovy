@@ -7,6 +7,7 @@ import static java.util.UUID.randomUUID
 
 import com.fasterxml.jackson.databind.module.SimpleModule
 import io.samituga.bard.application.ServerStatus
+import io.samituga.bard.endpoint.ContentType
 import io.samituga.bard.endpoint.context.HttpContext
 import io.samituga.bard.endpoint.response.HttpCode
 import io.samituga.bard.endpoint.response.type.ByteResponseBody
@@ -342,6 +343,10 @@ class JavalinApplicationSpec extends Specification {
 
         then: 'result should have correct values'
         result.statusCode() == HttpCode.OK.code()
+        result.headers().firstValue("Content-Type").get() == ContentType.APPLICATION_JSON.value()
+        def body = Json.mapper().readValue(result.body(), StubPerson.class)
+        body.p1 == "John Doe"
+        body.p2 == 25
     }
 
     def waitForServerInit() {

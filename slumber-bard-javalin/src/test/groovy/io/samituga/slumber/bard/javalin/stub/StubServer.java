@@ -20,6 +20,7 @@ import io.samituga.bard.configuration.ServerConfig;
 import io.samituga.bard.endpoint.context.HttpContext;
 import io.samituga.bard.endpoint.response.HttpCode;
 import io.samituga.bard.endpoint.response.type.ByteResponseBody;
+import io.samituga.bard.endpoint.response.type.TypeResponseBody;
 import io.samituga.bard.endpoint.route.Route;
 import io.samituga.bard.filter.Filter;
 import io.samituga.bard.handler.ExceptionHandler;
@@ -279,11 +280,15 @@ public class StubServer {
     private void jsonModule(HttpContext ctx) {
         var reqBody = ctx.request().requestBodyAsType(StubPerson.class);
 
-        var statusCode = reqBody.isPresent()
-              && reqBody.get().value().getP1().equals("John Doe")
-              && reqBody.get().value().getP2() == 25
-              ? OK : BAD_REQUEST;
-        ctx.response().statusCode(statusCode);
+        if (reqBody.isEmpty()) {
+            ctx.response().statusCode(BAD_REQUEST);
+            return;
+        }
+        var body = reqBody.get().value();
+        var statusCode = body.getP1().equals("John Doe") && body.getP2() == 25 ? OK : BAD_REQUEST;
+        ctx.response()
+              .statusCode(statusCode)
+              .responseBody(TypeResponseBody.of(body));
     }
 
     private void throwsRuntimeException(HttpContext ctx) {

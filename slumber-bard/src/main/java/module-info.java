@@ -1,6 +1,7 @@
 module slumber.bard {
     exports io.samituga.bard.application;
     exports io.samituga.bard.configuration;
+    exports io.samituga.bard.endpoint;
     exports io.samituga.bard.endpoint.context;
     exports io.samituga.bard.endpoint.request;
     exports io.samituga.bard.endpoint.request.type;
