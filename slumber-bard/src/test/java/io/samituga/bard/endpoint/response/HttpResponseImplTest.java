@@ -75,7 +75,7 @@ class HttpResponseImplTest {
 
         // when
         var response = new HttpResponseImpl(httpServletResponse);
-        response.responseBody(ByteResponseBody.of(bytes));
+        response.body(ByteResponseBody.of(bytes));
 
         // then
         verify(httpServletResponse).getOutputStream();
@@ -100,7 +100,7 @@ class HttpResponseImplTest {
 
         // when
         var response = new HttpResponseImpl(httpServletResponse);
-        response.responseBody(typeResponseBody);
+        response.body(typeResponseBody);
 
         // then
         verify(httpServletResponse).getOutputStream();
@@ -119,7 +119,7 @@ class HttpResponseImplTest {
         var responseBody = new InputStreamResponseBody(new MockedInputStream(true));
 
         // when / then
-        assertThatThrownBy(() -> httpResponse.responseBody(responseBody))
+        assertThatThrownBy(() -> httpResponse.body(responseBody))
               .isInstanceOf(UncheckedIOException.class);
     }
 

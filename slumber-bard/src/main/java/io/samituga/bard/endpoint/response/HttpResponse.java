@@ -9,7 +9,7 @@ public interface HttpResponse {
 
     HttpResponse headers(Headers headers);
 
-    HttpResponse responseBody(ResponseBody responseBody);
+    HttpResponse body(ResponseBody responseBody);
 
     HttpServletResponse response();
 }

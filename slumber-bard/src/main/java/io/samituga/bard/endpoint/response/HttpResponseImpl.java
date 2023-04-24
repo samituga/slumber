@@ -30,7 +30,7 @@ public class HttpResponseImpl implements HttpResponse {
     }
 
     @Override
-    public HttpResponse responseBody(ResponseBody responseBody) {
+    public HttpResponse body(ResponseBody responseBody) {
         try {
             IoUtils.copyTo(responseBody.toInputStream(), response.getOutputStream());
             response.setHeader("Content-Type", responseBody.contentType().value());

@@ -13,6 +13,6 @@ public class HttpResponseTestData {
         return ctx -> ctx.response()
               .statusCode(HttpCode.OK)
               .headers(Headers.of("key", "value"))
-              .responseBody(ByteResponseBody.of("Hello World"));
+              .body(ByteResponseBody.of("Hello World"));
     }
 }

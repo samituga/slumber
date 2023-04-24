@@ -198,7 +198,7 @@ public class StubServer {
         Optional.ofNullable(database.get(UUID.fromString(uuid)))
               .ifPresentOrElse(title -> ctx.response()
                           .statusCode(OK)
-                          .responseBody(ByteResponseBody.of(title)),
+                          .body(ByteResponseBody.of(title)),
                     () -> ctx.response().statusCode(NOT_FOUND));
     }
 
@@ -223,7 +223,7 @@ public class StubServer {
 
         ctx.response()
               .statusCode(statusCode)
-              .responseBody(ByteResponseBody.of(result));
+              .body(ByteResponseBody.of(result));
     }
 
     private void postTitle(HttpContext ctx) {
@@ -246,7 +246,7 @@ public class StubServer {
 
         ctx.response()
               .statusCode(statusCode)
-              .responseBody(ByteResponseBody.of(uuid.toString()));
+              .body(ByteResponseBody.of(uuid.toString()));
     }
 
     private void deleteTitle(HttpContext ctx) {
@@ -262,7 +262,7 @@ public class StubServer {
     private void helloWorld(HttpContext ctx) {
         ctx.response()
               .statusCode(OK)
-              .responseBody(ByteResponseBody.of("Hello world"));
+              .body(ByteResponseBody.of("Hello world"));
     }
 
     private void getHeaders(HttpContext ctx) {
@@ -273,7 +273,7 @@ public class StubServer {
 
         ctx.response()
               .statusCode(statusCode)
-              .responseBody(ByteResponseBody.of("Hello world"))
+              .body(ByteResponseBody.of("Hello world"))
               .headers(Headers.of("resp-header-name", "resp-header-value"));
     }
 
@@ -288,7 +288,7 @@ public class StubServer {
         var statusCode = body.getP1().equals("John Doe") && body.getP2() == 25 ? OK : BAD_REQUEST;
         ctx.response()
               .statusCode(statusCode)
-              .responseBody(TypeResponseBody.of(body));
+              .body(TypeResponseBody.of(body));
     }
 
     private void throwsRuntimeException(HttpContext ctx) {

@@ -276,7 +276,7 @@ class JavalinApplicationSpec extends Specification {
             void handle(RuntimeException exception, HttpContext ctx) {
                 ctx.response()
                       .statusCode(statusCode)
-                      .responseBody(ByteResponseBody.of(exception.message))
+                      .body(ByteResponseBody.of(exception.message))
             }
         }
 
