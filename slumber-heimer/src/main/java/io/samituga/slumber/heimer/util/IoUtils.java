@@ -32,7 +32,6 @@ public class IoUtils {
 
     public static void copyTo(InputStream inputStream, OutputStream outputStream, int bufferSize)
           throws IOException {
-        var bytesCopied = 0;
         byte[] buffer = new byte[bufferSize];
         int length;
         while ((length = inputStream.read(buffer)) != -1) {
