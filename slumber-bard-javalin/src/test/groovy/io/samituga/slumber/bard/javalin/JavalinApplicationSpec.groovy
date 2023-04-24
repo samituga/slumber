@@ -2,8 +2,10 @@ package io.samituga.slumber.bard.javalin
 
 import static io.samituga.bard.filter.FilterBuilder.filterBuilder
 import static io.samituga.slumber.bard.javalin.stub.StubServer.PATH_HELLO_WORLD
+import static java.util.Collections.emptyList
 import static java.util.UUID.randomUUID
 
+import com.fasterxml.jackson.databind.module.SimpleModule
 import io.samituga.bard.application.ServerStatus
 import io.samituga.bard.endpoint.context.HttpContext
 import io.samituga.bard.endpoint.response.HttpCode
@@ -11,7 +13,11 @@ import io.samituga.bard.endpoint.response.type.ByteResponseBody
 import io.samituga.bard.filter.Precedence
 import io.samituga.bard.filter.type.Order
 import io.samituga.bard.handler.ExceptionHandler
+import io.samituga.jayce.Json
 import io.samituga.slumber.bard.javalin.stub.StubClient
+import io.samituga.slumber.bard.javalin.stub.StubPerson
+import io.samituga.slumber.bard.javalin.stub.StubPersonDeserializer
+import io.samituga.slumber.bard.javalin.stub.StubPersonSerializer
 import io.samituga.slumber.bard.javalin.stub.StubServer
 import io.samituga.slumber.ivern.http.type.Headers
 import io.samituga.slumber.ziggs.WaitFor
@@ -23,13 +29,13 @@ import java.util.function.Consumer
 
 class JavalinApplicationSpec extends Specification {
 
-
     private StubServer application
     private StubClient client
 
     def setup() {
         application = new StubServer()
         client = new StubClient()
+        Json.initialized = false // TODO static variable doesn't reset from test to test
     }
 
     def cleanup() {
@@ -109,7 +115,7 @@ class JavalinApplicationSpec extends Specification {
               .path(PATH_HELLO_WORLD)
               .build()
 
-        application.init(Collections.emptyList(), List.of(filter), Collections.emptyList())
+        application.init(emptyList(), List.of(filter), emptyList(), emptyList())
 
 
         and: 'wait for the server to be initialized'
@@ -171,7 +177,7 @@ class JavalinApplicationSpec extends Specification {
               .path(PATH_HELLO_WORLD)
               .build()
 
-        application.init(Collections.emptyList(), List.of(middleFilter, lastFilter, firstFilter), Collections.emptyList())
+        application.init(emptyList(), List.of(middleFilter, lastFilter, firstFilter), emptyList(), emptyList())
 
         and: 'wait for the server to be initialized'
         waitForServerInit()
@@ -247,7 +253,7 @@ class JavalinApplicationSpec extends Specification {
         waitForServerInit()
 
         when: 'sends request with headers'
-        def response = client.sendHeaders(headers);
+        def response = client.sendHeaders(headers)
 
         then: 'should receive the response headers'
         response.statusCode() == HttpCode.OK.code()
@@ -275,7 +281,7 @@ class JavalinApplicationSpec extends Specification {
 
 
         and: 'server initialization with exception handler'
-        application.init(Collections.emptyList(), Collections.emptyList(), List.of(handler))
+        application.init(emptyList(), emptyList(), List.of(handler), emptyList())
 
         and: 'wait for the server to be initialized'
         waitForServerInit()
@@ -303,7 +309,7 @@ class JavalinApplicationSpec extends Specification {
               .build()
 
         and: 'server initialization'
-        application.init(Collections.emptyList(), List.of(filter), Collections.emptyList())
+        application.init(emptyList(), List.of(filter), emptyList(), emptyList())
         waitForServerInit()
 
         when: 'makes request'
@@ -313,6 +319,29 @@ class JavalinApplicationSpec extends Specification {
         result.statusCode() == HttpCode.OK.code()
         result.body() == "Hello world"
         result.headers().firstValue(key).orElseThrow() == value
+    }
+
+    def "should register module"() {
+        given: 'given json module'
+        def jsonModule = new SimpleModule()
+              .addSerializer(StubPerson.class, new StubPersonSerializer())
+              .addDeserializer(StubPerson.class, new StubPersonDeserializer());
+        def jsonBody = """
+                                {
+                                  "name": "John Doe",
+                                  "age": 25
+                                }
+                              """
+
+        and: 'server initialization'
+        application.init(emptyList(), emptyList(), emptyList(), List.of(jsonModule))
+        waitForServerInit()
+
+        when: 'makes request'
+        def result = client.jsonModule(jsonBody.bytes)
+
+        then: 'result should have correct values'
+        result.statusCode() == HttpCode.OK.code()
     }
 
     def waitForServerInit() {

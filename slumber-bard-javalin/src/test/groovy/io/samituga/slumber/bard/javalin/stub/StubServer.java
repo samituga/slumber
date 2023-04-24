@@ -14,6 +14,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.stream.Collectors.toList;
 
+import com.fasterxml.jackson.databind.Module;
 import io.samituga.bard.application.ServerStatus;
 import io.samituga.bard.configuration.ServerConfig;
 import io.samituga.bard.endpoint.context.HttpContext;
@@ -47,6 +48,7 @@ public class StubServer {
     public static final Path PATH_HELLO_WORLD = Path.of("/hello/world");
     public static final Path PATH_HEADERS = Path.of("/headers");
     public static final Path PATH_THROWS_EXCEPTION = Path.of("/exception");
+    public static final Path PATH_JSON_MODULE = Path.of("/json");
 
     private final JavalinApplication app = new JavalinApplication();
     private final Route routeHelloWorld = routeBuilder()
@@ -97,20 +99,27 @@ public class StubServer {
           .handler(this::throwsRuntimeException)
           .build();
 
+    private final Route routeJsonModule = routeBuilder()
+          .path(PATH_JSON_MODULE)
+          .verb(POST)
+          .handler(this::jsonModule)
+          .build();
+
     public StubServer() {
         this.database = new HashMap<>();
     }
 
 
     public void init() {
-        app.init(serverConfig(emptyList(), emptyList(), emptyList()));
+        app.init(serverConfig(emptyList(), emptyList(), emptyList(), emptyList()));
     }
 
     // TODO: 2023-03-31 Clean this
     public void init(Collection<Route> extraRoutes,
                      Collection<Filter> extraFilters,
-                     Collection<ExceptionHandler<? extends Exception>> exceptionHandlers) {
-        app.init(serverConfig(extraRoutes, extraFilters, exceptionHandlers));
+                     Collection<ExceptionHandler<? extends Exception>> exceptionHandlers,
+                     Collection<Module> jsonModules) {
+        app.init(serverConfig(extraRoutes, extraFilters, exceptionHandlers, jsonModules));
     }
 
     public void cleanup() {
@@ -140,11 +149,13 @@ public class StubServer {
 
     private ServerConfig serverConfig(Collection<Route> extraRoutes,
                                       Collection<Filter> extraFilters,
-                                      Collection<ExceptionHandler<? extends Exception>> extraExceptionHandlers) {
+                                      Collection<ExceptionHandler<? extends Exception>> extraExceptionHandlers,
+                                      Collection<Module> jsonModules) {
         return aServerConfig()
               .routes(routes(extraRoutes))
               .filters(filters(extraFilters))
               .exceptionHandlers(exceptionHandlers(extraExceptionHandlers))
+              .jacksonModules(jsonModules)
               .port(PORT)
               .build();
     }
@@ -157,7 +168,8 @@ public class StubServer {
                           routeGetTitleByQuery,
                           routePostTitle,
                           routeDeleteTitle,
-                          routeThrowsException),
+                          routeThrowsException,
+                          routeJsonModule),
                     extraRoutes.stream())
               .collect(toList());
     }
@@ -262,6 +274,16 @@ public class StubServer {
               .statusCode(statusCode)
               .responseBody(ByteResponseBody.of("Hello world"))
               .headers(Headers.of("resp-header-name", "resp-header-value"));
+    }
+
+    private void jsonModule(HttpContext ctx) {
+        var reqBody = ctx.request().requestBodyAsType(StubPerson.class);
+
+        var statusCode = reqBody.isPresent()
+              && reqBody.get().value().getP1().equals("John Doe")
+              && reqBody.get().value().getP2() == 25
+              ? OK : BAD_REQUEST;
+        ctx.response().statusCode(statusCode);
     }
 
     private void throwsRuntimeException(HttpContext ctx) {

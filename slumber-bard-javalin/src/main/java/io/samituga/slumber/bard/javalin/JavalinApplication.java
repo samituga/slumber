@@ -12,6 +12,7 @@ import io.samituga.bard.application.SlumberApplication;
 import io.samituga.bard.configuration.ServerConfig;
 import io.samituga.bard.exception.ServerInitException;
 import io.samituga.bard.exception.ServerShutdownException;
+import io.samituga.jayce.Json;
 import io.samituga.slumber.bard.javalin.configurator.JavalinConfigurator;
 import java.util.function.Consumer;
 
@@ -36,6 +37,8 @@ public class JavalinApplication implements SlumberApplication {
         if (serverStatus == STARTED || serverStatus == STARTING) {
             throw new ServerInitException();
         }
+
+        Json.initWithModules(config.jacksonModules());
 
         JavalinConfigurator.configure(javalin, config);
 

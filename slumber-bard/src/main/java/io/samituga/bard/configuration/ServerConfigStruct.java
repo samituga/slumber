@@ -2,8 +2,8 @@ package io.samituga.bard.configuration;
 
 import static io.samituga.bard.configuration.ServerConfigBuilder.serverConfigBuilder;
 import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
-import static io.samituga.slumber.heimer.validator.AssertionUtility.requiredValidPort;
 
+import com.fasterxml.jackson.databind.Module;
 import io.samituga.bard.endpoint.route.Route;
 import io.samituga.bard.filter.Filter;
 import io.samituga.bard.filter.Precedence;
@@ -15,17 +15,20 @@ import java.util.Collection;
 record ServerConfigStruct(Port port,
                           Collection<Filter> filters,
                           Collection<Route> routes,
-                          Collection<ExceptionHandler<? extends Exception>> exceptionHandlers)
+                          Collection<ExceptionHandler<? extends Exception>> exceptionHandlers,
+                          Collection<Module> jacksonModules)
       implements ServerConfig {
 
     ServerConfigStruct(Port port,
                        Collection<Filter> filters,
                        Collection<Route> routes,
-                       Collection<ExceptionHandler<? extends Exception>> exceptionHandlers) {
+                       Collection<ExceptionHandler<? extends Exception>> exceptionHandlers,
+                       Collection<Module> jacksonModules) {
         this.port = required("port", port);
         this.filters = validateFiltersOrder(filters);
         this.routes = required("routes", routes);
         this.exceptionHandlers = required("exceptionHandlers", exceptionHandlers);
+        this.jacksonModules = required("jacksonModules", jacksonModules);
     }
 
     @Override
@@ -34,7 +37,8 @@ record ServerConfigStruct(Port port,
               .port(port)
               .filters(filters)
               .routes(routes)
-              .exceptionHandlers(exceptionHandlers);
+              .exceptionHandlers(exceptionHandlers)
+              .jacksonModules(jacksonModules);
     }
 
     // TODO: 2023-03-31 Create a Filters class and move this to that class
