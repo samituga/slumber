@@ -2,8 +2,9 @@ package io.samituga.slumber.bard.javalin.stub;
 
 import static io.samituga.bard.endpoint.response.HttpCode.BAD_REQUEST;
 import static io.samituga.bard.endpoint.response.HttpCode.EXPECTATION_FAILED;
+import static io.samituga.bard.endpoint.response.HttpCode.NOT_FOUND;
+import static io.samituga.bard.endpoint.response.HttpCode.NO_CONTENT;
 import static io.samituga.bard.endpoint.response.HttpCode.OK;
-import static io.samituga.bard.endpoint.response.HttpResponseBuilder.httpResponseBuilder;
 import static io.samituga.bard.endpoint.route.RouteBuilder.routeBuilder;
 import static io.samituga.bard.endpoint.route.Verb.DELETE;
 import static io.samituga.bard.endpoint.route.Verb.GET;
@@ -13,11 +14,13 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.stream.Collectors.toList;
 
+import com.fasterxml.jackson.databind.Module;
 import io.samituga.bard.application.ServerStatus;
 import io.samituga.bard.configuration.ServerConfig;
 import io.samituga.bard.endpoint.context.HttpContext;
 import io.samituga.bard.endpoint.response.HttpCode;
 import io.samituga.bard.endpoint.response.type.ByteResponseBody;
+import io.samituga.bard.endpoint.response.type.TypeResponseBody;
 import io.samituga.bard.endpoint.route.Route;
 import io.samituga.bard.filter.Filter;
 import io.samituga.bard.handler.ExceptionHandler;
@@ -25,6 +28,7 @@ import io.samituga.bard.type.Path;
 import io.samituga.bard.type.Port;
 import io.samituga.slumber.bard.javalin.JavalinApplication;
 import io.samituga.slumber.ivern.http.type.Headers;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.HashMap;
@@ -45,6 +49,7 @@ public class StubServer {
     public static final Path PATH_HELLO_WORLD = Path.of("/hello/world");
     public static final Path PATH_HEADERS = Path.of("/headers");
     public static final Path PATH_THROWS_EXCEPTION = Path.of("/exception");
+    public static final Path PATH_JSON_MODULE = Path.of("/json");
 
     private final JavalinApplication app = new JavalinApplication();
     private final Route routeHelloWorld = routeBuilder()
@@ -95,20 +100,27 @@ public class StubServer {
           .handler(this::throwsRuntimeException)
           .build();
 
+    private final Route routeJsonModule = routeBuilder()
+          .path(PATH_JSON_MODULE)
+          .verb(POST)
+          .handler(this::jsonModule)
+          .build();
+
     public StubServer() {
         this.database = new HashMap<>();
     }
 
 
     public void init() {
-        app.init(serverConfig(emptyList(), emptyList(), emptyList()));
+        app.init(serverConfig(emptyList(), emptyList(), emptyList(), emptyList()));
     }
 
     // TODO: 2023-03-31 Clean this
     public void init(Collection<Route> extraRoutes,
                      Collection<Filter> extraFilters,
-                     Collection<ExceptionHandler<? extends Exception>> exceptionHandlers) {
-        app.init(serverConfig(extraRoutes, extraFilters, exceptionHandlers));
+                     Collection<ExceptionHandler<? extends Exception>> exceptionHandlers,
+                     Collection<Module> jsonModules) {
+        app.init(serverConfig(extraRoutes, extraFilters, exceptionHandlers, jsonModules));
     }
 
     public void cleanup() {
@@ -138,11 +150,13 @@ public class StubServer {
 
     private ServerConfig serverConfig(Collection<Route> extraRoutes,
                                       Collection<Filter> extraFilters,
-                                      Collection<ExceptionHandler<? extends Exception>> extraExceptionHandlers) {
+                                      Collection<ExceptionHandler<? extends Exception>> extraExceptionHandlers,
+                                      Collection<Module> jsonModules) {
         return aServerConfig()
               .routes(routes(extraRoutes))
               .filters(filters(extraFilters))
               .exceptionHandlers(exceptionHandlers(extraExceptionHandlers))
+              .jacksonModules(jsonModules)
               .port(PORT)
               .build();
     }
@@ -155,7 +169,8 @@ public class StubServer {
                           routeGetTitleByQuery,
                           routePostTitle,
                           routeDeleteTitle,
-                          routeThrowsException),
+                          routeThrowsException,
+                          routeJsonModule),
                     extraRoutes.stream())
               .collect(toList());
     }
@@ -176,22 +191,18 @@ public class StubServer {
     }
 
 
-    private HttpContext getTitle(HttpContext ctx) {
+    private void getTitle(HttpContext ctx) {
 
         var uuid = ctx.request().pathParams().get("uuid");
 
-        var response = Optional.ofNullable(database.get(UUID.fromString(uuid)))
-              .map(title -> ctx.response().copy()
-                    .statusCode(HttpCode.OK)
-                    .responseBody(ByteResponseBody.of(title))
-                    .build())
-              .orElse(ctx.response().copy()
-                    .statusCode(HttpCode.NOT_FOUND)
-                    .build());
-        return ctx.withResponse(response);
+        Optional.ofNullable(database.get(UUID.fromString(uuid)))
+              .ifPresentOrElse(title -> ctx.response()
+                          .statusCode(OK)
+                          .body(ByteResponseBody.of(title)),
+                    () -> ctx.response().statusCode(NOT_FOUND));
     }
 
-    private HttpContext getTitleByQuery(HttpContext ctx) {
+    private void getTitleByQuery(HttpContext ctx) {
 
         var firstLetter = ctx.request().queryParams().getFirst("firstLetter");
         var ignoreCase = ctx.request().queryParams()
@@ -205,25 +216,21 @@ public class StubServer {
                     : tittle.startsWith(firstLetter))
               .collect(Collectors.joining(","));
 
-        var statusCode = HttpCode.OK;
+        var statusCode = OK;
         if (result.isBlank()) {
-            statusCode = HttpCode.NOT_FOUND;
+            statusCode = NOT_FOUND;
         }
 
-        var response = ctx.response().copy()
+        ctx.response()
               .statusCode(statusCode)
-              .responseBody(ByteResponseBody.of(result))
-              .build();
-        return ctx.withResponse(response);
+              .body(ByteResponseBody.of(result));
     }
 
-    private HttpContext postTitle(HttpContext ctx) {
-        var requestBody = ctx.request().requestBody();
+    private void postTitle(HttpContext ctx) {
+        var requestBody = ctx.request().body();
         if (requestBody.isEmpty()) {
-            var response = httpResponseBuilder()
-                  .statusCode(BAD_REQUEST)
-                  .build();
-            return ctx.withResponse(response);
+            ctx.response().statusCode(BAD_REQUEST);
+            return;
         }
         String body = new String(requestBody.get().value(), StandardCharsets.UTF_8);
 
@@ -237,49 +244,54 @@ public class StubServer {
             statusCode = HttpCode.CREATED;
         }
 
-        var response = ctx.response().copy()
+        ctx.response()
               .statusCode(statusCode)
-              .responseBody(ByteResponseBody.of(uuid.toString()))
-              .build();
-        return ctx.withResponse(response);
+              .body(ByteResponseBody.of(uuid.toString()));
     }
 
-    private HttpContext deleteTitle(HttpContext ctx) {
+    private void deleteTitle(HttpContext ctx) {
         var uuid = ctx.request().pathParams().get("uuid");
 
         var deleted = Optional.ofNullable(database.remove(UUID.fromString(uuid)))
               .isPresent();
-        var statusCode = deleted ? HttpCode.NO_CONTENT : HttpCode.NOT_FOUND;
+        var statusCode = deleted ? NO_CONTENT : NOT_FOUND;
 
-        var response = ctx.response().copy()
-              .statusCode(statusCode)
-              .build();
-        return ctx.withResponse(response);
+        ctx.response().statusCode(statusCode);
     }
 
-    private HttpContext helloWorld(HttpContext ctx) {
-        var response = ctx.response().copy()
-              .statusCode(HttpCode.OK)
-              .responseBody(ByteResponseBody.of("Hello world"))
-              .build();
-        return ctx.withResponse(response);
+    private void helloWorld(HttpContext ctx) {
+        ctx.response()
+              .statusCode(OK)
+              .body(ByteResponseBody.of("Hello world"));
     }
 
-    private HttpContext getHeaders(HttpContext ctx) {
+    private void getHeaders(HttpContext ctx) {
 
-        var statusCode = Optional.ofNullable(ctx.request().request().getHeader("req-header-name"))
+        var statusCode = Optional.ofNullable(ctx.request().headers().value().get("req-header-name"))
               .map(headerValue -> headerValue.equals("req-header-value") ? OK : EXPECTATION_FAILED)
               .orElse(BAD_REQUEST);
 
-        var response = ctx.response().copy()
+        ctx.response()
               .statusCode(statusCode)
-              .responseBody(ByteResponseBody.of("Hello world"))
-              .headers(Headers.of("resp-header-name", "resp-header-value"))
-              .build();
-        return ctx.withResponse(response);
+              .body(ByteResponseBody.of("Hello world"))
+              .headers(Headers.of("resp-header-name", "resp-header-value"));
     }
 
-    private HttpContext throwsRuntimeException(HttpContext ctx) {
+    private void jsonModule(HttpContext ctx) {
+        var reqBody = ctx.request().bodyAsType(StubPerson.class);
+
+        if (reqBody.isEmpty()) {
+            ctx.response().statusCode(BAD_REQUEST);
+            return;
+        }
+        var body = reqBody.get().value();
+        var statusCode = body.getP1().equals("John Doe") && body.getP2() == 25 ? OK : BAD_REQUEST;
+        ctx.response()
+              .statusCode(statusCode)
+              .body(TypeResponseBody.of(body));
+    }
+
+    private void throwsRuntimeException(HttpContext ctx) {
         throw new RuntimeException("Test message");
     }
 }

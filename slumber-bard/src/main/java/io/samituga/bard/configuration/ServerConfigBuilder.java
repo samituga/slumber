@@ -1,5 +1,6 @@
 package io.samituga.bard.configuration;
 
+import com.fasterxml.jackson.databind.Module;
 import io.samituga.bard.endpoint.route.Route;
 import io.samituga.bard.filter.Filter;
 import io.samituga.bard.handler.ExceptionHandler;
@@ -16,6 +17,7 @@ public class ServerConfigBuilder implements Builder<ServerConfig> {
     private Collection<Filter> filters = new ArrayList<>();
     private Collection<Route> routes = new ArrayList<>();
     private Collection<ExceptionHandler<? extends Exception>> exceptionHandlers = new ArrayList<>();
+    private Collection<Module> jacksonModules = new ArrayList<>();
 
     private ServerConfigBuilder() {}
 
@@ -73,9 +75,14 @@ public class ServerConfigBuilder implements Builder<ServerConfig> {
         return this;
     }
 
+    public ServerConfigBuilder jacksonModules(Collection<Module> jacksonModules) {
+        this.jacksonModules = jacksonModules;
+        return this;
+    }
+
     @Override
     public ServerConfig build() {
-        return new ServerConfigStruct(port, filters, routes, exceptionHandlers);
+        return new ServerConfigStruct(port, filters, routes, exceptionHandlers, jacksonModules);
     }
 }
 

@@ -2,16 +2,23 @@ package io.samituga.slumber.bard.javalin
 
 import static io.samituga.bard.filter.FilterBuilder.filterBuilder
 import static io.samituga.slumber.bard.javalin.stub.StubServer.PATH_HELLO_WORLD
+import static java.util.Collections.emptyList
 import static java.util.UUID.randomUUID
 
+import com.fasterxml.jackson.databind.module.SimpleModule
 import io.samituga.bard.application.ServerStatus
+import io.samituga.bard.endpoint.ContentType
 import io.samituga.bard.endpoint.context.HttpContext
 import io.samituga.bard.endpoint.response.HttpCode
 import io.samituga.bard.endpoint.response.type.ByteResponseBody
 import io.samituga.bard.filter.Precedence
 import io.samituga.bard.filter.type.Order
 import io.samituga.bard.handler.ExceptionHandler
+import io.samituga.jayce.Json
 import io.samituga.slumber.bard.javalin.stub.StubClient
+import io.samituga.slumber.bard.javalin.stub.StubPerson
+import io.samituga.slumber.bard.javalin.stub.StubPersonDeserializer
+import io.samituga.slumber.bard.javalin.stub.StubPersonSerializer
 import io.samituga.slumber.bard.javalin.stub.StubServer
 import io.samituga.slumber.ivern.http.type.Headers
 import io.samituga.slumber.ziggs.WaitFor
@@ -19,10 +26,9 @@ import spock.lang.Specification
 
 import java.time.Duration
 import java.time.Instant
-import java.util.function.Function
+import java.util.function.Consumer
 
 class JavalinApplicationSpec extends Specification {
-
 
     private StubServer application
     private StubClient client
@@ -30,6 +36,7 @@ class JavalinApplicationSpec extends Specification {
     def setup() {
         application = new StubServer()
         client = new StubClient()
+        Json.initialized = false // TODO static variable doesn't reset from test to test
     }
 
     def cleanup() {
@@ -97,19 +104,19 @@ class JavalinApplicationSpec extends Specification {
         Instant doBeforeTimestamp = null
         Instant doAfterTimestamp = null
 
-        Function<HttpContext, HttpContext> doBefore =
-          (ctx) -> { doBeforeTimestamp = Instant.now(); Thread.sleep(2); ctx }
-        Function<HttpContext, HttpContext> doAfter =
-          (ctx) -> { doAfterTimestamp = Instant.now(); Thread.sleep(2); ctx }
+        Consumer<HttpContext> doBefore =
+              (ctx) -> { doBeforeTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> doAfter =
+              (ctx) -> { doAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
         def filter = filterBuilder()
-          .doBefore(doBefore)
-          .doAfter(doAfter)
-          .order(Order.of(0))
-          .path(PATH_HELLO_WORLD)
-          .build()
+              .doBefore(doBefore)
+              .doAfter(doAfter)
+              .order(Order.of(0))
+              .path(PATH_HELLO_WORLD)
+              .build()
 
-        application.init(Collections.emptyList(), List.of(filter), Collections.emptyList())
+        application.init(emptyList(), List.of(filter), emptyList(), emptyList())
 
 
         and: 'wait for the server to be initialized'
@@ -129,49 +136,49 @@ class JavalinApplicationSpec extends Specification {
         Instant firstDoBeforeTimestamp = null
         Instant firstDoAfterTimestamp = null
 
-        Function<HttpContext, HttpContext> firstDoBefore =
-          (ctx) -> { firstDoBeforeTimestamp = Instant.now(); Thread.sleep(2); ctx }
-        Function<HttpContext, HttpContext> firstDoAfter =
-          (ctx) -> { firstDoAfterTimestamp = Instant.now(); Thread.sleep(2); ctx }
+        Consumer<HttpContext> firstDoBefore =
+              (ctx) -> { firstDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> firstDoAfter =
+              (ctx) -> { firstDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
         def firstFilter = filterBuilder()
-          .doBefore(firstDoBefore)
-          .doAfter(firstDoAfter)
-          .order(Order.of(Precedence.FIRST))
-          .path(PATH_HELLO_WORLD)
-          .build()
+              .doBefore(firstDoBefore)
+              .doAfter(firstDoAfter)
+              .order(Order.of(Precedence.FIRST))
+              .path(PATH_HELLO_WORLD)
+              .build()
 
         Instant middleDoBeforeTimestamp = null
         Instant middleDoAfterTimestamp = null
 
-        Function<HttpContext, HttpContext> middleDoBefore =
-          (ctx) -> { middleDoBeforeTimestamp = Instant.now(); Thread.sleep(2); ctx }
-        Function<HttpContext, HttpContext> middleDoAfter =
-          (ctx) -> { middleDoAfterTimestamp = Instant.now(); Thread.sleep(2); ctx }
+        Consumer<HttpContext> middleDoBefore =
+              (ctx) -> { middleDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> middleDoAfter =
+              (ctx) -> { middleDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
         def middleFilter = filterBuilder()
-          .doBefore(middleDoBefore)
-          .doAfter(middleDoAfter)
-          .order(Order.of(0))
-          .path(PATH_HELLO_WORLD)
-          .build()
+              .doBefore(middleDoBefore)
+              .doAfter(middleDoAfter)
+              .order(Order.of(0))
+              .path(PATH_HELLO_WORLD)
+              .build()
 
         Instant lastDoBeforeTimestamp = null
         Instant lastDoAfterTimestamp = null
 
-        Function<HttpContext, HttpContext> lastDoBefore =
-          (ctx) -> { lastDoBeforeTimestamp = Instant.now(); Thread.sleep(2); ctx }
-        Function<HttpContext, HttpContext> lastDoAfter =
-          (ctx) -> { lastDoAfterTimestamp = Instant.now(); Thread.sleep(2); ctx }
+        Consumer<HttpContext> lastDoBefore =
+              (ctx) -> { lastDoBeforeTimestamp = Instant.now(); Thread.sleep(2) }
+        Consumer<HttpContext> lastDoAfter =
+              (ctx) -> { lastDoAfterTimestamp = Instant.now(); Thread.sleep(2) }
 
         def lastFilter = filterBuilder()
-          .doBefore(lastDoBefore)
-          .doAfter(lastDoAfter)
-          .order(Order.of(Precedence.LAST))
-          .path(PATH_HELLO_WORLD)
-          .build()
+              .doBefore(lastDoBefore)
+              .doAfter(lastDoAfter)
+              .order(Order.of(Precedence.LAST))
+              .path(PATH_HELLO_WORLD)
+              .build()
 
-        application.init(Collections.emptyList(), List.of(middleFilter, lastFilter, firstFilter), Collections.emptyList())
+        application.init(emptyList(), List.of(middleFilter, lastFilter, firstFilter), emptyList(), emptyList())
 
         and: 'wait for the server to be initialized'
         waitForServerInit()
@@ -247,7 +254,7 @@ class JavalinApplicationSpec extends Specification {
         waitForServerInit()
 
         when: 'sends request with headers'
-        def response = client.sendHeaders(headers);
+        def response = client.sendHeaders(headers)
 
         then: 'should receive the response headers'
         response.statusCode() == HttpCode.OK.code()
@@ -266,18 +273,16 @@ class JavalinApplicationSpec extends Specification {
             }
 
             @Override
-            HttpContext handle(RuntimeException exception, HttpContext ctx) {
-                var response = ctx.response().copy()
-                  .statusCode(statusCode)
-                  .responseBody(ByteResponseBody.of(exception.message))
-                  .build()
-                return ctx.withResponse(response)
+            void handle(RuntimeException exception, HttpContext ctx) {
+                ctx.response()
+                      .statusCode(statusCode)
+                      .body(ByteResponseBody.of(exception.message))
             }
         }
 
 
         and: 'server initialization with exception handler'
-        application.init(Collections.emptyList(), Collections.emptyList(), List.of(handler))
+        application.init(emptyList(), emptyList(), List.of(handler), emptyList())
 
         and: 'wait for the server to be initialized'
         waitForServerInit()
@@ -294,21 +299,18 @@ class JavalinApplicationSpec extends Specification {
         given: 'given filter'
         def key = "My-Key"
         def value = "My-Value"
-        Function<HttpContext, HttpContext> doBefore =
-          (ctx) -> {
-              def headers = ctx.response().headers()
-              def updatedHeaders = headers.withHeader(key, value)
-              ctx.withResponse(ctx.response().copy().headers(updatedHeaders).build())
-          }
+        Consumer<HttpContext> doBefore = (ctx) -> {
+            ctx.response().headers(Headers.of(key, value))
+        }
 
         def filter = filterBuilder()
-          .doBefore(doBefore)
-          .order(Order.of(0))
-          .path(PATH_HELLO_WORLD)
-          .build()
+              .doBefore(doBefore)
+              .order(Order.of(0))
+              .path(PATH_HELLO_WORLD)
+              .build()
 
         and: 'server initialization'
-        application.init(Collections.emptyList(), List.of(filter), Collections.emptyList())
+        application.init(emptyList(), List.of(filter), emptyList(), emptyList())
         waitForServerInit()
 
         when: 'makes request'
@@ -318,6 +320,33 @@ class JavalinApplicationSpec extends Specification {
         result.statusCode() == HttpCode.OK.code()
         result.body() == "Hello world"
         result.headers().firstValue(key).orElseThrow() == value
+    }
+
+    def "should register module"() {
+        given: 'given json module'
+        def jsonModule = new SimpleModule()
+              .addSerializer(StubPerson.class, new StubPersonSerializer())
+              .addDeserializer(StubPerson.class, new StubPersonDeserializer());
+        def jsonBody = """
+                                {
+                                  "name": "John Doe",
+                                  "age": 25
+                                }
+                              """
+
+        and: 'server initialization'
+        application.init(emptyList(), emptyList(), emptyList(), List.of(jsonModule))
+        waitForServerInit()
+
+        when: 'makes request'
+        def result = client.jsonModule(jsonBody.bytes)
+
+        then: 'result should have correct values'
+        result.statusCode() == HttpCode.OK.code()
+        result.headers().firstValue("Content-Type").get() == ContentType.APPLICATION_JSON.value()
+        def body = Json.mapper().readValue(result.body(), StubPerson.class)
+        body.p1 == "John Doe"
+        body.p2 == 25
     }
 
     def waitForServerInit() {

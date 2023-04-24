@@ -1,16 +1,14 @@
 package io.samituga.bard.endpoint.context;
 
+import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
+
 import io.samituga.bard.endpoint.request.HttpRequest;
 import io.samituga.bard.endpoint.response.HttpResponse;
-import io.samituga.slumber.ivern.structure.Structure;
 
-public interface HttpContext extends Structure<HttpContext, HttpContextBuilder> {
+public record HttpContext(HttpRequest request, HttpResponse response) {
 
-    HttpRequest request();
-
-    HttpResponse response();
-
-    HttpContext withRequest(HttpRequest request);
-
-    HttpContext withResponse(HttpResponse response);
+    public HttpContext(HttpRequest request, HttpResponse response) {
+        this.request = required("request", request);
+        this.response = required("response", response);
+    }
 }

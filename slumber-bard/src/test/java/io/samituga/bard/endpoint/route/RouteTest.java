@@ -12,7 +12,7 @@ class RouteTest {
       @Test
       void should_make_exact_copy() {
           // given
-          var route = RouteTestData.aRoute(mock(HttpServletResponse.class)).build();
+          var route = RouteTestData.aRoute().build();
 
           // when
           var copy = route.copy().build();

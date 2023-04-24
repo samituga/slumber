@@ -6,13 +6,13 @@ import static io.samituga.slumber.heimer.validator.AssertionUtility.required;
 import io.samituga.bard.endpoint.request.type.MultipartRequestBody;
 import io.samituga.bard.endpoint.request.type.PathParams;
 import io.samituga.bard.endpoint.request.type.QueryParams;
+import io.samituga.bard.endpoint.request.type.RequestAsTypeBody;
 import io.samituga.bard.endpoint.request.type.RequestBody;
 import io.samituga.bard.path.PathParser;
 import io.samituga.bard.util.MultipartUtil;
 import io.samituga.slumber.heimer.util.IoUtils;
 import io.samituga.slumber.ivern.http.type.Headers;
 import jakarta.servlet.http.HttpServletRequest;
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.HashMap;
@@ -59,10 +59,22 @@ public class HttpRequestImpl implements HttpRequest {
     }
 
     @Override
-    public Optional<RequestBody> requestBody() {
+    public Optional<RequestBody> body() {
         try {
             byte[] bytes = IoUtils.toBytes(request.getInputStream());
             return bytes.length > 0 ? Optional.of(RequestBody.of(bytes)) : Optional.empty();
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to read the request body", e);
+        }
+    }
+
+    @Override
+    public <T> Optional<RequestAsTypeBody<T>> bodyAsType(Class<T> type) {
+        try {
+            byte[] bytes = IoUtils.toBytes(request.getInputStream());
+            return bytes.length > 0
+                  ? Optional.of(RequestAsTypeBody.of(bytes, type))
+                  : Optional.empty();
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to read the request body", e);
         }

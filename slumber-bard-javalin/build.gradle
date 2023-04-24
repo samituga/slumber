@@ -9,6 +9,7 @@ dependencies {
     api project(':slumber-bard')
 
     implementation "io.javalin:javalin:${javalinVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
 
     compileOnly "jakarta.servlet:jakarta.servlet-api:${jakartaServletApiVersion}"
 

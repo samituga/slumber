@@ -1,24 +1,19 @@
 package io.samituga.slumber.bard.javalin.configurator;
 
-import static io.samituga.slumber.bard.javalin.mapper.HttpContextMapper.fromJavalinContext;
+import static io.samituga.slumber.bard.javalin.mapper.HttpContextMapper.toHttpContext;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.samituga.bard.configuration.ServerConfig;
 import io.samituga.bard.endpoint.context.HttpContext;
-import io.samituga.bard.endpoint.response.HttpResponse;
-import io.samituga.bard.endpoint.response.ResponseBody;
-import io.samituga.bard.endpoint.response.type.ByteResponseBody;
-import io.samituga.bard.endpoint.response.type.InputStreamResponseBody;
 import io.samituga.bard.endpoint.route.Route;
-import io.samituga.bard.exception.UnsupportedResponseTypeException;
 import io.samituga.bard.filter.Filter;
 import io.samituga.bard.handler.ExceptionHandler;
 import io.samituga.slumber.bard.javalin.mapper.VerbToHandlerType;
-import io.samituga.slumber.ivern.http.type.Headers;
+
 import java.util.Collection;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 public class JavalinConfigurator {
 
@@ -34,18 +29,13 @@ public class JavalinConfigurator {
               .sorted()
               .forEach(filter -> {
                   filter.doBefore().ifPresent(doBefore ->
-                        javalin.before(filter.path().value(),
-                              ctx -> {
-                                  var httpContext = doBefore.apply(fromJavalinContext(ctx));
-                                  withResponse(ctx, httpContext.response());
-                              }));
+                        javalin.before(
+                              filter.path().value(),
+                              javalinCtx -> doBefore.accept(toHttpContext(javalinCtx))));
                   filter.doAfter().ifPresent(doAfter ->
                         javalin.after(
                               filter.path().value(),
-                              ctx -> {
-                                  var httpContext = doAfter.apply(fromJavalinContext(ctx));
-                                  withResponse(ctx, httpContext.response());
-                              }));
+                              javalinCtx -> doAfter.accept(toHttpContext(javalinCtx))));
               });
     }
 
@@ -63,43 +53,17 @@ public class JavalinConfigurator {
                                               Collection<ExceptionHandler<? extends Exception>> exceptionHandlers) {
         for (ExceptionHandler<?> exceptionHandler : exceptionHandlers) {
             Class<? extends Exception> exceptionClass = exceptionHandler.exceptionClass();
-            javalin.exception(exceptionClass, (Exception e, Context ctx) -> {
-                var httpContext = fromJavalinContext(ctx);
-                var response =
-                      ((ExceptionHandler<Exception>) exceptionHandler).handle(e, httpContext);
-                withResponse(ctx, response.response());
+            javalin.exception(exceptionClass, (Exception e, Context javalinCtx) -> {
+                var httpContext = toHttpContext(javalinCtx);
+                ((ExceptionHandler<Exception>) exceptionHandler).handle(e, httpContext);
             });
         }
     }
 
-    private static Handler handle(Function<HttpContext, HttpContext> function) {
-        return ctx -> {
-            var httpContext = fromJavalinContext(ctx);
-            httpContext = function.apply(httpContext);
-            var response = httpContext.response();
-            withResponse(ctx, response);
+    private static Handler handle(Consumer<HttpContext> function) {
+        return javalinCtx -> {
+            var httpContext = toHttpContext(javalinCtx);
+            function.accept(httpContext);
         };
-    }
-
-    private static void withResponse(Context ctx, HttpResponse response) {
-        if (response.responseBody().isPresent()) {
-            withResponseBody(ctx, response.responseBody().get());
-        }
-        ctx.status(response.statusCode().code());
-        withResponseHeaders(ctx, response.headers());
-    }
-
-    private static void withResponseBody(Context ctx, ResponseBody responseBody) {
-        if (responseBody instanceof InputStreamResponseBody inputStreamResponseBody) {
-            ctx.result(inputStreamResponseBody.responseBody());
-        } else if (responseBody instanceof ByteResponseBody byteResponseBody) {
-            ctx.result(byteResponseBody.responseBody());
-        } else {
-            throw new UnsupportedResponseTypeException();
-        }
-    }
-
-    private static void withResponseHeaders(Context ctx, Headers headers) {
-        headers.value().forEach(ctx::header);
     }
 }
